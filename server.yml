@@ -9,13 +9,13 @@
       register: python_check
       changed_when: not python_check.stdout | search('/usr/bin/python')
 
-- name: Create a new sudo user
-    user: name={{base_user}}
-          state=present
-          group=primary-group
-          groups="sudo"
-          password={{ password }}
-          comment="Comment"
+# - name: Create a new sudo user
+#     user: name={{base_user}}
+#           state=present
+#           group=primary-group
+#           groups="sudo"
+#           password={{ password }}
+#           comment="Comment"
 
 - name: Server Provisioning
   hosts: server
