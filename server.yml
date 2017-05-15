@@ -21,12 +21,12 @@
           createhome=yes
           groups="sudo"
           append=yes
-          password={{ password }}
+          password={{password}}
           comment="Comment"
     - name: Set up authorized keys for the sudo user
-      authorized_key: user={{base_user}} key="{{item}}"
-      with_file:
-        - ~/.ssh/id_rsa.pub
+      authorized_key: 
+        user: "{{base_user}}"
+        key: {{"github_keys"}}
 
 - name: Server Provisioning
   hosts: server
