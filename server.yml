@@ -1,25 +1,36 @@
 ---
+
 - name: Install prerequisites
   hosts: server
+  remote_user: root
   gather_facts: false
-  become: yes
   tasks:
     - name: Install Python 2.x
-      raw: which python || sudo apt-get update && sudo apt-get install -qq -y python-simplejson
+      raw: which python || apt-get update && apt-get install -qq -y python-simplejson
       register: python_check
       changed_when: not python_check.stdout | search('/usr/bin/python')
 
-# - name: Create a new sudo user
-#     user: name={{base_user}}
-#           state=present
-#           group=primary-group
-#           groups="sudo"
-#           password={{ password }}
-#           comment="Comment"
+- name: User Creation
+  hosts: server
+  remote_user: root
+  become: yes
+  tasks:
+    - name: create sudo user
+      user: name={{base_user}}
+          state=present
+          createhome=yes
+          groups="sudo"
+          append=yes
+          password={{ password }}
+          comment="Comment"
+    - name: Set up authorized keys for the sudo user
+      authorized_key: user={{base_user}} key="{{item}}"
+      with_file:
+        - ~/.ssh/id_rsa.pub
 
 - name: Server Provisioning
   hosts: server
-  become: yes
+  remote_user: root
   tasks:
     - name: Add PHP 7.1 PPA
       apt_repository:
@@ -56,7 +67,7 @@
    #https://gist.github.com/pogorelov-ss/41893e17c7c4776d4d57
    # test SSH agent forwarding
     - shell: echo "Client= [$SSH_CLIENT] Sock= [$SSH_AUTH_SOCK]"
-      become: no
+      remote_user: laravel
       register: myecho
     - debug: msg="{{myecho.stdout}}"
     - shell: ssh-add -l
@@ -68,7 +79,7 @@
     # - debug: msg="{{myecho.stdout}}"
 
     - name: Get app from Github
-      become: no
+      remote_user: laravel
       git:
           repo=git@github.com:jasperf/ianua.git
           dest=repo/myproject.git
@@ -79,9 +90,7 @@
           version="{{ git_branch }}"
           
     - name: Create project folder
-      become: yes
-      become_user: root
-      become_method: sudo
+      remote_user: root
       file: path=/var/www/{{ project_folder }}
            owner={{ www_user }}
            group={{ www_user }}
