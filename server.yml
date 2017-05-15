@@ -16,17 +16,17 @@
   become: yes
   tasks:
     - name: create sudo user
-      user: name={{base_user}}
+      user: name="{{base_user}}"
           state=present
           createhome=yes
           groups="sudo"
           append=yes
-          password={{password}}
+          shell=/bin/bash
           comment="Comment"
     - name: Set up authorized keys for the sudo user
       authorized_key: 
         user: "{{base_user}}"
-        key: {{"github_keys"}}
+        key: "{{github_keys}}"
 
 - name: Server Provisioning
   hosts: server
