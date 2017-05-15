@@ -81,7 +81,7 @@
     - name: Get app from Github
       remote_user: laravel
       git:
-          repo=git@github.com:jasperf/ianua.git
+          repo="{{repo_url}}"
           dest=repo/myproject.git
           accept_hostkey=yes
           force=yes
