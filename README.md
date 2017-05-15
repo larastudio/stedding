@@ -15,6 +15,8 @@ You need to have Ansible installed on your local computer. This really differs f
 ## Remote Server Preparations
 To run Ansible Playbooks properly on Ubuntu 16.0.4 we need to setup a sudo user and make sure Python and some other packages are available so Ansible can run. The setting up of a sudo user and adding of the SSH keys for it can be done following the instructions below. In the future we will integrate this in a shell script.
 
+*NB* Adding Sudo user is in progress in the Playbooks 
+
 ### Setup Sudo User laravel
 Log into your remote server as root using
 ````
