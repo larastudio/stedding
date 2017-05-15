@@ -1,8 +1,8 @@
 ---
 #Which github repo to use
 repo_url : https://github.com/jasperf/ianua.git
+github_keys: https://github.com/jasperf.keys
 git_branch: master
 base_user: laravel
-password: 1111
 www_user: www-data
 project_folder: laravel
