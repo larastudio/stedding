@@ -1,7 +1,6 @@
 ---
-
 - name: Install prerequisites
-  hosts: server
+  hosts: web
   remote_user: root
   gather_facts: false
   tasks:
@@ -11,9 +10,8 @@
       changed_when: not python_check.stdout | search('/usr/bin/python')
 
 - name: User Creation
-  hosts: server
+  hosts: web
   remote_user: root
-  become: yes
   tasks:
     - name: create sudo user
       user: name="{{base_user}}"
@@ -28,108 +26,83 @@
         user: "{{base_user}}"
         key: "{{github_keys}}"
 
-- name: Server Provisioning
-  hosts: server
-  remote_user: root
-  tasks:
-    - name: Add PHP 7.1 PPA
-      apt_repository:
-        repo: "ppa:ondrej/php"
-        update_cache: yes
+- name: LEMP Provisioning
+  hosts: web
+  user: root
+  roles: 
+  - nginx
+  - itcraftsmanpl.php7
+  - geerlingguy.memcached 
+  - geerlingguy.git
+  - geerlingguy.composer
+  - tersmitten.htop
 
-    - name: install packages
-      apt: name={{ item }} update_cache=yes state=latest
-      with_items:
-        - git
-        - mcrypt
-        - nginx
-        - php7.1-cli
-        - php7.1-common
-        - php7.1-curl
-        - php7.1-dev
-        - php7.1-fpm
-        - php7.1-gd
-        - php7.1-intl
-        - php7.1-json
-        - php7.1-mbstring
-        - php7.1-mcrypt
-        - php7.1-mysql
-        - php7.1-opcache
-        - php7.1-xml
-        - php7.1-xmlrpc
-        - php7.1-zip
-        - mariadb-server
-        - mariadb-client
+  #  #https://gist.github.com/pogorelov-ss/41893e17c7c4776d4d57
+  #  # test SSH agent forwarding
+  #   - shell: echo "Client= [$SSH_CLIENT] Sock= [$SSH_AUTH_SOCK]"
+  #     remote_user: laravel
+  #     register: myecho
+  #   - debug: msg="{{myecho.stdout}}"
+  #   - shell: ssh-add -l
+  #     become: no
+  #     register: myecho
+  #   - debug: msg="{{myecho.stdout}}"
+  #   # - shell: ssh -T -vvvv git@github.com
+  #   #   register: myecho
+  #   # - debug: msg="{{myecho.stdout}}"
 
-    - name: create /var/www/ directory
-      file: dest=/var/www/ state=directory owner=www-data group=www-data mode=0700
-
-   #https://gist.github.com/pogorelov-ss/41893e17c7c4776d4d57
-   # test SSH agent forwarding
-    - shell: echo "Client= [$SSH_CLIENT] Sock= [$SSH_AUTH_SOCK]"
-      remote_user: laravel
-      register: myecho
-    - debug: msg="{{myecho.stdout}}"
-    - shell: ssh-add -l
-      become: no
-      register: myecho
-    - debug: msg="{{myecho.stdout}}"
-    # - shell: ssh -T -vvvv git@github.com
-    #   register: myecho
-    # - debug: msg="{{myecho.stdout}}"
-
-    - name: Get app from Github
-      remote_user: laravel
-      git:
-          repo="{{repo_url}}"
-          dest=repo/myproject.git
-          accept_hostkey=yes
-          force=yes
-          bare=yes
-          update=yes
-          version="{{ git_branch }}"
+  #   - name: Get app from Github
+  #     remote_user: laravel
+  #     git:
+  #         repo="{{repo_url}}"
+  #         dest=repo/myproject.git
+  #         accept_hostkey=yes
+  #         force=yes
+  #         bare=yes
+  #         update=yes
+  #         version="{{ git_branch }}"
           
-    - name: Create project folder
-      remote_user: root
-      file: path=/var/www/{{ project_folder }}
-           owner={{ www_user }}
-           group={{ www_user }}
-           mode=0775
-           state=directory
+  #   - name: Create project folder
+  #     remote_user: root
+  #     file: path=/var/www/{{ project_folder }}
+  #          owner={{ www_user }}
+  #          group={{ www_user }}
+  #          mode=0775
+  #          state=directory
 
-    - name: checkout app to project folder
-      environment:
-          GIT_WORK_TREE: /var/www/{{ project_folder }}
-      shell:
-          git checkout {{ git_branch}} -f
-          chdir=/home/{{base_user}}/repo/myproject.git
+  #   - name: checkout app to project folder
+  #     environment:
+  #         GIT_WORK_TREE: /var/www/{{ project_folder }}
+  #     shell:
+  #         git checkout {{ git_branch}} -f
+  #         chdir=/home/{{base_user}}/repo/myproject.git
 
-    - name: install composer
-      shell: curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-      args:
-        creates: /usr/local/bin/composer
+  #   - name: install composer
+  #     shell: curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+  #     args:
+  #       creates: /usr/local/bin/composer
     
-    - name: composer create-project
-      composer: command=create-project working_dir=/var/www/laravel optimize_autoloader=no
-      become: yes
-      become_user: www-data
-      when: cloned|changed
+  #   - name: composer create-project
+  #     composer: command=create-project working_dir=/var/www/laravel optimize_autoloader=no
+  #     become: yes
+  #     become_user: www-data
+  #     when: cloned|changed
 
-    - name: set APP_DEBUG=false
-      lineinfile: dest=/var/www/laravel/.env regexp='^APP_DEBUG=' line=APP_DEBUG=false
+  #   - name: set APP_DEBUG=false
+  #     lineinfile: dest=/var/www/laravel/.env regexp='^APP_DEBUG=' line=APP_DEBUG=false
 
-    - name: set APP_ENV=production
-      lineinfile: dest=/var/www/laravel/.env regexp='^APP_ENV=' line=APP_ENV=production
+  #   - name: set APP_ENV=production
+  #     lineinfile: dest=/var/www/laravel/.env regexp='^APP_ENV=' line=APP_ENV=production
 
-    - name: Configure nginx
-      template: src=nginx.conf dest=/etc/nginx/sites-available/default
-      notify:
-        - restart php7.1-fpm
-        - restart nginx
+  #   - name: Configure nginx
+  #     template: src=nginx.conf dest=/etc/nginx/sites-available/default
+  #     notify:
+  #       - restart php7.1-fpm
+  #       - restart nginx
 
-  handlers:
-    - name: restart php7.1-fpm
-      service: name=php7.1-fpm state=restarted
+  # handlers:
+  #   - name: restart php7.1-fpm
+  #     service: name=php7.1-fpm state=restarted
 
-    - name: restart nginx
-      service: name=nginx state=restarted
+  #   - name: restart nginx
+  #     service: name=nginx state=restarted
