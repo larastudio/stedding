@@ -76,33 +76,9 @@
   #     shell:
   #         git checkout {{ git_branch}} -f
   #         chdir=/home/{{base_user}}/repo/myproject.git
-
-  #   - name: install composer
-  #     shell: curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-  #     args:
-  #       creates: /usr/local/bin/composer
-    
-  #   - name: composer create-project
-  #     composer: command=create-project working_dir=/var/www/laravel optimize_autoloader=no
-  #     become: yes
-  #     become_user: www-data
-  #     when: cloned|changed
-
+  #         
   #   - name: set APP_DEBUG=false
   #     lineinfile: dest=/var/www/laravel/.env regexp='^APP_DEBUG=' line=APP_DEBUG=false
 
   #   - name: set APP_ENV=production
   #     lineinfile: dest=/var/www/laravel/.env regexp='^APP_ENV=' line=APP_ENV=production
-
-  #   - name: Configure nginx
-  #     template: src=nginx.conf dest=/etc/nginx/sites-available/default
-  #     notify:
-  #       - restart php7.1-fpm
-  #       - restart nginx
-
-  # handlers:
-  #   - name: restart php7.1-fpm
-  #     service: name=php7.1-fpm state=restarted
-
-  #   - name: restart nginx
-  #     service: name=nginx state=restarted
