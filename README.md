@@ -17,31 +17,6 @@ To run Ansible Playbooks properly on Ubuntu 16.0.4 we need to setup a sudo user 
 
 *NB* Adding Sudo user is in progress in the Playbooks 
 
-### Setup Sudo User laravel
-Log into your remote server as root using
-````
-ssh root@ip
-````
-Then add a new sudo user:
-````
-adduser laravel
-gpasswd -a laravel sudo
-````
-#### Public Key Addition to Authorized Keys
-Then add your own public key to the authorized keys for your user laravel:
-````
-su laravel
-cd
-mkdir .ssh
-chmod 700 .ssh
-nano .ssh/authorized_keys
-`````
-add key from local box cat ~/.ssh/id_rsa.pub and exit twice to log off the box
-````
-chmod 600 .ssh/authorized_keys
-exit
-exit
-````
 ### Block Root SSH Access
 Now on your local box do the following:
 ````
