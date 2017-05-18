@@ -1,4 +1,4 @@
-php_memory_limit: "256"
+php_memory_limit: "512M"
 php_max_execution_time: "90"
 php_upload_max_filesize: "256M"
 php_packages:
@@ -15,6 +15,7 @@ php_packages:
   - php-mcrypt
   - php-pdo
   - php-xml
+php_webserver_daemon: "nginx"
 
 mysql_root_password: super-secure-password
 mysql_databases:
