@@ -7,14 +7,12 @@ php_packages:
   - php-cli
   - php-common
   - php-curl
-  - php-devel
   - php-fpm
   - php-gd
   - php-intl
   - php-mbstring
   - php-mcrypt
   - php-pdo
-  - php-pecl-apcu
   - php-xml
 
 mysql_root_password: super-secure-password

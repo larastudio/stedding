@@ -32,7 +32,7 @@
   vars_files:
     - vars/main.yml
   roles: 
-  - nginx
+  - { role: geerlingguy.nginx }
   - {role: geerlingguy.php }
   - {role: geerlingguy.mysql }
   - { role: geerlingguy.php-mysql }
