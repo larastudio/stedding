@@ -29,13 +29,16 @@
 - name: LEMP Provisioning
   hosts: web
   user: root
+  vars_files:
+    - vars/main.yml
   roles: 
   - nginx
-  - itcraftsmanpl.php7
-  - geerlingguy.memcached 
-  - geerlingguy.git
-  - geerlingguy.composer
-  - tersmitten.htop
+  - {role: geerlingguy.php }
+  - {role: geerlingguy.mysql }
+  - { role: geerlingguy.php-mysql }
+  - {role: geerlingguy.memcached }
+  - {role: geerlingguy.git }
+  - {role: geerlingguy.composer }
 
   #  #https://gist.github.com/pogorelov-ss/41893e17c7c4776d4d57
   #  # test SSH agent forwarding
