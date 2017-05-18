@@ -3,6 +3,7 @@ php_max_execution_time: "90"
 php_upload_max_filesize: "256M"
 php_packages:
   - php
+  - php-apcu
   - php-cgi
   - php-cli
   - php-common
