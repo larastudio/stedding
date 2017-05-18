@@ -8,6 +8,7 @@ Again, this is still a work in progress. So use it wisely and backup when possib
 * [Digital Ocean Sudo User Setup](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-14-04)
 * [Digital Ocean Basic PHP App Setup](https://www.digitalocean.com/community/tutorials/how-to-deploy-a-basic-php-application-using-ansible-on-ubuntu-14-04)
 * [Pogorelov-SS' Github Private Repo Clone Gist](https://gist.github.com/pogorelov-ss/41893e17c7c4776d4d57)
+* Geerlingguy Packages
 
 ## Local Box Requirements
 You need to have Ansible installed on your local computer. This really differs from box to box See [Ansible Documents](http://docs.ansible.com/ansible/intro_installation.html) for instructions. 
@@ -89,6 +90,7 @@ The current yaml playbook will install the following packages:
 * git
 * mcrypt
 * nginx
+* memcached
 * php7.1-cli
 * php7.1-common
 * php7.1-curl
