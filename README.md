@@ -80,8 +80,9 @@ xxx.xxx.xx.xxx | SUCCESS => {
 ### Run Playbook
 Then to run the script use the following:
 ````
-ansible-playbook server.yml --ask-sudo-pass
+ansible-playbook server.yml
 ````
+This is run as root in most of our cases to `--ask-sudo-pass` is not added here.
 ## Server Packages
 The current yaml playbook will install the following packages:
 
