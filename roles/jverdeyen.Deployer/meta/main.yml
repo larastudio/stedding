@@ -1,0 +1,16 @@
+# file: nginx/meta/main.yml
+
+galaxy_info:
+  author: Joeri Verdeyen
+  company: jverdeyen.be
+  description: An Ansible role to install deployer.in
+  min_ansible_version: 1.4
+  license: MIT
+  platforms:
+  - name: Ubuntu
+    versions:
+    - all
+  categories:
+  - system
+
+dependencies: []
