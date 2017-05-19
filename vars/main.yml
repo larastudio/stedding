@@ -1,20 +1,29 @@
 php_memory_limit: "512M"
 php_max_execution_time: "90"
 php_upload_max_filesize: "256M"
-php_packages:
-  - php
-  - php-apcu
-  - php-cgi
-  - php-cli
-  - php-common
-  - php-curl
-  - php-fpm
-  - php-gd
-  - php-intl
+php_version: "7.1"
+php_packages_state: latest
+pphp_packages:
+  - php7.1-apcu
+  - php7.1-common
+  - php7.1-intl
+  - php7.1-cli
+  - php7.1-dev
+  - php7.1-fpm
+  - libpcre3-dev
+  - php7.1-gd
+  - php7.1-curl
+  - php7.1-imap
+  - php7.1-json
   - php-mbstring
-  - php-mcrypt
-  - php-pdo
-  - php-xml
+  - php7.1-mcrypt
+  - php7.1-opcache
+  - php7.1-pdo
+  - php7.1-xml
+  - php7.1-mbstring
+  - php7.1-zip
+  - php7.1-mysql
+php_date_timezone: "Europe/Amsterdam"
 php_webserver_daemon: "nginx"
 
 mysql_root_password: super-secure-password
