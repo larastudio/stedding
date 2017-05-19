@@ -85,13 +85,14 @@ Then to run the script use the following:
 ````
 ansible-playbook server.yml
 ````
-This is run as root in most of our cases to `--ask-sudo-pass` is not added here.
+This is run as root in most of our cases `--ask-sudo-pass` is not added here.
 ## Server Packages
 The current yaml playbook will install the following packages:
 
 * git
 * mcrypt
 * nginx
+* composer
 * memcached
 * php7.1-cli
 * php7.1-common
