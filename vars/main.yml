@@ -25,6 +25,7 @@ php_packages:
   - php7.1-mysql
 php_date_timezone: "Europe/Amsterdam"
 php_webserver_daemon: "nginx"
+php_fpm_daemon: php7.1-fpm
 
 mysql_root_password: super-secure-password
 mysql_databases:
