@@ -3,7 +3,7 @@ php_max_execution_time: "90"
 php_upload_max_filesize: "256M"
 php_version: "7.1"
 php_packages_state: latest
-pphp_packages:
+php_packages:
   - php7.1-apcu
   - php7.1-common
   - php7.1-intl
