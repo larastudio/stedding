@@ -14,7 +14,10 @@ Again, this is still a work in progress. So use it wisely and backup when possib
 You need to have Ansible installed on your local computer. This really differs from box to box See [Ansible Documents](http://docs.ansible.com/ansible/intro_installation.html) for instructions. 
 
 ## Remote Server Preparations
-To run Ansible Playbooks properly on *Ubuntu 16.0.4* we need to setup a sudo user and make sure Python and some other packages are available so Ansible can run. The setting up of a sudo user and adding of the SSH keys for it can be done following the instructions below. This has been taken care of. All you need is root access to the Ubuntu 16.0.4 box.
+To run Ansible Playbooks properly on *Ubuntu 16.0.4* we need to setup a sudo user and make sure Python and some other packages are available so Ansible can run. The setting up of a sudo user and adding of the SSH keys has been taken care of. All you need is root access to the Ubuntu 16.0.4 box.
+
+## Stedding Vars
+Do not forget to adjust the vars in `grousp_var/all` and or `vars/mainyml` where need be. Not all will have to be adjusted perhaps but some will have to. This is besides the addition of the hosts file as will be mentioned later on.
 
 ### Optionally Block Root SSH Access
 If at a later stage you would like to shut down ssh access for root on your local box do the following:
