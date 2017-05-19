@@ -8,18 +8,16 @@ Again, this is still a work in progress. So use it wisely and backup when possib
 * [Digital Ocean Sudo User Setup](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-14-04)
 * [Digital Ocean Basic PHP App Setup](https://www.digitalocean.com/community/tutorials/how-to-deploy-a-basic-php-application-using-ansible-on-ubuntu-14-04)
 * [Pogorelov-SS' Github Private Repo Clone Gist](https://gist.github.com/pogorelov-ss/41893e17c7c4776d4d57)
-* Geerlingguy Packages
+* [Geerlingguy](https://github.com/geerlingguy) Packages
 
 ## Local Box Requirements
 You need to have Ansible installed on your local computer. This really differs from box to box See [Ansible Documents](http://docs.ansible.com/ansible/intro_installation.html) for instructions. 
 
 ## Remote Server Preparations
-To run Ansible Playbooks properly on Ubuntu 16.0.4 we need to setup a sudo user and make sure Python and some other packages are available so Ansible can run. The setting up of a sudo user and adding of the SSH keys for it can be done following the instructions below. In the future we will integrate this in a shell script.
+To run Ansible Playbooks properly on *Ubuntu 16.0.4* we need to setup a sudo user and make sure Python and some other packages are available so Ansible can run. The setting up of a sudo user and adding of the SSH keys for it can be done following the instructions below. This has been taken care of. All you need is root access to the Ubuntu 16.0.4 box.
 
-*NB* Adding Sudo user is in progress in the Playbooks 
-
-### Block Root SSH Access
-Now on your local box do the following:
+### Optionally Block Root SSH Access
+If at a later stage you would like to shut down ssh access for root on your local box do the following:
 ````
 ssh laravel@ip
 ````
@@ -109,5 +107,5 @@ The current yaml playbook will install the following packages:
 * mariadb-server
 * mariadb-client
 
-### Git Clone
-It will also add a github repository of choice to a location of choice.
+### Deployment
+Deployment script using [Deployer.org](https://deployer.org/) will probably be added to repo at a later stage.
