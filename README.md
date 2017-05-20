@@ -14,9 +14,9 @@ Again, this is still a work in progress. So use it wisely and backup when possib
 You need to have Ansible installed on your local computer. This really differs from box to box See [Ansible Documents](http://docs.ansible.com/ansible/intro_installation.html) for instructions. 
 
 ## Remote Server Preparations
-To run Ansible Playbooks properly on *Ubuntu 16.0.4* we need to setup a sudo user and make sure Python and some other packages are available so Ansible can run. The setting up of a sudo user and adding of the SSH keys has been taken care of. All you need is root access to the Ubuntu 16.0.4 box.
+To run Ansible Playbooks properly on *Ubuntu 16.0.4* we need to setup a sudo user and make sure Python and some other packages are available so Ansible can run. The setting up of a sudo user and adding of the SSH keys has been taken care of. So is the adding of Python. All you need is root access to the Ubuntu 16.0.4 box. Preferably using an SSH key.
 
-## Stedding Vars
+## Stedding Variables
 Do not forget to adjust the vars in `grousp_var/all` and or `vars/mainyml` where need be. Not all will have to be adjusted perhaps but some will have to. This is besides the addition of the hosts file as will be mentioned later on.
 
 ### Optionally Block Root SSH Access
@@ -93,24 +93,30 @@ The current yaml playbook will install the following packages:
 * mcrypt
 * nginx
 * composer
+* mariadb
 * memcached
-* php7.1-cli
+
+Current list of PHP packages is pretty large at the moment and not all are needed to run Laravel. In the future some of these packages may be removed. Here is the current list of PHP packages that will be installed:
+
+* php7.1-apcu
 * php7.1-common
-* php7.1-curl
+* php7.1-intl
+* php7.1-cli
 * php7.1-dev
 * php7.1-fpm
+* libpcre3-dev
 * php7.1-gd
-* php7.1-intl
+* php7.1-curl
+* php7.1-imap
 * php7.1-json
-* php7.1-mbstring
+* php-mbstring
 * php7.1-mcrypt
-* php7.1-mysql
 * php7.1-opcache
+* php7.1-pdo
 * php7.1-xml
-* php7.1-xmlrpc
+* php7.1-mbstring
 * php7.1-zip
-* mariadb-server
-* mariadb-client
+* php7.1-mysql
 
 ### Deployment
-Deployment script using [Deployer.org](https://deployer.org/) will probably be added to repo at a later stage.
+Deployment script using [Deployer.org](https://deployer.org/) has been added as a role to this Ansible package, but it has not been included in a Playbook as of yet as it is outdated and needs tweaks as well as testing.
