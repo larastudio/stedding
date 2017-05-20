@@ -21,29 +21,6 @@ To run Ansible Playbooks properly on *Ubuntu 16.0.4* we need to setup a sudo use
 ## Stedding Variables
 Do not forget to adjust the vars in `grousp_var/all` and or `vars/mainyml` where need be. Not all will have to be adjusted perhaps but some will have to. This is besides the addition of the hosts file as will be mentioned later on.
 
-### Optionally Block Root SSH Access
-If at a later stage you would like to shut down ssh access for root on your local box do the following:
-````
-ssh laravel@ip
-````
-Then on the remote do:
-````
-sudo su
-nano /etc/ssh/sshd_config
-````
-Make sure you set root access to no to secure the box
-````
-PermitRootLogin no
-````
-Then you need to restart the SSH server:
-````
-service ssh restart
-````
-And log off as root and exit box as laravel:
-````
-exit
-exit
-````
 ## Local Ansible Config Setup
 
 We expect you to have installed Ansible on your own control box already. If not check out Ansible for [instructions](http://docs.ansible.com/ansible/intro_installation.html). 
