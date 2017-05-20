@@ -10,6 +10,7 @@ Again, this is still a work in progress. So use it wisely and backup when possib
 * [Pogorelov-SS' Github Private Repo Clone Gist](https://gist.github.com/pogorelov-ss/41893e17c7c4776d4d57)
 * [Geerlingguy Packages](https://github.com/geerlingguy)
 * [Ansible Deployer](https://github.com/jverdeyen/ansible-deployer-in)
+* [Ansible Users](https://github.com/singleplatform-eng/ansible-users)
 
 ## Local Box Requirements
 You need to have Ansible installed on your local computer. This really differs from box to box See [Ansible Documents](http://docs.ansible.com/ansible/intro_installation.html) for instructions. 
