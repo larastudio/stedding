@@ -37,3 +37,20 @@ mysql_users:
     host: "%"
     password: similarly-secure-password
     priv: "example_db.*:ALL"
+
+nginx_remove_default_vhost: true
+nginx_vhosts:
+  - listen: "80 default_server"
+    server_name: "larastud.io"
+    root: "/var/www/larastud.io"
+    index: "index.php index.html index.htm"
+    state: "present"
+    template: "{{ nginx_vhost_template }}"
+    extra_parameters: |
+      location ~ \.php$ {
+          fastcgi_split_path_info ^(.+\.php)(/.+)$;
+          fastcgi_pass unix:/var/run/php/php7.1-fpm.sock;
+          fastcgi_index index.php;
+          fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+          include fastcgi_params;
+      }
