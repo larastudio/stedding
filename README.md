@@ -158,4 +158,8 @@ mysql_users:
 More details will most probably be added at a later stage.
 
 ### Deployment
-Deployment script using [Deployer.org](https://deployer.org/) has been added as a role to this Ansible package. It is using the latest role version that is available on Github. The actual command to install the Laravel necessary files by Deployer has not been added as of yet.
+Deployment script using [Deployer.org](https://deployer.org/) has been added as a role to this Ansible package. It is using the latest role version that is available on Github. The actual command to install the Laravel necessary files by Deployer:
+````
+dep init -t Laravel
+````
+has not been added as of yet.
