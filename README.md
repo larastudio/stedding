@@ -56,15 +56,15 @@ ansible-playbook server.yml
 ````
 This is run as root in most of our cases `--ask-sudo-pass` is not added here.
 ## Server Packages
-The current yaml playbook will install the following packages:
+The current Ansible playbooks contain all the necessary packages to run a Laravel app and some more besides that. Here are all the packages besides PHP 7.1:
 
 * git
-* mcrypt
 * nginx
 * composer
 * mariadb
 * memcached
 
+#### PHP Packages
 Current list of PHP packages is pretty large at the moment and not all are needed to run Laravel. In the future some of these packages may be removed. Here is the current list of PHP packages that will be installed:
 
 * php7.1-apcu
@@ -88,4 +88,4 @@ Current list of PHP packages is pretty large at the moment and not all are neede
 * php7.1-mysql
 
 ### Deployment
-Deployment script using [Deployer.org](https://deployer.org/) has been added as a role to this Ansible package, but it has not been included in a Playbook as of yet as it is outdated and needs tweaks as well as testing.
+Deployment script using [Deployer.org](https://deployer.org/) has been added as a role to this Ansible package. It is using the latest role version that is available on Github. The actual command to install the Laravel necessary files by Deployer has not been added as of yet.
