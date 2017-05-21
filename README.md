@@ -18,6 +18,7 @@ To run Ansible Playbooks properly on *Ubuntu 16.0.4* we need to setup a sudo use
 * Sudo user Creation
 * Web user Creation
 * LEMP Provisioning
+* Laravel Homebase Setup
 
 ## Roles
 
