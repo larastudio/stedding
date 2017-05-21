@@ -19,7 +19,7 @@ You need to have Ansible installed on your local computer. This really differs f
 To run Ansible Playbooks properly on *Ubuntu 16.0.4* we need to setup a sudo user and make sure Python and some other packages are available so Ansible can run. The setting up of a sudo user and adding of the SSH keys has been taken care of. So is the adding of Python. All you need is root access to the Ubuntu 16.0.4 box. Preferably using an SSH key.
 
 ## Stedding Variables
-Do not forget to adjust the vars in `grousp_var/all` and or `vars/mainyml` where need be. Not all will have to be adjusted perhaps but some will have to. This is besides the addition of the hosts file as will be mentioned later on.
+Do not forget to adjust the vars in `grousp_var/all` and or `vars/mainyml` where need be. Not all will have to be adjusted perhaps but some will have to. This is besides the addition of the hosts file as will be mentioned later on. The variables in `vars/main.yml` are for setting up PHP, MySQL and Nginx details based on Geerlingguy roles. The variables in `grousp_var/all` are for the user only at the moment. Might merge all variables some time soon.
 
 ## Local Ansible Config Setup
 
