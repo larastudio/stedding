@@ -21,19 +21,13 @@ To run Ansible Playbooks properly on *Ubuntu 16.0.4* we need to setup a sudo use
 
 ## Roles
 
-* [Geerlingguy Packages](https://github.com/geerlingguy)
-
-````
-roles: 
-  - { role: geerlingguy.nginx }
-  - {role: geerlingguy.php }
-  - {role: geerlingguy.mysql }
-  - { role: geerlingguy.php-mysql }
-  - {role: geerlingguy.memcached }
-  - {role: geerlingguy.git }
-  - {role: geerlingguy.composer }
-````
-
+* [geerlingguy.nginx](https://github.com/geerlingguy/ansible-role-nginx)
+* [geerlingguy.php](https://github.com/geerlingguy/ansible-role-php)
+* [geerlingguy.mysql](https://github.com/geerlingguy/ansible-role-mysql)
+* [geerlingguy.php-mysql](https://github.com/geerlingguy/ansible-role-php-mysql)
+* [geerlingguy.memcached](https://github.com/geerlingguy/ansible-role-memcached)
+* [geerlingguy.git](https://github.com/geerlingguy/ansible-role-git)
+* [geerlingguy.composer](https://github.com/geerlingguy/ansible-role-composer)
 * [Ansible Deployer](https://github.com/jverdeyen/ansible-deployer-in) - not in use as of yet
 * [Ansible Users](https://github.com/singleplatform-eng/ansible-users) - not in use as of yet
 
