@@ -139,5 +139,23 @@ php_fpm_daemon: php7.1-fpm
 ##### PHP Packages
 Current list of PHP packages as listed above is pretty large at the moment and not all are needed to run Laravel. In the future some of these packages may be removed.
 
+#### MySQL
+
+The MySQL details added to `vars/main.yml` so far are only for adding a dummy database:
+````
+mysql_root_password: super-secure-password
+mysql_databases:
+  - name: example_db
+    encoding: latin1
+    collation: latin1_general_ci
+mysql_users:
+  - name: example_user
+    host: "%"
+    password: similarly-secure-password
+    priv: "example_db.*:ALL"
+````
+
+More details will most probably be added at a later stage.
+
 ### Deployment
 Deployment script using [Deployer.org](https://deployer.org/) has been added as a role to this Ansible package. It is using the latest role version that is available on Github. The actual command to install the Laravel necessary files by Deployer has not been added as of yet.
