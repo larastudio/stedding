@@ -11,7 +11,7 @@
     - name: Add repository for PHP 7.
       apt_repository: repo='ppa:ondrej/php'
 
-- name: User Creation
+- name: Sudo user Creation
   hosts: web
   remote_user: root
   tasks:
@@ -24,6 +24,23 @@
           shell=/bin/bash
           comment="Comment"
     - name: Set up authorized keys for the sudo user
+      authorized_key: 
+        user: "{{base_user}}"
+        key: "{{github_keys}}"
+
+- name: Web user creation
+  hosts: web
+  remote_user: root
+  tasks:
+    - name: create web user
+      user: name="web"
+          state=present
+          createhome=yes
+          groups="www-data"
+          append=yes
+          shell=/bin/bash
+          comment="Comment"
+    - name: Set up authorized keys for the web user
       authorized_key: 
         user: "{{base_user}}"
         key: "{{github_keys}}"
