@@ -90,7 +90,7 @@ nginx_remove_default_vhost: true
 nginx_vhosts:
   - listen: "80 default_server"
     server_name: "larastud.io"
-    root: "/var/www/larastud.io"
+    root: "/var/www/{{domain}}/public"
     index: "index.php index.html index.htm"
     state: "present"
     template: "{{ nginx_vhost_template }}"
