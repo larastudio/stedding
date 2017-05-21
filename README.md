@@ -11,6 +11,7 @@ Again, this is still a work in progress. So use it wisely and backup when possib
 * [Geerlingguy Packages](https://github.com/geerlingguy)
 * [Ansible Deployer](https://github.com/jverdeyen/ansible-deployer-in)
 * [Ansible Users](https://github.com/singleplatform-eng/ansible-users)
+* [Gist with useful setup tips](https://gist.github.com/jasperf/0be4439bbda9a324dd24e7300f357eb4)
 
 ## Local Box Requirements
 You need to have Ansible installed on your local computer. This really differs from box to box See [Ansible Documents](http://docs.ansible.com/ansible/intro_installation.html) for instructions. 
