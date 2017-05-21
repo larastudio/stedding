@@ -4,20 +4,19 @@ Stedding is a minimalistic LEMP Stack setup for Laravel *in progress*. It facili
 ## Note
 Again, this is still a work in progress. So use it wisely and backup when possible. Better still to test on a barebone server and send in pull requests :)
 
-## Sources
-* [Digital Ocean Sudo User Setup](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-14-04)
-* [Digital Ocean Basic PHP App Setup](https://www.digitalocean.com/community/tutorials/how-to-deploy-a-basic-php-application-using-ansible-on-ubuntu-14-04)
-* [Pogorelov-SS' Github Private Repo Clone Gist](https://gist.github.com/pogorelov-ss/41893e17c7c4776d4d57)
-* [Geerlingguy Packages](https://github.com/geerlingguy)
-* [Ansible Deployer](https://github.com/jverdeyen/ansible-deployer-in)
-* [Ansible Users](https://github.com/singleplatform-eng/ansible-users)
-* [Gist with useful setup tips](https://gist.github.com/jasperf/0be4439bbda9a324dd24e7300f357eb4)
-
 ## Local Box Requirements
 You need to have Ansible installed on your local computer. This really differs from box to box See [Ansible Documents](http://docs.ansible.com/ansible/intro_installation.html) for instructions. 
 
+## Roles
+
+* [Geerlingguy Packages](https://github.com/geerlingguy)
+* [Ansible Deployer](https://github.com/jverdeyen/ansible-deployer-in)
+* [Ansible Users](https://github.com/singleplatform-eng/ansible-users)
+
 ## Remote Server Preparations
 To run Ansible Playbooks properly on *Ubuntu 16.0.4* we need to setup a sudo user and make sure Python and some other packages are available so Ansible can run. The setting up of a sudo user and adding of the SSH keys has been taken care of. So is the adding of Python. All you need is root access to the Ubuntu 16.0.4 box. Preferably using an SSH key.
+
+**NB** [Gist with useful setup tips](https://gist.github.com/jasperf/0be4439bbda9a324dd24e7300f357eb4)
 
 ## Stedding Variables
 Do not forget to adjust the vars in `grousp_var/all` and or `vars/mainyml` where need be. Not all will have to be adjusted perhaps but some will have to. This is besides the addition of the hosts file as will be mentioned later on. The variables in `vars/main.yml` are for setting up PHP, MySQL and Nginx details based on Geerlingguy roles. The variables in `grousp_var/all` are for the user only at the moment. Might merge all variables some time soon.
