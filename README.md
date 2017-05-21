@@ -7,19 +7,24 @@ Again, this is still a work in progress. So use it wisely and backup when possib
 ## Local Box Requirements
 You need to have Ansible installed on your local computer. This really differs from box to box See [Ansible Documents](http://docs.ansible.com/ansible/intro_installation.html) for instructions. 
 
+## Remote Server Requirements
+To run Ansible Playbooks properly on *Ubuntu 16.0.4* we need to setup a sudo user and make sure Python and some other packages are available so Ansible can run. The setting up of a sudo user and adding of the SSH keys has been taken care of. So is the adding of Python. All you need is root access to the Ubuntu 16.0.4 box. Preferably using an SSH key.
+
+**NB** [Gist with useful setup tips](https://gist.github.com/jasperf/0be4439bbda9a324dd24e7300f357eb4)
+
 ## Roles
 
 * [Geerlingguy Packages](https://github.com/geerlingguy)
 * [Ansible Deployer](https://github.com/jverdeyen/ansible-deployer-in)
 * [Ansible Users](https://github.com/singleplatform-eng/ansible-users)
 
-## Remote Server Preparations
-To run Ansible Playbooks properly on *Ubuntu 16.0.4* we need to setup a sudo user and make sure Python and some other packages are available so Ansible can run. The setting up of a sudo user and adding of the SSH keys has been taken care of. So is the adding of Python. All you need is root access to the Ubuntu 16.0.4 box. Preferably using an SSH key.
-
-**NB** [Gist with useful setup tips](https://gist.github.com/jasperf/0be4439bbda9a324dd24e7300f357eb4)
-
 ## Stedding Variables
-Do not forget to adjust the vars in `grousp_var/all` and or `vars/mainyml` where need be. Not all will have to be adjusted perhaps but some will have to. This is besides the addition of the hosts file as will be mentioned later on. The variables in `vars/main.yml` are for setting up PHP, MySQL and Nginx details based on Geerlingguy roles. The variables in `grousp_var/all` are for the user only at the moment. Might merge all variables some time soon.
+Do not forget to adjust the vars in 
+
+* `grousp_var/all` and or 
+* `vars/mainyml` 
+
+where need be. Not all will have to be adjusted perhaps but some will have to. This is besides the addition of the hosts file as will be mentioned later on. The variables in `vars/main.yml` are for setting up PHP, MySQL and Nginx details based on Geerlingguy roles. The variables in `grousp_var/all` are for the user only at the moment. Might merge all variables some time soon.
 
 ## Local Ansible Config Setup
 
@@ -55,13 +60,17 @@ ansible-playbook server.yml
 ````
 This is run as root in most of our cases `--ask-sudo-pass` is not added here.
 ## Server Packages
-The current Ansible playbooks contain all the necessary packages to run a Laravel app and some more besides that. Here are all the packages besides PHP 7.1:
+The current Ansible playbooks contain all the necessary packages to run a Laravel app and some more besides that. Here are all the packages:
 
 * git
 * nginx
 * composer
+* php 7.1
 * mariadb
 * memcached
+
+#### Nginx
+Nginx details are stored in `vars/main.yml` . One host for the site being used for testing purposes has been added there. Do change it to work with the domain of your choice.
 
 #### PHP Packages
 Current list of PHP packages is pretty large at the moment and not all are needed to run Laravel. In the future some of these packages may be removed. Here is the current list of PHP packages that will be installed:
