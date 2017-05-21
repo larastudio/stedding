@@ -12,6 +12,13 @@ To run Ansible Playbooks properly on *Ubuntu 16.0.4* we need to setup a sudo use
 
 **NB** [Gist with useful setup tips](https://gist.github.com/jasperf/0be4439bbda9a324dd24e7300f357eb4)
 
+##Playbooks
+
+* Install prerequisites
+* Sudo user Creation
+* Web user Creation
+* LEMP Provisioning
+
 ## Roles
 
 * [Geerlingguy Packages](https://github.com/geerlingguy)
