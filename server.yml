@@ -42,7 +42,7 @@
           comment="Comment"
     - name: Set up authorized keys for the web user
       authorized_key: 
-        user: "{{base_user}}"
+        user: "web"
         key: "{{github_keys}}"
 
 - name: LEMP Provisioning
