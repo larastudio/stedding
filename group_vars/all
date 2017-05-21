@@ -6,3 +6,4 @@ git_branch: master
 base_user: laravel
 www_user: www-data
 project_folder: laravel
+domain: larastud.io
