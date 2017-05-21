@@ -27,8 +27,8 @@ roles:
   - {role: geerlingguy.composer }
 ````
 
-* [Ansible Deployer](https://github.com/jverdeyen/ansible-deployer-in)
-* [Ansible Users](https://github.com/singleplatform-eng/ansible-users)
+* [Ansible Deployer](https://github.com/jverdeyen/ansible-deployer-in) - not in use as of yet
+* [Ansible Users](https://github.com/singleplatform-eng/ansible-users) - not in use as of yet
 
 ## Stedding Variables
 Do not forget to adjust the vars in 
