@@ -15,6 +15,18 @@ To run Ansible Playbooks properly on *Ubuntu 16.0.4* we need to setup a sudo use
 ## Roles
 
 * [Geerlingguy Packages](https://github.com/geerlingguy)
+
+````
+roles: 
+  - { role: geerlingguy.nginx }
+  - {role: geerlingguy.php }
+  - {role: geerlingguy.mysql }
+  - { role: geerlingguy.php-mysql }
+  - {role: geerlingguy.memcached }
+  - {role: geerlingguy.git }
+  - {role: geerlingguy.composer }
+````
+
 * [Ansible Deployer](https://github.com/jverdeyen/ansible-deployer-in)
 * [Ansible Users](https://github.com/singleplatform-eng/ansible-users)
 
@@ -71,6 +83,25 @@ The current Ansible playbooks contain all the necessary packages to run a Larave
 
 #### Nginx
 Nginx details are stored in `vars/main.yml` . One host for the site being used for testing purposes has been added there. Do change it to work with the domain of your choice.
+
+````
+nginx_remove_default_vhost: true
+nginx_vhosts:
+  - listen: "80 default_server"
+    server_name: "larastud.io"
+    root: "/var/www/larastud.io"
+    index: "index.php index.html index.htm"
+    state: "present"
+    template: "{{ nginx_vhost_template }}"
+    extra_parameters: |
+      location ~ \.php$ {
+          fastcgi_split_path_info ^(.+\.php)(/.+)$;
+          fastcgi_pass unix:/var/run/php/php7.1-fpm.sock;
+          fastcgi_index index.php;
+          fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+          include fastcgi_params;
+      }
+````
 
 #### PHP Packages
 Current list of PHP packages is pretty large at the moment and not all are needed to run Laravel. In the future some of these packages may be removed. Here is the current list of PHP packages that will be installed:
