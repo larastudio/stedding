@@ -1,8 +1,9 @@
+php_version: "7.1"
+php_packages_state: latest
+php_use_managed_ini: true
 php_memory_limit: "512M"
 php_max_execution_time: "90"
 php_upload_max_filesize: "256M"
-php_version: "7.1"
-php_packages_state: latest
 php_packages:
   - php7.1-apcu
   - php7.1-common
@@ -27,6 +28,11 @@ php_date_timezone: "Europe/Amsterdam"
 php_webserver_daemon: "nginx"
 php_fpm_daemon: php7.1-fpm
 
+mysql_packages:
+  - mariadb-client
+  - mariadb-server
+  - python-mysqldb
+  
 mysql_root_password: super-secure-password
 mysql_databases:
   - name: example_db
@@ -50,7 +56,7 @@ nginx_vhosts:
       location / {
           try_files $uri $uri/ /index.php$is_args$args;
       }
-      
+
       location ~ \.php$ {
           fastcgi_split_path_info ^(.+\.php)(/.+)$;
           fastcgi_pass unix:/var/run/php/php7.1-fpm.sock;
