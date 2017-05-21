@@ -103,8 +103,41 @@ nginx_vhosts:
       }
 ````
 
-#### PHP Packages
-Current list of PHP packages is pretty large at the moment and not all are needed to run Laravel. In the future some of these packages may be removed. Here is the current list of PHP packages that will be installed:
+#### PHP
+
+Current PHP configuration details added to `vars/main.yml are:
+````
+php_memory_limit: "512M"
+php_max_execution_time: "90"
+php_upload_max_filesize: "256M"
+php_version: "7.1"
+php_packages_state: latest
+php_packages:
+  - php7.1-apcu
+  - php7.1-common
+  - php7.1-intl
+  - php7.1-cli
+  - php7.1-dev
+  - php7.1-fpm
+  - libpcre3-dev
+  - php7.1-gd
+  - php7.1-curl
+  - php7.1-imap
+  - php7.1-json
+  - php-mbstring
+  - php7.1-mcrypt
+  - php7.1-opcache
+  - php7.1-pdo
+  - php7.1-xml
+  - php7.1-mbstring
+  - php7.1-zip
+  - php7.1-mysql
+php_date_timezone: "Europe/Amsterdam"
+php_webserver_daemon: "nginx"
+php_fpm_daemon: php7.1-fpm
+````
+##### PHP Packages
+Current list of PHP packages as listed above is pretty large at the moment and not all are needed to run Laravel. In the future some of these packages may be removed. Here is the current list of PHP packages that will be installed:
 
 * php7.1-apcu
 * php7.1-common
