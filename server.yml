@@ -10,6 +10,8 @@
       changed_when: not python_check.stdout | search('/usr/bin/python')
     - name: Add repository for PHP 7.
       apt_repository: repo='ppa:ondrej/php'
+    - name: Project Folder Creation
+      file: dest=/var/www/{{domain}} mode=0700 state=directory owner=web group=www-data
 
 - name: Sudo user Creation
   hosts: web
@@ -59,8 +61,8 @@
   - {role: geerlingguy.git }
   - {role: geerlingguy.composer }
 
-  #   - name: set APP_DEBUG=false
-  #     lineinfile: dest=/var/www/laravel/.env regexp='^APP_DEBUG=' line=APP_DEBUG=false
+#   - name: set APP_DEBUG=false
+#     lineinfile: dest=/var/www/laravel/.env regexp='^APP_DEBUG=' line=APP_DEBUG=false
 
-  #   - name: set APP_ENV=production
-  #     lineinfile: dest=/var/www/laravel/.env regexp='^APP_ENV=' line=APP_ENV=production
+#   - name: set APP_ENV=production
+#     lineinfile: dest=/var/www/laravel/.env regexp='^APP_ENV=' line=APP_ENV=production
