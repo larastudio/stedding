@@ -47,6 +47,10 @@ nginx_vhosts:
     state: "present"
     template: "{{ nginx_vhost_template }}"
     extra_parameters: |
+      location / {
+          try_files $uri $uri/ /index.php$is_args$args;
+      }
+      
       location ~ \.php$ {
           fastcgi_split_path_info ^(.+\.php)(/.+)$;
           fastcgi_pass unix:/var/run/php/php7.1-fpm.sock;
