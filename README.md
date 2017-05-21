@@ -35,17 +35,6 @@ add php details using your non sudo user, laravel here, and the ip address to yo
 [server]
 xxx.xxx.xx.xxx
 ````
-### SSH Agent Forwarding
-Then make sure SSH agent forwarding is working to forward the SSH key to access the repository. Add the following to `~/.ssh/config`:
-````
-Host *
-  ForwardAgent yes
-````
-I am using * as the Host as called "Laravel" + ip address did not work. May be a configuration issue on my part that can be changed later on. Also, to make sure the ssh agent is running and your ssh key is included you can run:
-````
-eval `ssh-agent -s`
-ssh-add
-`````
 ### Ansible Books Test
 To do a test from your local computer - a MacBook Pro for example - you should run the following command:
 ````
