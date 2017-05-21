@@ -42,46 +42,6 @@
   - {role: geerlingguy.git }
   - {role: geerlingguy.composer }
 
-  #  #https://gist.github.com/pogorelov-ss/41893e17c7c4776d4d57
-  #  # test SSH agent forwarding
-  #   - shell: echo "Client= [$SSH_CLIENT] Sock= [$SSH_AUTH_SOCK]"
-  #     remote_user: laravel
-  #     register: myecho
-  #   - debug: msg="{{myecho.stdout}}"
-  #   - shell: ssh-add -l
-  #     become: no
-  #     register: myecho
-  #   - debug: msg="{{myecho.stdout}}"
-  #   # - shell: ssh -T -vvvv git@github.com
-  #   #   register: myecho
-  #   # - debug: msg="{{myecho.stdout}}"
-
-  #   - name: Get app from Github
-  #     remote_user: laravel
-  #     git:
-  #         repo="{{repo_url}}"
-  #         dest=repo/myproject.git
-  #         accept_hostkey=yes
-  #         force=yes
-  #         bare=yes
-  #         update=yes
-  #         version="{{ git_branch }}"
-          
-  #   - name: Create project folder
-  #     remote_user: root
-  #     file: path=/var/www/{{ project_folder }}
-  #          owner={{ www_user }}
-  #          group={{ www_user }}
-  #          mode=0775
-  #          state=directory
-
-  #   - name: checkout app to project folder
-  #     environment:
-  #         GIT_WORK_TREE: /var/www/{{ project_folder }}
-  #     shell:
-  #         git checkout {{ git_branch}} -f
-  #         chdir=/home/{{base_user}}/repo/myproject.git
-  #         
   #   - name: set APP_DEBUG=false
   #     lineinfile: dest=/var/www/laravel/.env regexp='^APP_DEBUG=' line=APP_DEBUG=false
 
