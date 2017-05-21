@@ -8,7 +8,7 @@ Again, this is still a work in progress. So use it wisely and backup when possib
 You need to have Ansible installed on your local computer. This really differs from box to box See [Ansible Documents](http://docs.ansible.com/ansible/intro_installation.html) for instructions. 
 
 ## Remote Server Requirements
-To run Ansible Playbooks properly on *Ubuntu 16.0.4* we need to setup a sudo user and make sure Python and some other packages are available so Ansible can run. The setting up of a sudo user and adding of the SSH keys has been taken care of. So is the adding of Python. All you need is root access to the Ubuntu 16.0.4 box. Preferably using an SSH key.
+To run Ansible Playbooks properly on *Ubuntu 16.0.4* we need to setup a sudo user and make sure Python and some other packages such as `ppa:ondrej/php` are available so Ansible can run. The setting up of a sudo user and adding of the SSH keys has been taken care of. So is the adding of Python and Ondrej's PHP PPA. All you need is root access to the Ubuntu 16.0.4 box. Preferably using an SSH key.
 
 **NB** [Gist with useful setup tips](https://gist.github.com/jasperf/0be4439bbda9a324dd24e7300f357eb4)
 
@@ -135,6 +135,12 @@ php_packages:
 php_date_timezone: "Europe/Amsterdam"
 php_webserver_daemon: "nginx"
 php_fpm_daemon: php7.1-fpm
+````
+
+To work with PHP 7.1. Ondrej's PHP PPA is added in requirements playbook using:
+````
+- name: Add repository for PHP 7.
+      apt_repository: repo='ppa:ondrej/php'
 ````
 ##### PHP Packages
 Current list of PHP packages as listed above is pretty large at the moment and not all are needed to run Laravel. In the future some of these packages may be removed.
