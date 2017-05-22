@@ -35,7 +35,7 @@ To run Ansible Playbooks properly on *Ubuntu 16.0.4* we need to setup a sudo use
 ## Stedding Variables
 Do not forget to adjust the vars in 
 
-* `grousp_var/all` and or 
+* `grousp_var/all` and 
 * `vars/mainyml` 
 
 where need be. Not all will have to be adjusted perhaps but some will have to. This is besides the addition of the hosts file as will be mentioned later on. The variables in `vars/main.yml` are for setting up PHP, MySQL and Nginx details based on Geerlingguy roles. The variables in `grousp_var/all` are for the user only at the moment. Might merge all variables some time soon.
@@ -164,6 +164,15 @@ mysql_users:
 ````
 
 More details will most probably be added at a later stage.
+
+### Laravel Homebase Setup
+
+To run your Laravel application from a specific project directory, the one added to your Nginx configuration, we have added a separate playbook. One we will expand upon soon with other tasks. For now the project directory is created only using this task:
+```
+  - name: Project Folder Creation
+    file: dest=/var/www/{{domain}} mode=0755 state=directory owner=web group=www-data
+    ````
+The domain can be set in `group_vars/all.
 
 ### Deployment
 Deployment script using [Deployer.org](https://deployer.org/) has been added as a role to this Ansible package. It is using the latest role version that is available on Github. The actual command to install the Laravel necessary files by Deployer:
