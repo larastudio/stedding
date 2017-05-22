@@ -27,12 +27,19 @@ php_packages:
 php_date_timezone: "Europe/Amsterdam"
 php_webserver_daemon: "nginx"
 php_fpm_daemon: php7.1-fpm
+php_conf_paths:
+  - /etc/php/7.1/fpm
+  - /etc/php/7.1/cli
+
+php_extension_conf_paths:
+  - /etc/php/7.1/fpm/conf.d
+  - /etc/php/7.1/cli/conf.d
 
 mysql_packages:
   - mariadb-client
   - mariadb-server
   - python-mysqldb
-  
+
 mysql_root_password: super-secure-password
 mysql_databases:
   - name: example_db
