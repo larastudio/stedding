@@ -90,12 +90,16 @@ Nginx details are stored in `vars/main.yml` . One host for the site being used f
 nginx_remove_default_vhost: true
 nginx_vhosts:
   - listen: "80 default_server"
-    server_name: "larastud.io"
+    server_name: "{{domain}}"
     root: "/var/www/{{domain}}/public"
     index: "index.php index.html index.htm"
     state: "present"
     template: "{{ nginx_vhost_template }}"
     extra_parameters: |
+      location / {
+          try_files $uri $uri/ /index.php$is_args$args;
+      }
+
       location ~ \.php$ {
           fastcgi_split_path_info ^(.+\.php)(/.+)$;
           fastcgi_pass unix:/var/run/php/php7.1-fpm.sock;
@@ -144,6 +148,17 @@ To work with PHP 7.1. Ondrej's PHP PPA is added in requirements playbook using:
 - name: Add repository for PHP 7.
       apt_repository: repo='ppa:ondrej/php'
 ````
+
+And to make sure all the Ubuntu PHP related config files get all the settings we have to add:
+````
+php_conf_paths:
+  - /etc/php/7.1/fpm
+  - /etc/php/7.1/cli
+
+php_extension_conf_paths:
+  - /etc/php/7.1/fpm/conf.d
+  - /etc/php/7.1/cli/conf.d
+````
 ##### PHP Packages
 Current list of PHP packages as listed above is pretty large at the moment and not all are needed to run Laravel. In the future some of these packages may be removed.
 
@@ -170,7 +185,7 @@ More details will most probably be added at a later stage.
 To run your Laravel application from a specific project directory, the one added to your Nginx configuration, we have added a separate playbook. One we will expand upon soon with other tasks. For now the project directory is created only using this task:
 ```
   - name: Project Folder Creation
-    file: dest=/var/www/{{domain}} mode=0755 state=directory owner=web group=www-data
+    file: dest=/var/www/{{domain}} mode=2755 state=directory owner=web group=www-data
 ````
 The domain can be set in `group_vars/all.
 
