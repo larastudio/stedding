@@ -162,9 +162,9 @@ php_extension_conf_paths:
 ##### PHP Packages
 Current list of PHP packages as listed above is pretty large at the moment and not all are needed to run Laravel. In the future some of these packages may be removed.
 
-#### MySQL
+#### MariaDB
 
-The MySQL details added to `vars/main.yml` so far are only for adding a dummy database:
+The MariaDB details added to `vars/main.yml` so far are only for adding a dummy database:
 ````
 mysql_root_password: super-secure-password
 mysql_databases:
@@ -177,6 +177,14 @@ mysql_users:
     password: similarly-secure-password
     priv: "example_db.*:ALL"
 ````
+
+That and for setting the MySQL package up with MariaDB:
+````
+mysql_packages:
+  - mariadb-client
+  - mariadb-server
+  - python-mysqldb
+  ````
 
 More details will most probably be added at a later stage.
 
