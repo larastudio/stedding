@@ -187,7 +187,7 @@ To run your Laravel application from a specific project directory, the one added
   - name: Project Folder Creation
     file: dest=/var/www/{{domain}} mode=2755 state=directory owner=web group=www-data
 ````
-The domain can be set in `group_vars/all.
+The domain can be set in `group_vars/all. [GUID](https://blog.dbrgn.ch/2014/6/17/setting-setuid-setgid-bit-with-ansible/) has been set as well so all files and directories added will all be under group www-data. User web should be used to add files in the project folder preferably as it is the owner of the project directory.
 
 ### Deployment
 Deployment script using [Deployer.org](https://deployer.org/) has been added as a role to this Ansible package. It is using the latest role version that is available on Github. The actual command to install the Laravel necessary files by Deployer:
