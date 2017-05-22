@@ -171,7 +171,7 @@ To run your Laravel application from a specific project directory, the one added
 ```
   - name: Project Folder Creation
     file: dest=/var/www/{{domain}} mode=0755 state=directory owner=web group=www-data
-    ````
+````
 The domain can be set in `group_vars/all.
 
 ### Deployment
