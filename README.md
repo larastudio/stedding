@@ -115,11 +115,14 @@ nginx_vhosts:
 #### Certbot
 Using Geerling's [Certbot role](https://github.com/geerlingguy/ansible-role-certbot) Let's Encrypt's [Certbot](https://certbot.eff.org/) has been added to the server. This allows the site to use Let's Encrypt SSL certificate. This does however not adjust the Nginx's domain configuration to server on 443 and redirect port 80 traffic to port 443. Tweaks for this are being made.
 
-To install the certificate run:
+To install the nginx certificate run:
 ````
-certbot certonly
+apt install python-certbot-nginx
 ````
-You will then get instructions to choose the domain name(s) and to add the webroot where they should be stored.
+You will then be asked to choose a domain. Next, they will ask you to agree with the TOS and install all. You could get this error:
+````
+nginx: [emerg] could not build server_names_hash, you should increase server_names_hash_bucket_size: 64
+````
 #### PHP
 
 Current PHP configuration details added to `vars/main.yml` are:
