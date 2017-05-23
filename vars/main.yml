@@ -71,3 +71,7 @@ nginx_vhosts:
           fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
           include fastcgi_params;
       }
+
+certbot_auto_renew_user: root
+certbot_auto_renew_minute: 20
+certbot_auto_renew_hour: 5
