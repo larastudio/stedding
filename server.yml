@@ -52,6 +52,7 @@
     - vars/main.yml
   roles: 
   - { role: geerlingguy.nginx }
+  - {role: geerlingguy.certbot }
   - {role: geerlingguy.php }
   - {role: geerlingguy.mysql }
   - { role: geerlingguy.php-mysql }
