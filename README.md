@@ -121,8 +121,9 @@ apt install python-certbot-nginx
 ````
 Then you can run:
 ````
-certbot --nginx````
-to start the intallation. You will then be asked to choose a domain. Next, they will ask you to agree with the TOS and install all. 
+certbot --nginx
+````
+to start the installation. You will then be asked to choose a domain. Next, they will ask you to agree with the TOS and install all. 
 
 #### PHP
 
