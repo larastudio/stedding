@@ -23,6 +23,7 @@ To run Ansible Playbooks properly on *Ubuntu 16.0.4* we need to setup a sudo use
 ## Roles
 
 * [geerlingguy.nginx](https://github.com/geerlingguy/ansible-role-nginx)
+* [geerlingguy.certbot](https://github.com/geerlingguy/ansible-role-certbot)
 * [geerlingguy.php](https://github.com/geerlingguy/ansible-role-php)
 * [geerlingguy.mysql](https://github.com/geerlingguy/ansible-role-mysql)
 * [geerlingguy.php-mysql](https://github.com/geerlingguy/ansible-role-php-mysql)
@@ -78,6 +79,7 @@ The current Ansible playbooks contain all the necessary packages to run a Larave
 
 * git
 * nginx
+* certbot
 * composer
 * php 7.1
 * mariadb
@@ -109,6 +111,8 @@ nginx_vhosts:
       }
 ````
 
+#### Certbot
+Using Geerling's [Certbot role](https://github.com/geerlingguy/ansible-role-certbot) Let's Encrypt's [Certbot](https://certbot.eff.org/) has been added to the server. This allows the site to use Let's Encrypt SSL certificate. This does however not adjust the Nginx's domain configuration to server on 443 and redirect port 80 traffic to port 443. Tweaks for this are being made.
 #### PHP
 
 Current PHP configuration details added to `vars/main.yml` are:
