@@ -1,0 +1,11 @@
+---
+- include: include-vars.yml
+
+- include: install-with-package.yml
+  when: not certbot_install_from_source
+
+- include: install-from-source.yml
+  when: certbot_install_from_source
+
+- include: renew-cron.yml
+  when: certbot_auto_renew
