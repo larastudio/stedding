@@ -51,6 +51,7 @@ mysql_users:
     password: similarly-secure-password
     priv: "example_db.*:ALL"
 
+nginx_server_names_hash_bucket_size: "128"
 nginx_remove_default_vhost: true
 nginx_vhosts:
   - listen: "80 default_server"
