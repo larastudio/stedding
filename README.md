@@ -111,6 +111,8 @@ nginx_vhosts:
       }
 ````
 
+**NB** Let's Encrypt details for server content over SSL will be added as soon as possible.
+
 #### Certbot
 Using Geerling's [Certbot role](https://github.com/geerlingguy/ansible-role-certbot) Let's Encrypt's [Certbot](https://certbot.eff.org/) has been added to the server. This allows the site to use Let's Encrypt SSL certificate. This does however not adjust the Nginx's domain configuration to server on 443 and redirect port 80 traffic to port 443. Tweaks for this are being made.
 #### PHP
