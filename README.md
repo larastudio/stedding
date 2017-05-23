@@ -8,7 +8,7 @@ Again, this is still a work in progress. So use it wisely and backup when possib
 You need to have Ansible installed on your local computer. This really differs from box to box See [Ansible Documents](http://docs.ansible.com/ansible/intro_installation.html) for instructions. 
 
 ## Remote Server Requirements
-To run Ansible Playbooks properly on *Ubuntu 16.0.4* we need to setup a sudo user and make sure Python and some other packages such as `ppa:ondrej/php` are available so Ansible can run. The setting up of a sudo user and adding of the SSH keys has been taken care of. So is the adding of Python and Ondrej's PHP PPA. All you need is root access to the Ubuntu 16.0.4 box. Preferably using an SSH key.
+To run Ansible Playbooks properly on *Ubuntu 16.0.4+* we need to setup a sudo user and make sure Python and some other packages such as `ppa:ondrej/php` are available so Ansible can run. The setting up of a sudo user and adding of the SSH keys has been taken care of. So is the adding of Python and Ondrej's PHP PPA. All you need is root access to the Ubuntu 16.0.4 box. Preferably using an SSH key.
 
 **NB** [Gist with useful setup tips](https://gist.github.com/jasperf/0be4439bbda9a324dd24e7300f357eb4)
 
@@ -31,7 +31,6 @@ To run Ansible Playbooks properly on *Ubuntu 16.0.4* we need to setup a sudo use
 * [geerlingguy.git](https://github.com/geerlingguy/ansible-role-git)
 * [geerlingguy.composer](https://github.com/geerlingguy/ansible-role-composer)
 * [Ansible Deployer](https://github.com/jverdeyen/ansible-deployer-in) - not in use as of yet
-* [Ansible Users](https://github.com/singleplatform-eng/ansible-users) - not in use as of yet
 
 ## Stedding Variables
 Do not forget to adjust the vars in 
