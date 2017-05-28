@@ -82,3 +82,10 @@ nodejs_npm_global_packages:
   - name: bower
   - name: grunt
   - name: gulp
+
+# Documentation: https://roots.io/trellis/docs/mail/
+mail_smtp_server: smtp.sendgrid.net:587
+mail_admin: admin@larastud.io
+mail_hostname: larastud.io
+mail_user: larastudio
+mail_password: "{{ vault_mail_password }}" # Define this variable in group_vars/all/vault.yml

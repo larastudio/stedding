@@ -35,6 +35,8 @@ Geerllingguy Roles:
 
 added where possible with `ansible-galaxy install --roles-path . geerlingguy.rolename` inside roles folder.
 
+sSMTP
+* [sSMTP](https://roots.io/trellis/docs/mail/)
 Deployer:
 * [Ansible Deployer](https://github.com/jverdeyen/ansible-deployer-in) - not in use as of yet
 
@@ -255,7 +257,17 @@ nodejs_npm_global_packages:
 ````
 
 Bower and Grunt will probably be removed in the future.
-
+### sSMTP
+Roots Trellis Role added to Stedding. More details will be added and this is still in testing phase. Current vars added are using larastud.io dummy details:
+````
+# Documentation: https://roots.io/trellis/docs/mail/
+mail_smtp_server: smtp.sendgrid.net:587
+mail_admin: admin@larastud.io
+mail_hostname: larastud.io
+mail_user: larastudio
+mail_password: "{{ vault_mail_password }}" # Define this variable in group_vars/all/vault.yml
+````
+Sendgrid is chosen, but other options are available of course.
 ## Laravel Homebase Setup
 
 To run your Laravel application from a specific project directory, the one added to your Nginx configuration, we have added a separate playbook. One we will expand upon soon with other tasks. For now the project directory is created only using this task:
