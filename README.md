@@ -31,7 +31,9 @@ Geerllingguy Roles:
 * [memcached](https://github.com/geerlingguy/ansible-role-memcached)
 * [git](https://github.com/geerlingguy/ansible-role-git)
 * [composer](https://github.com/geerlingguy/ansible-role-composer)
+* [node](https://github.com/geerlingguy/ansible-role-nodejs)
 
+added where possible with `ansible-galaxy install --roles-path . geerlingguy.rolename` inside roles folder
 Deployer:
 * [Ansible Deployer](https://github.com/jverdeyen/ansible-deployer-in) - not in use as of yet
 
@@ -106,7 +108,7 @@ The current Ansible playbooks contain all the following server packages to run a
 *  ngrok
 
 Now of a live server we won't be needing all, but what still needs to be added is:
-* [Node](https://nodejs.org/en/)
+* ~~[Node](https://nodejs.org/en/)~~
 * [Beanstalkd](https://github.com/kr/beanstalkd) Work queue
 * [sSMTP](https://wiki.archlinux.org/index.php/SSMTP)
 
