@@ -59,7 +59,7 @@
   - {role: geerlingguy.memcached }
   - {role: geerlingguy.git }
   - {role: geerlingguy.composer }
-   - {role: geerlingguy.nodejs }
+  - {role: geerlingguy.nodejs }
 
 - name: Laravel Homebase Setup
   hosts: web
