@@ -77,10 +77,11 @@ certbot_auto_renew_user: root
 certbot_auto_renew_minute: 20
 certbot_auto_renew_hour: 5
 
+composer_add_to_path: true
+composer_global_packages: { name: laravel/installer, release: "@stable"}
 composer_home_path: '/home/web/.composer'
 composer_home_owner: web
 composer_home_group: www-data
-composer_add_to_path: true
 
 nodejs_npm_global_packages:
   - name: yarn
