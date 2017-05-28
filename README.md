@@ -74,7 +74,7 @@ ansible-playbook server.yml
 ````
 This is run as root in most of our cases `--ask-sudo-pass` is not added here.
 ## Server Packages
-The current Ansible playbooks contain all the necessary packages to run a Laravel app and some more besides that. Here are all the packages:
+The current Ansible playbooks contain all the following server packages to run a Laravel app:
 
 * git
 * nginx
@@ -84,6 +84,32 @@ The current Ansible playbooks contain all the necessary packages to run a Larave
 * mariadb
 * memcached
 
+### Homestead Server Packes
+Homestead the Vagrant Box Laravel offers all users has the following out of the box:
+* Ubuntu 16.04
+* Git
+* PHP 7.1
+* Nginx
+* MySQL
+* MariaDB
+* Sqlite3
+* Postgres
+* Composer
+* Node (With Yarn, Bower, Grunt, and Gulp)
+* Redis
+* Memcached
+* Beanstalkd
+* Mailhog
+*  ngrok
+
+### Server Packages to be added
+Now of a live server we won't be needing all, but what still needs to be added is:
+* [Node](https://nodejs.org/en/)
+* [Beanstalkd](https://github.com/kr/beanstalkd) Work queue
+* [sSMTP](https://wiki.archlinux.org/index.php/SSMTP)
+
+sSMTP is not used on Homestead, but Mailhog is instead. Mailhog is for SMTP testing and should be used locally only. sSMTP together with Sendgrid, mailgun or Amazon SES works great. 
+MySQL and Sqlite3 won't be added as we will use MariaDB only for database management.
 #### Nginx
 Nginx details are stored in `vars/main.yml` . One host for the site being used for testing purposes has been added there. Do change it to work with the domain of your choice.
 
@@ -219,3 +245,5 @@ Deployment script using [Deployer.org](https://deployer.org/) has been added as 
 dep init -t Laravel
 ````
 has not been added as of yet.
+
+## Todo
