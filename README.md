@@ -245,6 +245,14 @@ mysql_packages:
   ````
 
 More details will most probably be added at a later stage.
+### Composer
+
+Composer added and made sure binary is in directory web user. Path stuff will have to be taken care of manually for now.
+````
+composer_home_path: '/home/web/.composer'
+composer_home_owner: web
+composer_home_group: www-data
+````
 
 ### Nodejs
 Nodejs role is installed and we automatically add the following global packages:
@@ -261,7 +269,7 @@ Bower and Grunt will probably be removed in the future.
 ### sSMTP
 Roots Trellis Role added to Stedding. More details will be added and this is still in testing phase. Current vars added are using larastud.io dummy details:
 ````
-# Documentation: https://roots.io/trellis/docs/mail/
+Documentation: https://roots.io/trellis/docs/mail/
 mail_smtp_server: smtp.sendgrid.net:587
 mail_admin: admin@larastud.io
 mail_hostname: larastud.io
