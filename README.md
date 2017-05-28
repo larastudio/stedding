@@ -108,8 +108,12 @@ Now of a live server we won't be needing all, but what still needs to be added i
 * [Beanstalkd](https://github.com/kr/beanstalkd) Work queue
 * [sSMTP](https://wiki.archlinux.org/index.php/SSMTP)
 
+#### sSMTP
 sSMTP is not used on Homestead, but Mailhog is instead. Mailhog is for SMTP testing and should be used locally only. sSMTP together with Sendgrid, mailgun or Amazon SES works great. 
+#### Database Management
 MySQL and Sqlite3 won't be added as we will use MariaDB only for database management.
+#### DNS
+ngrok is not needed either as DNS management will be done using DNS servers and fixed ip addresses using web servers accessible to all.
 #### Nginx
 Nginx details are stored in `vars/main.yml` . One host for the site being used for testing purposes has been added there. Do change it to work with the domain of your choice.
 
