@@ -37,6 +37,7 @@ added where possible with `ansible-galaxy install --roles-path . geerlingguy.rol
 
 sSMTP
 * [sSMTP](https://roots.io/trellis/docs/mail/)
+
 Deployer:
 * [Ansible Deployer](https://github.com/jverdeyen/ansible-deployer-in) - not in use as of yet
 
