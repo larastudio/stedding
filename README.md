@@ -22,14 +22,17 @@ To run Ansible Playbooks properly on *Ubuntu 16.0.4+* we need to setup a sudo us
 
 ## Roles
 
-* [geerlingguy.nginx](https://github.com/geerlingguy/ansible-role-nginx)
-* [geerlingguy.certbot](https://github.com/geerlingguy/ansible-role-certbot)
-* [geerlingguy.php](https://github.com/geerlingguy/ansible-role-php)
-* [geerlingguy.mysql](https://github.com/geerlingguy/ansible-role-mysql)
-* [geerlingguy.php-mysql](https://github.com/geerlingguy/ansible-role-php-mysql)
-* [geerlingguy.memcached](https://github.com/geerlingguy/ansible-role-memcached)
-* [geerlingguy.git](https://github.com/geerlingguy/ansible-role-git)
-* [geerlingguy.composer](https://github.com/geerlingguy/ansible-role-composer)
+Geerllingguy Roles:
+* [nginx](https://github.com/geerlingguy/ansible-role-nginx)
+* [certbot](https://github.com/geerlingguy/ansible-role-certbot)
+* [php](https://github.com/geerlingguy/ansible-role-php)
+* [mysql](https://github.com/geerlingguy/ansible-role-mysql)
+* [php-mysql](https://github.com/geerlingguy/ansible-role-php-mysql)
+* [memcached](https://github.com/geerlingguy/ansible-role-memcached)
+* [git](https://github.com/geerlingguy/ansible-role-git)
+* [composer](https://github.com/geerlingguy/ansible-role-composer)
+
+Deployer:
 * [Ansible Deployer](https://github.com/jverdeyen/ansible-deployer-in) - not in use as of yet
 
 ## Stedding Variables
