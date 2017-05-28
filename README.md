@@ -238,6 +238,19 @@ mysql_packages:
 
 More details will most probably be added at a later stage.
 
+### Nodejs
+Nodejs role is installed and we automatically add the following global packages:
+
+````
+nodejs_npm_global_packages:
+  - name: yarn
+  - name: Bower
+  - name: Grunt
+  - name: Gulp
+````
+
+Bower and Grunt will probably be removed in the future.
+
 ## Laravel Homebase Setup
 
 To run your Laravel application from a specific project directory, the one added to your Nginx configuration, we have added a separate playbook. One we will expand upon soon with other tasks. For now the project directory is created only using this task:
