@@ -107,7 +107,7 @@ The current Ansible playbooks contain all the following server packages to run a
 * Mailhog
 *  ngrok
 
-Now of a live server we won't be needing all, but what still needs to be added is:
+Now on a live server we won't be needing all, but what still needs to be added is:
 * ~~[Node](https://nodejs.org/en/)~~
 * [Beanstalkd](https://github.com/kr/beanstalkd) Work queue
 * [sSMTP](https://wiki.archlinux.org/index.php/SSMTP)
@@ -119,7 +119,7 @@ MySQL, PostGres and Sqlite3 won't be added as we will use MariaDB only for datab
 #### DNS
 ngrok is not needed either as DNS management will be done using DNS servers and fixed ip addresses using web servers accessible to all.
 ### OS
-Ubuntu 17.04 x64 is the version we use for testing, but Ubuntu 16.0.4 x64 works just fine as well. We will not support lower versions.
+Ubuntu 17.04 x64 is the version we use for testing, but Ubuntu 16.0.4 x64 works just fine as well. We will not support lower versions. We will not support other distributions either.
 
 ### Nginx
 Nginx details are stored in `vars/main.yml` . One host for the site being used for testing purposes has been added there. Do change it to work with the domain of your choice.
