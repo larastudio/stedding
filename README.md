@@ -84,14 +84,14 @@ The current Ansible playbooks contain all the following server packages to run a
 * mariadb
 * memcached
 
-### Homestead Server Packes
-Homestead the Vagrant Box Laravel offers all users has the following out of the box:
+### Server Packages to be added
+[Homestead](https://laravel.com/docs/5.4/homestead), the Vagrant Box Laravel, offers all users has the following out of the box:
 * Ubuntu 16.04
 * Git
 * PHP 7.1
 * Nginx
 * MySQL
-* MariaDB
+* MariaDB 10.1
 * Sqlite3
 * Postgres
 * Composer
@@ -102,7 +102,6 @@ Homestead the Vagrant Box Laravel offers all users has the following out of the 
 * Mailhog
 *  ngrok
 
-### Server Packages to be added
 Now of a live server we won't be needing all, but what still needs to be added is:
 * [Node](https://nodejs.org/en/)
 * [Beanstalkd](https://github.com/kr/beanstalkd) Work queue
@@ -111,7 +110,7 @@ Now of a live server we won't be needing all, but what still needs to be added i
 #### sSMTP
 sSMTP is not used on Homestead, but Mailhog is instead. Mailhog is for SMTP testing and should be used locally only. sSMTP together with Sendgrid, mailgun or Amazon SES works great. 
 #### Database Management
-MySQL and Sqlite3 won't be added as we will use MariaDB only for database management.
+MySQL, PostGres and Sqlite3 won't be added as we will use MariaDB only for database management.
 #### DNS
 ngrok is not needed either as DNS management will be done using DNS servers and fixed ip addresses using web servers accessible to all.
 #### Nginx
