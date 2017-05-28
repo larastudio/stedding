@@ -76,3 +76,9 @@ nginx_vhosts:
 certbot_auto_renew_user: root
 certbot_auto_renew_minute: 20
 certbot_auto_renew_hour: 5
+
+nodejs_npm_global_packages:
+  - name: yarn
+  - name: Bower
+  - name: Grunt
+  - name: Gulp
