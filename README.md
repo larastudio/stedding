@@ -113,7 +113,7 @@ sSMTP is not used on Homestead, but Mailhog is instead. Mailhog is for SMTP test
 MySQL, PostGres and Sqlite3 won't be added as we will use MariaDB only for database management.
 #### DNS
 ngrok is not needed either as DNS management will be done using DNS servers and fixed ip addresses using web servers accessible to all.
-#### Nginx
+### Nginx
 Nginx details are stored in `vars/main.yml` . One host for the site being used for testing purposes has been added there. Do change it to work with the domain of your choice.
 
 ````
@@ -141,7 +141,7 @@ nginx_vhosts:
 
 **NB** Let's Encrypt details for server content over SSL will be added as soon as possible.
 
-#### Certbot
+### Certbot
 Using Geerling's [Certbot role](https://github.com/geerlingguy/ansible-role-certbot) Let's Encrypt's [Certbot](https://certbot.eff.org/) has been added to the server. This allows the site to use Let's Encrypt SSL certificate. This does however not adjust the Nginx's domain configuration to server on 443 and redirect port 80 traffic to port 443. Tweaks for this are being made.
 
 To install the nginx certbot plugin run:
@@ -154,7 +154,7 @@ certbot --nginx
 ````
 to start the installation. You will then be asked to choose a domain. Next, they will ask you to agree with the TOS and install all. 
 
-#### PHP
+### PHP
 
 Current PHP configuration details added to `vars/main.yml` are:
 ````
@@ -204,10 +204,10 @@ php_extension_conf_paths:
   - /etc/php/7.1/fpm/conf.d
   - /etc/php/7.1/cli/conf.d
 ````
-##### PHP Packages
+#### PHP Packages
 Current list of PHP packages as listed above is pretty large at the moment and not all are needed to run Laravel. In the future some of these packages may be removed.
 
-#### MariaDB
+### MariaDB
 
 The MariaDB details added to `vars/main.yml` so far are only for adding a dummy database:
 ````
@@ -233,7 +233,7 @@ mysql_packages:
 
 More details will most probably be added at a later stage.
 
-### Laravel Homebase Setup
+## Laravel Homebase Setup
 
 To run your Laravel application from a specific project directory, the one added to your Nginx configuration, we have added a separate playbook. One we will expand upon soon with other tasks. For now the project directory is created only using this task:
 ```
@@ -242,7 +242,7 @@ To run your Laravel application from a specific project directory, the one added
 ````
 The domain can be set in `group_vars/all`. [GUID](https://blog.dbrgn.ch/2014/6/17/setting-setuid-setgid-bit-with-ansible/) has been set as well so all files and directories added will all be under group www-data. User web should be used to add files in the project folder preferably as it is the owner of the project directory.
 
-### Deployment
+## Deployment
 Deployment script using [Deployer.org](https://deployer.org/) has been added as a role to this Ansible package. It is using the latest role version that is available on Github. The actual command to install the Laravel necessary files by Deployer:
 ````
 dep init -t Laravel
