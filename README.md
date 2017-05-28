@@ -249,9 +249,9 @@ Nodejs role is installed and we automatically add the following global packages:
 ````
 nodejs_npm_global_packages:
   - name: yarn
-  - name: Bower
-  - name: Grunt
-  - name: Gulp
+  - name: bower
+  - name: grunt
+  - name: gulp
 ````
 
 Bower and Grunt will probably be removed in the future.

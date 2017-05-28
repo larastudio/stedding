@@ -79,6 +79,6 @@ certbot_auto_renew_hour: 5
 
 nodejs_npm_global_packages:
   - name: yarn
-  - name: Bower
-  - name: Grunt
-  - name: Gulp
+  - name: bower
+  - name: grunt
+  - name: gulp
