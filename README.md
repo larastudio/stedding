@@ -33,7 +33,8 @@ Geerllingguy Roles:
 * [composer](https://github.com/geerlingguy/ansible-role-composer)
 * [node](https://github.com/geerlingguy/ansible-role-nodejs)
 
-added where possible with `ansible-galaxy install --roles-path . geerlingguy.rolename` inside roles folder
+added where possible with `ansible-galaxy install --roles-path . geerlingguy.rolename` inside roles folder.
+
 Deployer:
 * [Ansible Deployer](https://github.com/jverdeyen/ansible-deployer-in) - not in use as of yet
 
@@ -88,6 +89,7 @@ The current Ansible playbooks contain all the following server packages to run a
 * php 7.1
 * mariadb
 * memcached
+* node
 
 ### Server Packages to be added
 [Homestead](https://laravel.com/docs/5.4/homestead), the Vagrant Box Laravel, offers all users has the following out of the box:
