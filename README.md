@@ -118,6 +118,9 @@ sSMTP is not used on Homestead, but Mailhog is instead. Mailhog is for SMTP test
 MySQL, PostGres and Sqlite3 won't be added as we will use MariaDB only for database management.
 #### DNS
 ngrok is not needed either as DNS management will be done using DNS servers and fixed ip addresses using web servers accessible to all.
+### OS
+Ubuntu 17.04 x64 is the version we use for testing, but Ubuntu 16.0.4 x64 works just fine as well. We will not support lower versions.
+
 ### Nginx
 Nginx details are stored in `vars/main.yml` . One host for the site being used for testing purposes has been added there. Do change it to work with the domain of your choice.
 
