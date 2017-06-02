@@ -252,7 +252,7 @@ composer_add_to_path: true
 ````
 *NB* Composer is added to the web user's path using the web user role
 
-### Email
+### Mail
 To set up your Laravel application to work with Sendgrid for sending out emails which is used in this repo check out [Sendgrid's blog on this](https://sendgrid.com/docs/Integrate/Frameworks/laravel.html) You will need:
 ````
 return array(
@@ -268,6 +268,11 @@ return array(
 in your `app/config/mail.php`
 
 Swiftmail is set up with Composer and should run out of the box.
+````
+composer_global_packages:
+  - { name: laravel/installer }
+  - { name: swiftmailer/swiftmailer }
+````
 
 The server will not be setup to deal with email clients nor will work as an email server. For that we recommend Google Mail.
 ### Nodejs
