@@ -35,8 +35,7 @@ Geerllingguy Roles:
 
 added where possible with `ansible-galaxy install --roles-path . geerlingguy.rolename` inside roles folder.
 
-sSMTP
-* [sSMTP](https://roots.io/trellis/docs/mail/)
+
 
 Deployer:
 * [Ansible Deployer](https://github.com/jverdeyen/ansible-deployer-in) - not in use as of yet
@@ -115,10 +114,10 @@ The current Ansible playbooks contain all the following server packages to run a
 Now on a live server we won't be needing all, but what still needs to be added is:
 * ~~[Node](https://nodejs.org/en/)~~
 * [Beanstalkd](https://github.com/kr/beanstalkd) Work queue
-*  ~~[sSMTP](https://wiki.archlinux.org/index.php/SSMTP)~~
+*  Swiftmailer
+SwiftMailer & Sendgrid
+* [sSMTP](https://roots.io/trellis/docs/mail/)
 
-#### sSMTP
-sSMTP is not used on Homestead, but Mailhog is instead. Mailhog is for SMTP testing and should be used locally only. sSMTP together with Sendgrid, mailgun or Amazon SES works great. 
 #### Database Management
 MySQL, PostGres and Sqlite3 won't be added as we will use MariaDB only for database management.
 #### DNS
@@ -254,6 +253,25 @@ composer_home_group: www-data
 composer_add_to_path: true
 ````
 *NB* Composer is added to the web user's path using the web user role
+
+### Email
+To set up your Laravel application to work with Sendgrid for sending out emails which is used in this repo check out [Sendgrid's blog on this](https://sendgrid.com/docs/Integrate/Frameworks/laravel.html) You will need:
+````
+return array(
+  'driver' => 'smtp',
+  'host' => 'smtp.sendgrid.net',
+  'port' => 587,
+  'from' => array('address' => 'from@example.com', 'name' => 'John Smith'),
+  'encryption' => 'tls',
+  'username' => 'sendgrid_username',
+  'password' => 'sendgrid_password',
+);
+````
+in your `app/config/mail.php`
+
+Swiftmail is set up with Composer and should run out of the box.
+
+The server will not be setup to deal with email clients nor will work as an email server. For that we recommend Google Mail.
 ### Nodejs
 Nodejs role is installed and we automatically add the following global packages:
 
