@@ -79,7 +79,6 @@ certbot_auto_renew_hour: 5
 
 composer_global_packages:
   - { name: laravel/installer }
-  - { name: swiftmailer/swiftmailer }
 composer_home_path: '/home/web/.composer'
 composer_home_owner: web
 composer_home_group: www-data
