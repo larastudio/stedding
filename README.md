@@ -255,7 +255,7 @@ composer_add_to_path: true
 ### Mail
 To set up your Laravel application to work with [Mailgun](https://www.mailgun.com/) for sending out emails which is used in this repo check out this [Laravel document](https://laravel.com/docs/5.4/mail) You will need:
 
-To use the Mailgun driver, first install Guzzle (installed when Laravel was installed using `laravel new`), then set the driver option in your `config/mail.php` configuration file to mailgun. 
+To use the Mailgun driver, first install Guzzle (installed when Laravel was installed using `laravel new` ), then set the driver option in your `config/mail.php` configuration file to mailgun. 
 Next, verify that your `config/services.php` configuration file contains the following options:
 ````
 'mailgun' => [
