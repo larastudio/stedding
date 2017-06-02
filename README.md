@@ -298,3 +298,4 @@ has not been added as of yet.
 * Cerbot tweaks so certificate is added automatically, preferably with templates, if not with Certbot Nginx plugin. 
 * sSMTP configuration so variables can be set properly and test can be done
 * MariaDB database tests
+*  Deployer full integration to set up zero downtime deployment
