@@ -244,7 +244,7 @@ mysql_packages:
 More details will most probably be added at a later stage.
 ### Composer
 
-Composer added and made sure binary is in directory web user.
+Composer is added and binary is put in the directory of the web user. Laravel is also added as a globally required package so it can be used.
 ````
 composer_global_packages:
   - { name: laravel/installer }
