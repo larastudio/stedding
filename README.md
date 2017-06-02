@@ -113,7 +113,7 @@ The current Ansible playbooks contain all the following server packages to run a
 
 Now on a live server we won't be needing all, but what still needs to be added is:
 * ~~[Node](https://nodejs.org/en/)~~
-* [Beanstalkd](https://github.com/kr/beanstalkd) Work queue
+* [Beanstalkd](https://github.com/kr/beanstalkd) Work queue (Redis or Amazon SQS also possible)
 *  ~~[SwiftMailer](http://swiftmailer.org/) & [Mailgun](https://www.mailgun.com/)~~
 
 #### Database Management
