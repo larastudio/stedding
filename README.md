@@ -114,9 +114,7 @@ The current Ansible playbooks contain all the following server packages to run a
 Now on a live server we won't be needing all, but what still needs to be added is:
 * ~~[Node](https://nodejs.org/en/)~~
 * [Beanstalkd](https://github.com/kr/beanstalkd) Work queue
-*  Swiftmailer
-SwiftMailer & Sendgrid
-* [sSMTP](https://roots.io/trellis/docs/mail/)
+*  [SwiftMailer](http://swiftmailer.org/) & [Sendgrid](https://sendgrid.com/)
 
 #### Database Management
 MySQL, PostGres and Sqlite3 won't be added as we will use MariaDB only for database management.
@@ -284,17 +282,7 @@ nodejs_npm_global_packages:
 ````
 
 Bower and Grunt will probably be removed in the future.
-### sSMTP
-Roots Trellis Role added to Stedding. More details will be added and this is still in testing phase. Current vars added are using larastud.io dummy details:
-````
-Documentation: https://roots.io/trellis/docs/mail/
-mail_smtp_server: smtp.sendgrid.net:587
-mail_admin: admin@larastud.io
-mail_hostname: larastud.io
-mail_user: larastudio
-mail_password: "{{ vault_mail_password }}" # Define this variable in group_vars/all/vault.yml
-````
-Sendgrid is chosen, but other options are available of course.
+
 ## Laravel Homebase Setup
 
 To run your Laravel application from a specific project directory, the one added to your Nginx configuration, we have added a separate playbook. One we will expand upon soon with other tasks. For now the project directory is created only using this task:
@@ -314,6 +302,6 @@ has not been added as of yet.
 ## Todo
 
 * Cerbot tweaks so certificate is added automatically, preferably with templates, if not with Certbot Nginx plugin. 
-* sSMTP configuration so variables can be set properly and test can be done
+* SwiftMail tests
 * MariaDB database tests
 *  Deployer full integration to set up zero downtime deployment
