@@ -267,7 +267,7 @@ return array(
 ````
 in your `app/config/mail.php`
 
-Swiftmail - via which the [Laravel Mail API]{https://laravel.com/docs/5.4/mail} does its thin - is set up with Composer and should run out of the box.
+Swiftmail - via which the [Laravel Mail API](https://laravel.com/docs/5.4/mail) does its thin - is set up with Composer and should run out of the box.
 ````
 composer_global_packages:
   - { name: laravel/installer }
