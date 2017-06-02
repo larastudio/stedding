@@ -114,7 +114,7 @@ The current Ansible playbooks contain all the following server packages to run a
 Now on a live server we won't be needing all, but what still needs to be added is:
 * ~~[Node](https://nodejs.org/en/)~~
 * [Beanstalkd](https://github.com/kr/beanstalkd) Work queue
-*  [SwiftMailer](http://swiftmailer.org/) & [Sendgrid](https://sendgrid.com/)
+*  ~~[SwiftMailer](http://swiftmailer.org/) & [Mailgun](https://www.mailgun.com/)~~
 
 #### Database Management
 MySQL, PostGres and Sqlite3 won't be added as we will use MariaDB only for database management.
