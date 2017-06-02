@@ -115,7 +115,7 @@ The current Ansible playbooks contain all the following server packages to run a
 Now on a live server we won't be needing all, but what still needs to be added is:
 * ~~[Node](https://nodejs.org/en/)~~
 * [Beanstalkd](https://github.com/kr/beanstalkd) Work queue
-* [sSMTP](https://wiki.archlinux.org/index.php/SSMTP)
+*  ~~[sSMTP](https://wiki.archlinux.org/index.php/SSMTP) ~~
 
 #### sSMTP
 sSMTP is not used on Homestead, but Mailhog is instead. Mailhog is for SMTP testing and should be used locally only. sSMTP together with Sendgrid, mailgun or Amazon SES works great. 
@@ -151,9 +151,6 @@ nginx_vhosts:
           include fastcgi_params;
       }
 ````
-
-**NB** Let's Encrypt details for server content over SSL will be added as soon as possible.
-
 ### Certbot
 Using Geerling's [Certbot role](https://github.com/geerlingguy/ansible-role-certbot) Let's Encrypt's [Certbot](https://certbot.eff.org/) has been added to the server. This allows the site to use Let's Encrypt SSL certificate. This does however not adjust the Nginx's domain configuration to server on 443 and redirect port 80 traffic to port 443. Tweaks for this are being made.
 
