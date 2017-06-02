@@ -115,7 +115,7 @@ The current Ansible playbooks contain all the following server packages to run a
 Now on a live server we won't be needing all, but what still needs to be added is:
 * ~~[Node](https://nodejs.org/en/)~~
 * [Beanstalkd](https://github.com/kr/beanstalkd) Work queue
-*  ~~[sSMTP](https://wiki.archlinux.org/index.php/SSMTP) ~~
+*  ~~[sSMTP](https://wiki.archlinux.org/index.php/SSMTP)~~
 
 #### sSMTP
 sSMTP is not used on Homestead, but Mailhog is instead. Mailhog is for SMTP testing and should be used locally only. sSMTP together with Sendgrid, mailgun or Amazon SES works great. 
