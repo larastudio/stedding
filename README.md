@@ -253,23 +253,17 @@ composer_add_to_path: true
 *NB* Composer is added to the web user's path using the web user role
 
 ### Mail
-To set up your Laravel application to work with Sendgrid for sending out emails which is used in this repo check out this [Sendgrid's blog](https://sendgrid.com/docs/Integrate/Frameworks/laravel.html) You will need:
-````
-return array(
-  'driver' => 'smtp',
-  'host' => 'smtp.sendgrid.net',
-  'port' => 587,
-  'from' => array('address' => 'from@example.com', 'name' => 'John Smith'),
-  'encryption' => 'tls',
-  'username' => 'sendgrid_username',
-  'password' => 'sendgrid_password',
-);
-````
-in your `app/config/mail.php`
+To set up your Laravel application to work with Mailgun for sending out emails which is used in this repo check out this [Laravel document](https://laravel.com/docs/5.4/mail) You will need:
 
-this way it can interact with the built in Swiftmailer class.
-
-The server will not be setup to deal with email clients nor will work as an email server. For that we recommend Google Mail.
+To use the Mailgun driver, first install Guzzle (installed when Laravel was installed using `laravel new`), then set the driver option in your `config/mail.php` configuration file to mailgun. 
+Next, verify that your `config/services.php` configuration file contains the following options:
+````
+'mailgun' => [
+    'domain' => 'your-mailgun-domain',
+    'secret' => 'your-mailgun-key',
+],
+````
+The server will not be setup to deal with email clients nor will work as an email server. For that we recommend [Google Mail](https://mail.google.com/mail/).
 ### Nodejs
 Nodejs role is installed and we automatically add the following global packages:
 
