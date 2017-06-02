@@ -79,6 +79,7 @@ certbot_auto_renew_hour: 5
 
 composer_global_packages:
   - { name: laravel/installer }
+  - { name: swiftmailer/swiftmailer }
 composer_home_path: '/home/web/.composer'
 composer_home_owner: web
 composer_home_group: www-data
@@ -89,13 +90,3 @@ nodejs_npm_global_packages:
   - name: bower
   - name: grunt
   - name: gulp
-
-# Documentation: https://roots.io/trellis/docs/mail/
-apt_cache_valid_time: 3600 # might be moved to a separe file with some general vars at a later stage
-vault_mail_password: super-secure-password # might be moved to a separe file with some password vars at a later stage
-
-mail_smtp_server: smtp.sendgrid.net:587
-mail_admin: admin@larastud.io
-mail_hostname: larastud.io
-mail_user: larastudio
-mail_password: "{{ vault_mail_password }}" # Define this variable in group_vars/all/vault.yml
