@@ -244,13 +244,16 @@ mysql_packages:
 More details will most probably be added at a later stage.
 ### Composer
 
-Composer added and made sure binary is in directory web user. Path stuff will have to be taken care of manually for now.
+Composer added and made sure binary is in directory web user.
 ````
+composer_global_packages:
+  - { name: laravel/installer }
 composer_home_path: '/home/web/.composer'
 composer_home_owner: web
 composer_home_group: www-data
+composer_add_to_path: true
 ````
-
+*NB* Composer is added to the web user's path using the web user role
 ### Nodejs
 Nodejs role is installed and we automatically add the following global packages:
 

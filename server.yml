@@ -44,6 +44,9 @@
       authorized_key: 
         user: "web"
         key: "{{github_keys}}"
+    - name : Add Composer to path
+      lineinfile: dest=/home/web/.bashrc state=present line='export PATH="$PATH:$HOME/.composer/vendor/bin"'
+
 
 - name: LEMP Provisioning
   hosts: web
