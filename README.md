@@ -253,7 +253,7 @@ composer_add_to_path: true
 *NB* Composer is added to the web user's path using the web user role
 
 ### Mail
-To set up your Laravel application to work with Sendgrid for sending out emails which is used in this repo check out [Sendgrid's blog on this](https://sendgrid.com/docs/Integrate/Frameworks/laravel.html) You will need:
+To set up your Laravel application to work with Sendgrid for sending out emails which is used in this repo check out this [Sendgrid's blog](https://sendgrid.com/docs/Integrate/Frameworks/laravel.html) You will need:
 ````
 return array(
   'driver' => 'smtp',
