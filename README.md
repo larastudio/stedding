@@ -267,12 +267,7 @@ return array(
 ````
 in your `app/config/mail.php`
 
-Swiftmail - via which the [Laravel Mail API](https://laravel.com/docs/5.4/mail) does its thin - is set up with Composer and should run out of the box.
-````
-composer_global_packages:
-  - { name: laravel/installer }
-  - { name: swiftmailer/swiftmailer }
-````
+this way it can interact with the built in Swiftmailer class.
 
 The server will not be setup to deal with email clients nor will work as an email server. For that we recommend Google Mail.
 ### Nodejs
