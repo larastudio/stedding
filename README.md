@@ -59,7 +59,7 @@ nano hosts
 ````
 add php details using your non sudo user, laravel here, and the ip address to your server
 ````
-[server]
+[web]
 xxx.xxx.xx.xxx
 ````
 ### Ansible Books Test
