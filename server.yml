@@ -47,7 +47,6 @@
     - name : Add Composer to path
       lineinfile: dest=/home/web/.bashrc state=present line='export PATH="$PATH:$HOME/.composer/vendor/bin"'
 
-
 - name: LEMP Provisioning
   hosts: web
   user: root
@@ -63,6 +62,7 @@
   - {role: geerlingguy.git }
   - {role: geerlingguy.composer }
   - {role: geerlingguy.nodejs }
+  - {role: deployer }
 
 - name: Laravel Homebase Setup
   hosts: web
