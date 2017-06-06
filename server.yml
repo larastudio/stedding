@@ -16,7 +16,7 @@
   remote_user: root
   tasks:
     - name: create sudo user
-      user: name="{{base_user}}"
+      user: name="{{sudo_user}}"
           state=present
           createhome=yes
           groups="sudo"
