@@ -25,7 +25,7 @@
           comment="Comment"
     - name: Set up authorized keys for the sudo user
       authorized_key: 
-        user: "{{base_user}}"
+        user: "{{sudo_user}}"
         key: "{{github_keys}}"
 
 - name: Web user creation
@@ -33,7 +33,7 @@
   remote_user: root
   tasks:
     - name: create web user
-      user: name="web"
+      user: name="{{web_user}}"
           state=present
           createhome=yes
           groups="www-data"
@@ -42,7 +42,7 @@
           comment="Comment"
     - name: Set up authorized keys for the web user
       authorized_key: 
-        user: "web"
+        user: "{{web_user}}"
         key: "{{github_keys}}"
     - name : Add Composer to path
       lineinfile: dest=/home/web/.bashrc state=present line='export PATH="$PATH:$HOME/.composer/vendor/bin"'
