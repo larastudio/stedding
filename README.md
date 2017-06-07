@@ -1,5 +1,5 @@
 # Stedding
-Stedding is a minimalistic LEMP Stack setup for [Laravel PHP](https://laravel.com/). It facilitates the setting up of Laravel apps on a well prepared VPS using Ansible Playbooks on a [Ubuntu](https://www.ubuntu.com/) server. 
+Stedding is a minimalistic LEMP Stack setup for [Laravel PHP](https://laravel.com/). It facilitates the setting up of Laravel apps on a well prepared [Ubuntu](https://www.ubuntu.com/) server) VPS using Ansible Playbooks. 
 
 ## Note
 Again, this is constantly evolving. So use it wisely and backup when possible.
