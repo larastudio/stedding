@@ -294,15 +294,33 @@ To run your Laravel application from a specific project directory, the one added
 The domain can be set in `group_vars/all`. [GUID](https://blog.dbrgn.ch/2014/6/17/setting-setuid-setgid-bit-with-ansible/) has been set as well so all files and directories added will all be under group www-data. User web should be used to add files in the project folder preferably as it is the owner of the project directory.
 
 ## Deployment
-Deployment script using [Deployer.org](https://deployer.org/) has been added as a role to this Ansible package. It is using the latest role version that is available on Github. The actual command to install the Laravel necessary files by Deployer:
+Deployment script using [Deployer.org](https://deployer.org/) has been added as a role to this Ansible package. It is using the latest role version that is available on Github.  The repository with the deploy.php script that has been tested with the Laravel app Larastudio can be found [here](https://github.com/jasperf/larastudio). Here is the code:
 ````
-dep init -t Laravel
+<?php
+namespace Deployer;
+require 'recipe/laravel.php';
+// Configuration
+// Specify the repository from which to download your project's code.
+// The server needs to have git installed for this to work.
+// If you're not using a forward agent, then the server has to be able to clone
+// your project from this repository.
+set('repository', 'git@github.com:jasperf/larastudio.git');
+set('default_stage', 'production');
+set('git_tty', true); // [Optional] Allocate tty for git on first deployment
+set('ssh_type', 'native');
+// set('writable_mode', 'chmod');
+// set('writable_chmod_mode', '0775');
+// Hosts
+host('larastud.io')
+    ->user('web')
+    ->forwardAgent()
+    ->stage('production')
+    ->set('deploy_path', '/var/www/larastud.io');
 ````
-has not been added as of yet.
+Just add it locally to your Laravel app, make sure your added Deployer locally with composer using `composer global require deployer/deployer`.
 
 ## Todo
 
 * Cerbot tweaks so certificate is added automatically, preferably with templates, if not with Certbot Nginx plugin. 
 * SwiftMail tests
 * MariaDB database tests
-*  Deployer full integration to set up zero downtime deployment
