@@ -214,6 +214,13 @@ php_extension_conf_paths:
 #### PHP Packages
 Current list of PHP packages as listed above is pretty large at the moment and not all are needed to run Laravel. In the future some of these packages may be removed.
 
+#### PHP OpCache
+
+For pre compiling PHP scripts Stedding uses PHP OpCache. For quick emptying OpCache use `/etc/init.d/php7.1-fpm restart` . Read more on it at [Ma.ttias.be](https://ma.ttias.be/how-to-clear-php-opcache/)
+
+### Memcached
+"Free & open source, high-performance, distributed memory object caching system, generic in nature, but intended for use in speeding up dynamic web applications by alleviating database load." More information at their [wiki](https://github.com/memcached/memcached/wiki).
+
 ### MariaDB
 
 The MariaDB details added to `vars/main.yml` so far are only for adding a dummy database:
