@@ -317,7 +317,7 @@ host('larastud.io')
     ->stage('production')
     ->set('deploy_path', '/var/www/larastud.io');
 ````
-Just add it locally to your Laravel app, make sure your added Deployer locally with composer using `composer global require deployer/deployer`.
+Just add it locally to your Laravel app, make sure your added Deployer locally with composer using `composer global require deployer/deployer`. And of course make sure you use your own details.
 
 ## Todo
 
