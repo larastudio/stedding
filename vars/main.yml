@@ -24,7 +24,7 @@ php_packages:
   - php7.1-mbstring
   - php7.1-zip
   - php7.1-mysql
-php_date_timezone: "Asia/Bahrain"
+php_date_timezone: "UTC"
 php_webserver_daemon: "nginx"
 php_fpm_daemon: php7.1-fpm
 php_conf_paths:
