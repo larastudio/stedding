@@ -1,8 +1,8 @@
 # Stedding
-Stedding is a minimalistic LEMP Stack setup for [Laravel PHP](https://laravel.com/) *in progress*. It facilitates the setting up of Laravel apps on a well prepared server using Ansible Playbooks on a [Ubuntu](https://www.ubuntu.com/) server. It provisions your VPS with all the tools necessary to run your Laravel PHP application with ease.
+Stedding is a minimalistic LEMP Stack setup for [Laravel PHP](https://laravel.com/). It facilitates the setting up of Laravel apps on a well prepared VPS using Ansible Playbooks on a [Ubuntu](https://www.ubuntu.com/) server. 
 
 ## Note
-Again, this is still a work in progress. So use it wisely and backup when possible. Better still to test on a barebone server and send in pull requests :)
+Again, this is constantly evolving. So use it wisely and backup when possible.
 
 ## Local Box Requirements
 You need to have Ansible installed on your local computer. This really differs from box to box See [Ansible Documents](http://docs.ansible.com/ansible/intro_installation.html) for instructions. 
@@ -35,13 +35,11 @@ Geerllingguy Roles:
 
 added where possible with `ansible-galaxy install --roles-path . geerlingguy.rolename` inside roles folder.
 
-
-
 Deployer:
-* [Ansible Deployer](https://github.com/jverdeyen/ansible-deployer-in) - not in use as of yet
+* [Ansible Deployer](https://github.com/jverdeyen/ansible-deployer-in)
 
 ## Stedding Variables
-Do not forget to adjust the vars in 
+Do not forget to adjust the vars in:
 
 * `grousp_var/all` and 
 * `vars/mainyml` 
@@ -112,9 +110,7 @@ The current Ansible playbooks contain all the following server packages to run a
 *  ngrok
 
 Now on a live server we won't be needing all, but what still needs to be added is:
-* ~~[Node](https://nodejs.org/en/)~~
 * [Beanstalkd](https://github.com/kr/beanstalkd) Work queue (Redis or Amazon SQS also possible)
-*  ~~[SwiftMailer](http://swiftmailer.org/) & [Mailgun](https://www.mailgun.com/)~~
 
 #### Database Management
 MySQL, PostGres and Sqlite3 won't be added as we will use MariaDB only for database management.
