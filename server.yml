@@ -53,6 +53,7 @@
   vars_files:
     - vars/main.yml
   roles: 
+  - {role: swapfile }
   - { role: geerlingguy.nginx }
   - {role: geerlingguy.certbot }
   - {role: geerlingguy.php }
