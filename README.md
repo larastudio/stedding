@@ -37,6 +37,7 @@ added where possible with `ansible-galaxy install --roles-path . geerlingguy.rol
 
 Deployer:
 * [Ansible Deployer](https://github.com/jverdeyen/ansible-deployer-in)
+* [Swapfile](https://github.com/kamaln7/ansible-swapfile)
 
 ## Stedding Variables
 Do not forget to adjust the vars in:
@@ -186,7 +187,7 @@ php_packages:
   - php7.1-mbstring
   - php7.1-zip
   - php7.1-mysql
-php_date_timezone: "Europe/Amsterdam"
+php_date_timezone: "UTC"
 php_webserver_daemon: "nginx"
 php_fpm_daemon: php7.1-fpm
 ````
@@ -315,6 +316,8 @@ host('larastud.io')
 ````
 Just add it locally to your Laravel app, make sure your added Deployer locally with composer using `composer global require deployer/deployer`. And of course make sure you use your own details.
 
+## Swampfile
+Kamal's [swapfile role](https://github.com/kamaln7/ansible-swapfile) has been added with default configuration. This to add some more RAM in the form of a swapfile which is especially useful when you are using a 512MB Droplet at Digital Ocean for example.
 ## Todo
 
 * Cerbot tweaks so certificate is added automatically, preferably with templates, if not with Certbot Nginx plugin. 
