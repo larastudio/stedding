@@ -1,0 +1,64 @@
+---
+- name: Create Nginx conf for challenges location
+  template:
+    src: acme-challenge-location.conf.j2
+    dest: "{{ nginx_path }}/acme-challenge-location.conf"
+
+- name: Get list of hosts in current Nginx conf
+  shell: |
+    [ ! -f {{ nginx_path }}/sites-enabled/{{ item.key }}.conf ] ||
+    sed -n -e "/listen 80/,/server_name/{s/server_name \(.*\);/\1/p}" {{ nginx_path }}/sites-enabled/{{ item.key }}.conf
+  register: current_hosts
+  changed_when: false
+  when: site_uses_letsencrypt
+  with_dict: "{{ wordpress_sites }}"
+
+- name: Create needed Nginx confs for challenges
+  template:
+    src: nginx-challenge-site.conf.j2
+    dest: "{{ nginx_path }}/sites-available/letsencrypt-{{ item.key }}.conf"
+  register: challenge_site_confs
+  when:
+    - site_uses_letsencrypt
+    - missing_hosts | count
+  with_dict: "{{ wordpress_sites }}"
+
+- name: Enable Nginx sites
+  file:
+    src: "{{ nginx_path }}/sites-available/letsencrypt-{{ item.key }}.conf"
+    dest: "{{ nginx_path }}/sites-enabled/letsencrypt-{{ item.key }}.conf"
+    state: link
+  register: challenge_sites_enabled
+  when:
+    - site_uses_letsencrypt
+    - missing_hosts | count
+  with_dict: "{{ wordpress_sites }}"
+  notify: disable temporary challenge sites
+
+- include: "{{ playbook_dir }}/roles/common/tasks/reload_nginx.yml"
+  when: challenge_site_confs | changed or challenge_sites_enabled | changed
+
+- name: Create test Acme Challenge file
+  shell: touch {{ acme_tiny_challenges_directory }}/ping.txt
+  args:
+    creates: "{{ acme_tiny_challenges_directory }}/ping.txt"
+    warn: false
+
+- name: Test Acme Challenges
+  test_challenges:
+    hosts: "{{ site_hosts }}"
+  register: letsencrypt_test_challenges
+  ignore_errors: true
+  when: site_uses_letsencrypt
+  with_dict: "{{ wordpress_sites }}"
+
+- name: Notify of challenge failures
+  fail:
+    msg: >
+      Could not access the challenge file for the hosts/domains: {{ item.failed_hosts | join(', ') }}.
+      Let's Encrypt requires every domain/host be publicly accessible.
+      Make sure that a valid DNS record exists for {{ item.failed_hosts | join(', ') }} and that they point to this server's IP.
+      If you don't want these domains in your SSL certificate, then remove them from `site_hosts`.
+      See https://roots.io/trellis/docs/ssl for more details.
+  when: not item | skipped and letsencrypt_test_challenges | failed
+  with_items: "{{ letsencrypt_test_challenges.results }}"
