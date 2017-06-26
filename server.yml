@@ -54,12 +54,14 @@
     - vars/main.yml
   roles: 
   - {role: swapfile }
-  - { role: geerlingguy.nginx }
-  - {role: geerlingguy.certbot }
+  # - { role: geerlingguy.nginx }
+  # - {role: geerlingguy.certbot }
   - {role: geerlingguy.php }
   - {role: geerlingguy.mysql }
   - { role: geerlingguy.php-mysql }
   - {role: geerlingguy.memcached }
+  - {role: nginx }
+  - { role: letsencrypt, tags: [letsencrypt], when: sites_using_letsencrypt | count }
   - {role: geerlingguy.git }
   - {role: geerlingguy.composer }
   - {role: geerlingguy.nodejs }
