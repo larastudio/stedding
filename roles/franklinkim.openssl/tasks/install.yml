@@ -1,0 +1,26 @@
+---
+
+- name: Installing packages
+  action: "{{ ansible_pkg_mgr }} pkg={{ item }} state=present"
+  with_items:
+    - openssl
+
+- name: Creating certs dir
+  include: create_dir.yml
+  vars:
+    item: "{{ openssl_certs_path }}"
+    mode: "0755"
+
+- name: Creating keys dir
+  include: create_dir.yml
+  vars:
+    item: "{{ openssl_keys_path }}"
+    mode: "0700"
+
+- name: Creating csrs dir
+  when: openssl_generate_csr
+  include: create_dir.yml
+  vars:
+    item: "{{ openssl_csrs_path }}"
+    mode: "0750"
+

@@ -1,0 +1,31 @@
+---
+
+- include: install.yml
+  tags:
+    - system
+    - openssl
+    - install
+    - openssl-install
+
+- include: config.yml
+  tags:
+    - system
+    - openssl
+    - config
+    - openssl-config
+
+- include: manage.yml
+  tags:
+    - system
+    - openssl
+    - manage
+    - openssl-manage
+
+- include: cacert.yml
+  tags:
+    - system
+    - openssl
+    - cacert
+    - openssl-cacert
+  when: openssl_cacert_import
+
