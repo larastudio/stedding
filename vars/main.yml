@@ -80,8 +80,8 @@ nginx_vhosts:
           include fastcgi_params;
       }
       # certificates for when Let's Encrypt Certbot is not used
-      # ssl_certificate     /etc/ssl/certs/ssl-cert-snakeoil.pem;
-      # ssl_certificate_key /etc/ssl/private/ssl-cert-snakeoil.key;
+      # ssl_certificate /etc/ssl/certs/domain_com-bundle.crt;
+      # ssl_certificate_key /etc/ssl/certs/domain_com.key;
       # ssl_protocols       TLSv1.1 TLSv1.2;
       # ssl_ciphers         HIGH:!aNULL:!MD5;
 
