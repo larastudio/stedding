@@ -324,11 +324,18 @@ Kamal's [swapfile role](https://github.com/kamaln7/ansible-swapfile) has been ad
 * SwiftMail tests
 * MariaDB database tests
 
-## Let's Encryp and Commercial SSL Certificates
+## Let's Encryp or Commercial SSL Certificates
 
 OpenSSL role has been added so self signed certificates can be added when you would like to. Current Stedding setup is aimed at working with Let's Encrypt so this role has not been acitvated.
 
-In the Nginx configuration inside `var/main.yml` a block for a commercial SSL Certificate Block has been added. These will load certificates assuming them to be at that location. Task to add them has not been added yet
+In the Nginx configuration inside `var/main.yml` a block for a commercial SSL Certificate Block has been added. These will load certificates assuming them to be at that location. Task to add them has not been added yet. Paths should be adjusted as per your configuration
+
+````
+  ssl_certificate     /etc/ssl/certs/ssl-cert-snakeoil.pem;
+  ssl_certificate_key /etc/ssl/private/ssl-cert-snakeoil.key;
+  ssl_protocols       TLSv1.1 TLSv1.2;
+  ssl_ciphers         HIGH:!aNULL:!MD5;
+````
 
 Let's Encrypt task for auto renewal:
 ````
