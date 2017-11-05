@@ -59,13 +59,14 @@ nginx_vhosts:
     server_name: "example.com www.example.com"
     return: "301 https://example.com$request_uri"
     filename: "example.com.80.conf"
-  - listen: "80 default_server"
+  - listen: "443 ssl http2"
     server_name: "{{domain}}"
     root: "/var/www/{{domain}}/current/public"
     index: "index.php index.html index.htm"
     state: "present"
     template: "{{ nginx_vhost_template }}"
-    #filename: "example.com.conf" The filename defaults to the first domain in server_name
+    #The filename defaults to the first domain in server_name
+    filename: "example.com.conf" 
     extra_parameters: |
       location / {
           try_files $uri $uri/ /index.php$is_args$args;

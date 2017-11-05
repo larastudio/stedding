@@ -336,8 +336,14 @@ In the Nginx configuration inside `var/main.yml` a block for a commercial SSL Ce
   ssl_protocols       TLSv1.1 TLSv1.2;
   ssl_ciphers         HIGH:!aNULL:!MD5;
 ````
-
-Let's Encrypt task for auto renewal:
+As you will see there are two server blocks. One is for port 80, the second one should be for port 443 and both in different files
+````
+- listen: "80"
+    server_name: "example.com www.example.com"
+    return: "301 https://example.com$request_uri"
+    filename: "example.com.80.conf"
+````
+Let's Encrypt task for auto renewal has also been added and commented out as not everyone will use LE:
 ````
 certbot_auto_renew_user: root
 certbot_auto_renew_minute: 20
