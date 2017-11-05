@@ -79,13 +79,13 @@
 #   - name: set APP_ENV=production
 #     lineinfile: dest=/var/www/laravel/.env regexp='^APP_ENV=' line=APP_ENV=production
 
-- name: Install Certbot Plugin and create Certs
-  hosts: web
-  remote_user: root
-  gather_facts: false
-  tasks:
-    - name: Install "python-certbot-nginx"
-      raw: sudo apt-get install python-certbot-nginx
+# - name: Install Certbot Plugin and create Certs
+#   hosts: web
+#   remote_user: root
+#   gather_facts: false
+#   tasks:
+#     - name: Install "python-certbot-nginx"
+#       raw: sudo apt-get install python-certbot-nginx
 
 # - name: Run certbot generation for each host
 #   command: /opt/certbot/certbot-auto --nginx -n -d {{ item['host'] }} --email {{ item['admin_email'] }} --redirect --agree-tos
