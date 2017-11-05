@@ -17,6 +17,7 @@
   tasks:
     - name: create sudo user
       user: name="{{sudo_user}}"
+          password="{{ upassword | password_hash('sha512') }}"
           state=present
           createhome=yes
           groups="sudo"
