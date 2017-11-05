@@ -56,9 +56,9 @@ nginx_remove_default_vhost: true
 #one vhost, one block, filename is server_name unless added
 nginx_vhosts:
   - listen: "80"
-    server_name: "example.com www.example.com"
-    return: "301 https://example.com$request_uri"
-    filename: "example.com.80.conf"
+    server_name: "{{domain}}"
+    return: "301 https://{{domain}}$request_uri"
+    filename: "{{domain}}.80.conf"
   - listen: "443 ssl http2"
     server_name: "{{domain}}"
     root: "/var/www/{{domain}}/current/public"
@@ -66,7 +66,7 @@ nginx_vhosts:
     state: "present"
     template: "{{ nginx_vhost_template }}"
     #The filename defaults to the first domain in server_name
-    filename: "example.com.conf" 
+    filename: "{{domain}}.conf" 
     extra_parameters: |
       location / {
           try_files $uri $uri/ /index.php$is_args$args;

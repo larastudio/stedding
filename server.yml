@@ -77,3 +77,12 @@
 
 #   - name: set APP_ENV=production
 #     lineinfile: dest=/var/www/laravel/.env regexp='^APP_ENV=' line=APP_ENV=production
+
+- name: Install the package "python-certbot-nginx"
+  apt:
+    name: python-certbot-nginx
+    state: present
+
+# - name: Run certbot generation for each host
+#   command: /opt/certbot/certbot-auto --nginx -n -d {{ item['host'] }} --email {{ item['admin_email'] }} --redirect --agree-tos
+#   with_items: "{{ vhost_sites }}"
