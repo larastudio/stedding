@@ -158,6 +158,7 @@ certbot --nginx
 ````
 to start the installation. You will then be asked to choose a domain. Next, they will ask you to agree with the TOS and install all. 
 
+*NB* May not be necessary if you run your own certs only. See further down on SSL
 ### PHP
 
 Current PHP configuration details added to `vars/main.yml` are:
