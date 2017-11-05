@@ -55,6 +55,10 @@ nginx_server_names_hash_bucket_size: "128"
 nginx_remove_default_vhost: true
 #one vhost, one block, filename is server_name unless added
 nginx_vhosts:
+  - listen: "80"
+    server_name: "example.com www.example.com"
+    return: "301 https://example.com$request_uri"
+    filename: "example.com.80.conf"
   - listen: "80 default_server"
     server_name: "{{domain}}"
     root: "/var/www/{{domain}}/current/public"
