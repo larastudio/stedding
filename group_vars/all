@@ -1,8 +1,10 @@
 ---
 #Which github repo to use
-repo_url : git@github.com:jasperf/ianua.git
+repo_url : git@github.com:Larastudio/larastudio.git
 github_keys: https://github.com/jasperf.keys
 git_branch: master
 sudo_user: admin
 web_user: web
+upassword: userpassword
+password_hash: password_hash
 domain: larastud.io
