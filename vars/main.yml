@@ -53,6 +53,7 @@ mysql_users:
 
 nginx_server_names_hash_bucket_size: "128"
 nginx_remove_default_vhost: true
+#one vhost, one block, filename is server_name unless added
 nginx_vhosts:
   - listen: "80 default_server"
     server_name: "{{domain}}"
@@ -60,6 +61,7 @@ nginx_vhosts:
     index: "index.php index.html index.htm"
     state: "present"
     template: "{{ nginx_vhost_template }}"
+    #filename: "example.com.conf" The filename defaults to the first domain in server_name
     extra_parameters: |
       location / {
           try_files $uri $uri/ /index.php$is_args$args;
@@ -72,10 +74,10 @@ nginx_vhosts:
           fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
           include fastcgi_params;
       }
-
-certbot_auto_renew_user: root
-certbot_auto_renew_minute: 20
-certbot_auto_renew_hour: 5
+      ssl_certificate     /etc/ssl/certs/ssl-cert-snakeoil.pem;
+      ssl_certificate_key /etc/ssl/private/ssl-cert-snakeoil.key;
+      ssl_protocols       TLSv1.1 TLSv1.2;
+      ssl_ciphers         HIGH:!aNULL:!MD5;
 
 composer_global_packages:
   - { name: laravel/installer }
