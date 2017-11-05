@@ -323,3 +323,7 @@ Kamal's [swapfile role](https://github.com/kamaln7/ansible-swapfile) has been ad
 * Cerbot tweaks so certificate is added automatically, preferably with templates, if not with Certbot Nginx plugin. 
 * SwiftMail tests
 * MariaDB database tests
+
+## OpenSSL
+
+OpenSSL role has been added so self signed certificates can be added when you would like to. Current Stedding setup is aimed at working with Let's Encrypt so this role has not been acitvated.
