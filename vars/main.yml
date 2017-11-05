@@ -86,9 +86,9 @@ nginx_vhosts:
       # ssl_ciphers         HIGH:!aNULL:!MD5;
 
 # Certbot Details if used instead of own SSL Certificates
-# certbot_auto_renew_user: root
-# certbot_auto_renew_minute: 20
-# certbot_auto_renew_hour: 5
+certbot_auto_renew_user: root
+certbot_auto_renew_minute: 20
+certbot_auto_renew_hour: 5
 
 composer_global_packages:
   - { name: laravel/installer }
