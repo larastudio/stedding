@@ -74,10 +74,16 @@ nginx_vhosts:
           fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
           include fastcgi_params;
       }
-      ssl_certificate     /etc/ssl/certs/ssl-cert-snakeoil.pem;
-      ssl_certificate_key /etc/ssl/private/ssl-cert-snakeoil.key;
-      ssl_protocols       TLSv1.1 TLSv1.2;
-      ssl_ciphers         HIGH:!aNULL:!MD5;
+      # certificates for when Let's Encrypt Certbot is not used
+      # ssl_certificate     /etc/ssl/certs/ssl-cert-snakeoil.pem;
+      # ssl_certificate_key /etc/ssl/private/ssl-cert-snakeoil.key;
+      # ssl_protocols       TLSv1.1 TLSv1.2;
+      # ssl_ciphers         HIGH:!aNULL:!MD5;
+
+# Certbot Details if used instead of own SSL Certificates
+# certbot_auto_renew_user: root
+# certbot_auto_renew_minute: 20
+# certbot_auto_renew_hour: 5
 
 composer_global_packages:
   - { name: laravel/installer }
