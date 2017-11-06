@@ -6,5 +6,4 @@ git_branch: master
 sudo_user: admin
 web_user: web
 upassword: userpassword
-password_hash: password_hash
 domain: larastud.io
