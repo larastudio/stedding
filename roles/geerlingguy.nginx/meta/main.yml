@@ -17,6 +17,10 @@ galaxy_info:
       - all
     - name: Ubuntu
       versions:
+      - trusty
+      - xenial
+    - name: Archlinux
+      versions:
       - all
     - name: FreeBSD
       versions:

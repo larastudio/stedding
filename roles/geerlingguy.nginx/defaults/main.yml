@@ -9,7 +9,7 @@ nginx_yum_repo_enabled: true
 nginx_ppa_use: false
 nginx_ppa_version: stable
 
-# The name of the nginx apt/yum package to install.
+# The name of the nginx package to install.
 nginx_package_name: "nginx"
 
 nginx_conf_template: "nginx.conf.j2"
@@ -20,7 +20,7 @@ nginx_worker_connections: "1024"
 nginx_multi_accept: "off"
 
 nginx_error_log: "/var/log/nginx/error.log warn"
-nginx_access_log: "/var/log/nginx/access.log main buffer=16k"
+nginx_access_log: "/var/log/nginx/access.log main buffer=16k flush=2m"
 
 nginx_sendfile: "on"
 nginx_tcp_nopush: "on"
@@ -55,12 +55,14 @@ nginx_extra_http_options: ""
 nginx_remove_default_vhost: false
 nginx_vhosts: []
 # Example vhost below, showing all available options:
-# - listen: "80 default_server" # default: "80 default_server"
+# - listen: "80" # default: "80"
 #   server_name: "example.com" # default: N/A
 #   root: "/var/www/example.com" # default: N/A
 #   index: "index.html index.htm" # default: "index.html index.htm"
+#   filename: "example.com.conf" # Can be used to set the filename of the vhost file.
 #
 #   # Properties that are only added if defined:
+#   server_name_redirect: "www.example.com" # default: N/A
 #   error_page: ""
 #   access_log: ""
 #   error_log: ""

@@ -55,10 +55,6 @@ nginx_server_names_hash_bucket_size: "128"
 nginx_remove_default_vhost: true
 #one vhost, one block, filename is server_name unless added
 nginx_vhosts:
-  - listen: "80"
-    server_name: "{{domain}}"
-    return: "301 https://{{domain}}$request_uri"
-    filename: "{{domain}}.80.conf"
   - listen: "443 ssl http2"
     server_name: "{{domain}}"
     root: "/var/www/{{domain}}/current/public"
@@ -71,7 +67,6 @@ nginx_vhosts:
       location / {
           try_files $uri $uri/ /index.php$is_args$args;
       }
-
       location ~ \.php$ {
           fastcgi_split_path_info ^(.+\.php)(/.+)$;
           fastcgi_pass unix:/var/run/php/php7.1-fpm.sock;
@@ -84,6 +79,11 @@ nginx_vhosts:
       # ssl_certificate_key /etc/ssl/certs/domain_com.key;
       # ssl_protocols       TLSv1.1 TLSv1.2;
       # ssl_ciphers         HIGH:!aNULL:!MD5;
+  - listen: "80"
+    server_name: "{{domain}}"
+    return: "301 https://{{domain}}$request_uri"
+    state: "present"
+    filename: "{{domain}}.80.conf"
 
 # Certbot Details if used instead of own SSL Certificates
 certbot_auto_renew_user: root

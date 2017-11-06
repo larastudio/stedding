@@ -2,9 +2,9 @@
 
 [![Build Status](https://travis-ci.org/geerlingguy/ansible-role-nginx.svg?branch=master)](https://travis-ci.org/geerlingguy/ansible-role-nginx)
 
-Installs Nginx on RedHat/CentOS or Debian/Ubuntu Linux, FreeBSD or OpenBSD servers.
+Installs Nginx on RedHat/CentOS, Debian/Ubuntu, Archlinux, FreeBSD or OpenBSD servers.
 
-This role installs and configures the latest version of Nginx from the Nginx yum repository (on RedHat-based systems) or via apt (on Debian-based systems) or pkgng (on FreeBSD systems) or pkg_add (on OpenBSD systems). You will likely need to do extra setup work after this role has installed Nginx, like adding your own [virtualhost].conf file inside `/etc/nginx/conf.d/`, describing the location and options to use for your particular website.
+This role installs and configures the latest version of Nginx from the Nginx yum repository (on RedHat-based systems), apt (on Debian-based systems), pacman (Archlinux), pkgng (on FreeBSD systems) or pkg_add (on OpenBSD systems). You will likely need to do extra setup work after this role has installed Nginx, like adding your own [virtualhost].conf file inside `/etc/nginx/conf.d/`, describing the location and options to use for your particular website.
 
 ## Requirements
 
@@ -19,8 +19,9 @@ Available variables are listed below, along with default values (see `defaults/m
 A list of vhost definitions (server blocks) for Nginx virtual hosts. Each entry will create a separate config file named by `server_name`. If left empty, you will need to supply your own virtual host configuration. See the commented example in `defaults/main.yml` for available server options. If you have a large number of customizations required for your server definition(s), you're likely better off managing the vhost configuration file yourself, leaving this variable set to `[]`.
 
     nginx_vhosts:
-      - listen: "80 default_server"
+      - listen: "443 ssl http2"
         server_name: "example.com"
+        server_name_redirect: "www.example.com"
         root: "/var/www/example.com"
         index: "index.php index.html index.htm"
         error_page: ""
@@ -28,6 +29,7 @@ A list of vhost definitions (server blocks) for Nginx virtual hosts. Each entry 
         error_log: ""
         state: "present"
         template: "{{ nginx_vhost_template }}"
+        filename: "example.com.conf"
         extra_parameters: |
           location ~ \.php$ {
               fastcgi_split_path_info ^(.+\.php)(/.+)$;
@@ -36,10 +38,23 @@ A list of vhost definitions (server blocks) for Nginx virtual hosts. Each entry 
               fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
               include fastcgi_params;
           }
+          ssl_certificate     /etc/ssl/certs/ssl-cert-snakeoil.pem;
+          ssl_certificate_key /etc/ssl/private/ssl-cert-snakeoil.key;
+          ssl_protocols       TLSv1.1 TLSv1.2;
+          ssl_ciphers         HIGH:!aNULL:!MD5;
 
 An example of a fully-populated nginx_vhosts entry, using a `|` to declare a block of syntax for the `extra_parameters`.
 
 Please take note of the indentation in the above block. The first line should be a normal 2-space indent. All other lines should be indented normally relative to that line. In the generated file, the entire block will be 4-space indented. This style will ensure the config file is indented correctly.
+
+      - listen: "80"
+        server_name: "example.com www.example.com"
+        return: "301 https://example.com$request_uri"
+        filename: "example.com.80.conf"
+
+An example of a secondary vhost which will redirect to the one shown above.
+
+*Note: The `filename` defaults to the first domain in `server_name`, if you have two vhosts with the same domain, eg. a redirect, you need to manually set the `filename` so the second one doesn't override the first one*
 
     nginx_remove_default_vhost: false
 
@@ -101,6 +116,17 @@ Extra lines to be inserted in the top-level `http` block in `nginx.conf`. The va
       proxy_set_header   X-Scheme $scheme;
       proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
       proxy_set_header   Host $http_host;
+
+See the template in `templates/nginx.conf.j2` for more details on the placement.
+
+    nginx_extra_conf_options: ""
+
+Extra lines to be inserted in the top of `nginx.conf`. The value should be defined literally (as you would insert it directly in the `nginx.conf`, adhering to the Nginx configuration syntax - such as `;` for line termination, etc.), for example:
+
+    nginx_extra_conf_options: |
+      worker_rlimit_nofile 8192;
+
+See the template in `templates/nginx.conf.j2` for more details on the placement.
 
     nginx_log_format: |
       '$remote_addr - $remote_user [$time_local] "$request" '
