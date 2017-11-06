@@ -5,5 +5,5 @@ github_keys: https://github.com/jasperf.keys
 git_branch: master
 sudo_user: admin
 web_user: web
-upassword: mfKVVXCewyXKUK5XviYFwjgsG
+upassword: 
 domain: larastud.io
