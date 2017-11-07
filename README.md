@@ -302,8 +302,6 @@ Just add it locally to your Laravel app, make sure your added Deployer locally w
 
 ## Swapfile
 Kamal's [swapfile role](https://github.com/kamaln7/ansible-swapfile) has been added with default configuration. This to add some more RAM in the form of a swapfile which is especially useful when you are using a 512MB Droplet at Digital Ocean for example.
-## Todo
-
 
 ## Let's Encryp or Commercial SSL Certificates
 
