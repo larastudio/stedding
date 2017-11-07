@@ -52,30 +52,8 @@ where need be. Not all will have to be adjusted perhaps but some will have to. T
 
 
 ### Nginx
-Nginx details are stored in `vars/main.yml` . One host for the site being used for testing purposes has been added there. Do change it to work with the domain of your choice.
+Nginx details are stored in `vars/main.yml` and `server.yml` . One host for the site being used for testing purposes has been added there. Do change it to work with the domain of your choice.
 
-````
-nginx_remove_default_vhost: true
-nginx_vhosts:
-  - listen: "80 default_server"
-    server_name: "{{domain}}"
-    root: "/var/www/{{domain}}/public"
-    index: "index.php index.html index.htm"
-    state: "present"
-    template: "{{ nginx_vhost_template }}"
-    extra_parameters: |
-      location / {
-          try_files $uri $uri/ /index.php$is_args$args;
-      }
-
-      location ~ \.php$ {
-          fastcgi_split_path_info ^(.+\.php)(/.+)$;
-          fastcgi_pass unix:/var/run/php/php7.1-fpm.sock;
-          fastcgi_index index.php;
-          fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-          include fastcgi_params;
-      }
-````
 ### Certbot
 Using Geerling's [Certbot role](https://github.com/geerlingguy/ansible-role-certbot) Let's Encrypt's [Certbot](https://certbot.eff.org/) has been added to the server. This allows the site to use Let's Encrypt SSL certificate. This does however not adjust the Nginx's domain configuration to server on 443 and redirect port 80 traffic to port 443. Tweaks for this are being made.
 
