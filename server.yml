@@ -82,10 +82,9 @@
 # - name: Install Certbot Plugin and create Certs
 #   hosts: web
 #   remote_user: root
-#   gather_facts: false
 #   tasks:
 #     - name: Install "python-certbot-nginx"
-#       raw: sudo apt-get install python-certbot-nginx
+#       command: sudo apt-get install python-certbot-nginx
 
 # - name: Run certbot generation for each host
 #   command: /opt/certbot/certbot-auto --nginx -n -d {{ item['host'] }} --email {{ item['admin_email'] }} --redirect --agree-tos
