@@ -80,6 +80,9 @@
 #     lineinfile: dest=/var/www/laravel/.env regexp='^APP_ENV=' line=APP_ENV=production
 
 # - name: Install Certbot Plugin and create Certs
+#   raw without python
+#   shell for $HOME and other operators like > &
+#   https://blog.confirm.ch/ansible-modules-shell-vs-command/
 #   hosts: web
 #   remote_user: root
 #   tasks:
