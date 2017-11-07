@@ -1,8 +1,6 @@
 # Stedding
 Stedding is a minimalistic LEMP Stack setup for [Laravel PHP](https://laravel.com/). It facilitates the setting up of Laravel apps on a well prepared [Ubuntu based](https://www.ubuntu.com/) VPS using Ansible Playbooks. 
 
-## Note
-Again, this is constantly evolving. So use it wisely and backup when possible.
 
 ## Local Box Requirements
 You need to have Ansible installed on your local computer. This really differs from box to box See [Ansible Documents](http://docs.ansible.com/ansible/intro_installation.html) for instructions.
@@ -13,7 +11,7 @@ pip install passlib
 ````
 
 ## Remote Server Requirements
-To run Ansible Playbooks properly on *Ubuntu 16.0.4+* we need to setup a sudo user and make sure Python and some other packages such as `ppa:ondrej/php` are available so Ansible can run. The setting up of a sudo user and adding of the SSH keys has been taken care of. So is the adding of Python and Ondrej's PHP PPA. All you need is root access to the Ubuntu 16.0.4 box. Preferably using an SSH key.
+To run Ansible Playbooks properly on *Ubuntu 17.10+* we need to setup a sudo user and make sure Python and some other packages such as `ppa:ondrej/php` are available so Ansible can run. The setting up of a sudo user and adding of the SSH keys has been taken care of. So is the adding of Python and Ondrej's PHP PPA. All you need is root access to the Ubuntu 16.0.4 box. Preferably using an SSH key.
 
 **NB** [Gist with useful setup tips](https://gist.github.com/jasperf/0be4439bbda9a324dd24e7300f357eb4)
 
@@ -50,7 +48,7 @@ Do not forget to adjust the vars in:
 * `grousp_var/all` and 
 * `vars/mainyml` 
 
-where need be. Not all will have to be adjusted perhaps but some will have to. This is besides the addition of the hosts file as will be mentioned later on. The variables in `vars/main.yml` are for setting up PHP, MySQL and Nginx details based on Geerlingguy roles. The variables in `grousp_var/all` are for the user only at the moment. Might merge all variables some time soon.
+where need be. Not all will have to be adjusted perhaps but some will have to. This is besides the addition of the hosts file as will be mentioned later on. The variables in `vars/main.yml` are for setting up PHP, MySQL and Nginx details based on Geerlingguy roles. The variables in `grousp_var/all` are for the user only at the moment.
 
 ## Local Ansible Config Setup
 
@@ -97,27 +95,6 @@ The current Ansible playbooks contain all the following server packages to run a
 * memcached
 * node
 
-### Server Packages to be added
-[Homestead](https://laravel.com/docs/5.4/homestead), the Vagrant Box Laravel, offers all users has the following out of the box:
-* Ubuntu 16.04
-* Git
-* PHP 7.1
-* Nginx
-* MySQL
-* MariaDB 10.1
-* Sqlite3
-* Postgres
-* Composer
-* Node (With Yarn, Bower, Grunt, and Gulp)
-* Redis
-* Memcached
-* Beanstalkd
-* Mailhog
-*  ngrok
-
-Now on a live server we won't be needing all, but what still needs to be added is:
-* [Beanstalkd](https://github.com/kr/beanstalkd) Work queue (Redis or Amazon SQS also possible)
-
 #### Database Management
 MySQL, PostGres and Sqlite3 won't be added as we will use MariaDB only for database management.
 #### DNS
@@ -153,13 +130,11 @@ nginx_vhosts:
 ### Certbot
 Using Geerling's [Certbot role](https://github.com/geerlingguy/ansible-role-certbot) Let's Encrypt's [Certbot](https://certbot.eff.org/) has been added to the server. This allows the site to use Let's Encrypt SSL certificate. This does however not adjust the Nginx's domain configuration to server on 443 and redirect port 80 traffic to port 443. Tweaks for this are being made.
 
-Nginx Certbot plugin has been added as well using:
+Nginx Certbot plugin has to be added using
 ````
-- name: Install the package "python-certbot-nginx"
-  apt:
-    name: python-certbot-nginx
-    state: present
+sudo apt-get install python-certbot-nginx
 ````
+A task is in the works, but not done.
 Then you can run:
 ````
 certbot --nginx
@@ -329,34 +304,29 @@ Just add it locally to your Laravel app, make sure your added Deployer locally w
 Kamal's [swapfile role](https://github.com/kamaln7/ansible-swapfile) has been added with default configuration. This to add some more RAM in the form of a swapfile which is especially useful when you are using a 512MB Droplet at Digital Ocean for example.
 ## Todo
 
-* Cerbot tweaks so certificate is added automatically, preferably with templates, if not with Certbot Nginx plugin. 
-* SwiftMail tests
-* MariaDB database tests
 
 ## Let's Encryp or Commercial SSL Certificates
 
-OpenSSL role has been added so self signed certificates can be added when you would like to. Current Stedding setup is aimed at working with Let's Encrypt so this role has not been acitvated.
-
-In the Nginx configuration inside `var/main.yml` a block for a commercial SSL Certificate Block has been added. These will load certificates assuming them to be at that location. Task to add them has not been added yet. Paths should be adjusted as per your configuration
+OpenSSL role has been added so self signed certificates can be added when you would like to. Current Stedding setup is aimed at working with Let's Encrypt so this role has not been acitvated. The path to own SSL certificates have been commented out:
 
 ````
-  ssl_certificate /etc/ssl/certs/domain_com-bundle.crt;
-  ssl_certificate_key /etc/ssl/certs/domain_com.key;
-  ssl_protocols       TLSv1.1 TLSv1.2;
-  ssl_ciphers         HIGH:!aNULL:!MD5;
+#  ssl_certificate /etc/ssl/certs/domain_com-bundle.crt;
+#  ssl_certificate_key /etc/ssl/certs/domain_com.key;
+#  ssl_protocols       TLSv1.1 TLSv1.2;
+#  ssl_ciphers         HIGH:!aNULL:!MD5;
 ````
-As you will see there are two server blocks. One is for port 80, the second one should be for port 443 and both in different files
+As you will see there are two server blocks. One is for port 80, the second one should be for port 443 and both in different files:
 ````
 - listen: "80"
     server_name: "example.com www.example.com"
     return: "301 https://example.com$request_uri"
     filename: "example.com.80.conf"
 ````
-Let's Encrypt task for auto renewal has also been added and commented out as not everyone will use LE:
+Let's Encrypt task for auto renewal has also been added :
 ````
 certbot_auto_renew_user: root
 certbot_auto_renew_minute: 20
 certbot_auto_renew_hour: 5
 ````
 
-Only use it when you are using Let's Encrypt instead of your own certs. Beginnning 2018 we should have wildcard certs so things will be much more interesting.
+**NB** Only use it when you are using Let's Encrypt instead of your own certs. Beginnning 2018 we should have wildcard certs so things will be much more interesting.
