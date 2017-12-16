@@ -48,7 +48,19 @@ Do not forget to adjust the vars in:
 * `grousp_var/all` and 
 * `vars/mainyml` 
 
-where need be. Not all will have to be adjusted perhaps but some will have to. This is besides the addition of the hosts file as will be mentioned later on. The variables in `vars/main.yml` are for setting up PHP, MySQL and Nginx details based on Geerlingguy roles. The variables in `grousp_var/all` are for the user only at the moment.
+where need be. 
+
+example for the all file (not added in repo):
+````
+repo_url : git@github.com:Larastudio/larastudio.git
+github_keys: https://github.com/jasperf.keys
+git_branch: master
+sudo_user: admin
+web_user: web
+upassword: passsword
+domain: larastud.io
+````
+Not all will have to be adjusted perhaps but some will have to. This is besides the addition of the hosts file as will be mentioned later on. The variables in `vars/main.yml` are for setting up PHP, MySQL and Nginx details based on Geerlingguy roles. The variables in `grousp_var/all` are for the user and domein only at the moment.
 
 
 ### Nginx
