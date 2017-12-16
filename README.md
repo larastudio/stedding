@@ -45,12 +45,13 @@ Other roles:
 ## Stedding Variables
 Do not forget to adjust the vars in:
 
-* `grousp_var/all` and 
+* `grousp_var/all` 
 * `vars/mainyml` 
+* `hosts`
 
 where need be. 
 
-example for the all file (not added in repo):
+example for the `all` file (not added in repo):
 ````
 repo_url : git@github.com:Larastudio/larastudio.git
 github_keys: https://github.com/jasperf.keys
@@ -60,7 +61,12 @@ web_user: web
 upassword: passsword
 domain: larastud.io
 ````
-Not all will have to be adjusted perhaps but some will have to. This is besides the addition of the hosts file as will be mentioned later on. The variables in `vars/main.yml` are for setting up PHP, MySQL and Nginx details based on Geerlingguy roles. The variables in `grousp_var/all` are for the user and domein only at the moment.
+Not all will have to be adjusted perhaps but some will have to. This is besides the addition of the hosts file. Here you normally add at least the ip address for the server:
+````
+[web]
+xxx.xxx.xx.xxx
+````
+The variables in `vars/main.yml` are for setting up PHP, MySQL and Nginx details based on Geerlingguy roles. The variables in `grousp_var/all` are for the repo, keys, branch, user, password and domain.
 
 
 ### Nginx
