@@ -42,13 +42,13 @@ mysql_packages:
 
 mysql_root_password: super-secure-password
 mysql_databases:
-  - name: example_db
+  - name: "{{database_name}}"
     encoding: utf8mb4
     collation: utf8mb4_unicode_ci
 mysql_users:
-  - name: example_user
+  - name: "{{database_user}}"
     host: "%"
-    password: similarly-secure-password
+    password: "{{database_user_password}}"
     priv: "example_db.*:ALL"
 
 nginx_server_names_hash_bucket_size: "128"
