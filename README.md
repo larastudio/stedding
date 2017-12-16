@@ -60,6 +60,9 @@ sudo_user: admin
 web_user: web
 upassword: passsword
 domain: larastud.io
+database_name: database_name
+database_user: database_user
+database_user_password: database_user_password
 ````
 Not all will have to be adjusted perhaps but some will have to. This is besides the addition of the hosts file. Here you normally add at least the ip address for the server:
 ````
