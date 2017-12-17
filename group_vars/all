@@ -1,0 +1,12 @@
+---
+#Which github repo to use
+repo_url : git@github.com:Larastudio/larastudio.git
+github_keys: https://github.com/jasperf.keys
+git_branch: master
+sudo_user: admin
+web_user: web
+upassword: password
+domain: larastud.io
+database_name: database_name
+database_user: database_user
+database_user_password: database_user_password
