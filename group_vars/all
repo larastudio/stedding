@@ -10,3 +10,5 @@ domain: domain_name
 database_name: database_name
 database_user: database_user
 database_user_password: database_user_password
+mysql_root_password: mysql_root_password
+

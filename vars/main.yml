@@ -40,7 +40,7 @@ mysql_packages:
   - mariadb-server
   - python-mysqldb
 
-mysql_root_password: super-secure-password
+mysql_root_password: "{{mysql_root_password}}"
 mysql_databases:
   - name: "{{database_name}}"
     encoding: utf8mb4
