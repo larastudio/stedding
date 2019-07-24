@@ -45,7 +45,7 @@ Other roles:
 ## Stedding Variables
 Do not forget to adjust the vars in:
 
-* `grousp_var/all` 
+* `group_vars/all` 
 * `vars/mainyml` 
 * `hosts`
 
@@ -69,7 +69,7 @@ Not all will have to be adjusted perhaps but some will have to. This is besides 
 [web]
 xxx.xxx.xx.xxx
 ````
-The variables in `vars/main.yml` are for setting up PHP, MySQL and Nginx details based on Geerlingguy roles. The variables in `grousp_var/all` are for the repo, keys, branch, user, password and domain.
+The variables in `vars/main.yml` are for setting up PHP, MySQL and Nginx details based on Geerlingguy roles. The variables in `group_vars/all` are for the repo, keys, branch, user, password and domain.
 
 
 ### Nginx
@@ -114,7 +114,7 @@ The MariaDB details are added to `vars/main.yml` are just dummy data. Do adjust 
 Composer is added and binary is put in the directory of the web user. Laravel is also added as a globally required package so it can be used.
 
 ### Mail
-To set up your Laravel application to work with [Mailgun](https://www.mailgun.com/) for sending out emails which is used in this repo check out this [Laravel document](https://laravel.com/docs/5.4/mail) 
+To set up your Laravel application to work with [Mailgun](https://www.mailgun.com/) for sending out emails which is used in this repo check out this [Laravel document](https://laravel.com/docs/mail) 
 ### Nodejs
 Nodejs role is installed and we automatically add the following global packages:
 
