@@ -1,3 +1,0 @@
----
-- name: Reload sysctl
-  command: sysctl -p
