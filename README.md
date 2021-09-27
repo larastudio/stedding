@@ -40,7 +40,6 @@ added where possible with `ansible-galaxy install --roles-path . geerlingguy.rol
 
 Other roles:
 * [Ansible Deployer](https://github.com/jverdeyen/ansible-deployer-in) by jverdeyen
-* [Ansible Swapfile](https://github.com/kamaln7/ansible-swapfile) by Kamaln7
 
 ## Stedding Variables
 Do not forget to adjust the vars in:
@@ -139,9 +138,6 @@ The domain can be set in `group_vars/all`. [GUID]
 
 ## Deployment
 Deployment script using [Deployer.org](https://deployer.org/) has been added as a role to this Ansible package. It is using the latest role version that is available on Github.  The repository with the deploy.php script that has been tested with the Laravel app Larastudio can be found [here](https://github.com/jasperf/larastudio). 
-
-## Swapfile
-Kamal's [swapfile role](https://github.com/kamaln7/ansible-swapfile) has been added with default configuration. This to add some more RAM in the form of a swapfile which is especially useful when you are using a 512MB Droplet at Digital Ocean for example.
 
 ## Let's Encryp or Commercial SSL Certificates
 
