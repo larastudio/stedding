@@ -1,39 +1,39 @@
-php_version: "7.1"
+php_version: "7.4"
 php_packages_state: latest
 php_use_managed_ini: true
 php_memory_limit: "512M"
 php_max_execution_time: "90"
 php_upload_max_filesize: "256M"
 php_packages:
-  - php7.1-apcu
-  - php7.1-common
-  - php7.1-intl
-  - php7.1-cli
-  - php7.1-dev
-  - php7.1-fpm
+  - php7.4-apcu
+  - php7.4-common
+  - php7.4-intl
+  - php7.4-cli
+  - php7.4-dev
+  - php7.4-fpm
   - libpcre3-dev
-  - php7.1-gd
-  - php7.1-curl
-  - php7.1-imap
-  - php7.1-json
+  - php7.4-gd
+  - php7.4-curl
+  - php7.4-imap
+  - php7.4-json
   - php-mbstring
-  - php7.1-mcrypt
-  - php7.1-opcache
-  - php7.1-pdo
-  - php7.1-xml
-  - php7.1-mbstring
-  - php7.1-zip
-  - php7.1-mysql
+  - php7.4-mcrypt
+  - php7.4-opcache
+  - php7.4-pdo
+  - php7.4-xml
+  - php7.4-mbstring
+  - php7.4-zip
+  - php7.4-mysql
 php_date_timezone: "UTC"
 php_webserver_daemon: "nginx"
-php_fpm_daemon: php7.1-fpm
+php_fpm_daemon: php7.4-fpm
 php_conf_paths:
-  - /etc/php/7.1/fpm
-  - /etc/php/7.1/cli
+  - /etc/php/7.4/fpm
+  - /etc/php/7.4/cli
 
 php_extension_conf_paths:
-  - /etc/php/7.1/fpm/conf.d
-  - /etc/php/7.1/cli/conf.d
+  - /etc/php/7.4/fpm/conf.d
+  - /etc/php/7.4/cli/conf.d
 
 mysql_packages:
   - mariadb-client
@@ -70,7 +70,7 @@ nginx_vhosts:
   #     }
   #     location ~ \.php$ {
   #         fastcgi_split_path_info ^(.+\.php)(/.+)$;
-  #         fastcgi_pass unix:/var/run/php/php7.1-fpm.sock;
+  #         fastcgi_pass unix:/var/run/php/php7.4-fpm.sock;
   #         fastcgi_index index.php;
   #         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
   #         include fastcgi_params;
@@ -98,7 +98,7 @@ nginx_vhosts:
       }
       location ~ \.php$ {
           fastcgi_split_path_info ^(.+\.php)(/.+)$;
-          fastcgi_pass unix:/var/run/php/php7.1-fpm.sock;
+          fastcgi_pass unix:/var/run/php/php7.4-fpm.sock;
           fastcgi_index index.php;
           fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
           include fastcgi_params;
@@ -118,6 +118,4 @@ composer_add_to_path: true
 
 nodejs_npm_global_packages:
   - name: yarn
-  - name: bower
-  - name: grunt
-  - name: gulp
+  - name: npm
