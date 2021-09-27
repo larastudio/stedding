@@ -4,7 +4,7 @@
   remote_user: root
   gather_facts: false
   tasks:
-    - name: Install Python 2.x
+    - name: Install Python 3.x
       raw: which python || apt-get update && apt-get install -qq -y python-simplejson
       register: python_check
       changed_when: not python_check.stdout | search('/usr/bin/python')
