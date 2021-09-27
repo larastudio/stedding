@@ -64,7 +64,6 @@
   - {role: geerlingguy.git }
   - {role: geerlingguy.composer }
   - {role: geerlingguy.nodejs }
-  - {role: deployer }
 
 - name: Laravel Homebase Setup
   hosts: web

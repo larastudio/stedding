@@ -38,9 +38,6 @@ Geerllingguy Roles:
 
 added where possible with `ansible-galaxy install --roles-path . geerlingguy.rolename` inside roles folder.
 
-Other roles:
-* [Ansible Deployer](https://github.com/jverdeyen/ansible-deployer-in) by jverdeyen
-
 ## Stedding Variables
 Do not forget to adjust the vars in:
 
