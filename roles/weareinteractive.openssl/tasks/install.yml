@@ -1,0 +1,26 @@
+---
+
+- name: Installing packages
+  package:
+    name: "{{ openssl_packages }}"
+    state: present
+
+- name: Creating certs dir
+  import_tasks: create_dir.yml
+  vars:
+    item: "{{ openssl_certs_path }}"
+    mode: "0755"
+
+- name: Creating keys dir
+  import_tasks: create_dir.yml
+  vars:
+    item: "{{ openssl_keys_path }}"
+    mode: "0700"
+
+- name: Creating csrs dir
+  import_tasks: create_dir.yml
+  vars:
+    item: "{{ openssl_csrs_path }}"
+    mode: "0750"
+  when: openssl_generate_csr | bool
+

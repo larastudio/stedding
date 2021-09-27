@@ -1,0 +1,25 @@
+---
+# Manually generated fingerprints as http://www.cacert.org/index.php?id=3 doesn't list them.
+
+- name: Create directory for CAcert certificates
+  file:
+    path: "{{ openssl_cacert_certificates_path }}"
+    state: directory
+    recurse: yes
+    group: root
+    owner: root
+
+- name: Download CAcert Class 1 PKI key
+  get_url:
+    dest: "{{ openssl_cacert_certificates_path }}"
+    url: http://www.cacert.org/certs/root.crt
+    sha256sum: "{{ openssl_cacert_class_one_key_sha256 }}"
+  notify: update ca certificates
+
+- name: Download CAcert Class 3 PKI key
+  get_url:
+    dest: "{{ openssl_cacert_certificates_path }}"
+    url: http://www.cacert.org/certs/class3.crt
+    sha256sum: "{{ openssl_cacert_class_three_key_sha256 }}"
+  notify: update ca certificates
+

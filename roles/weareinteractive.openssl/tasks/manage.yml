@@ -1,0 +1,39 @@
+---
+
+- name: Copying keys
+  copy:
+    content: "{{ item.key }}"
+    dest: "{{ openssl_keys_path }}/{{ item.name }}"
+    owner: "{{ item.owner | default(openssl_default_key_owner) }}"
+    group: "{{ item.group | default(openssl_default_key_group) }}"
+    mode: "{{ item.mode | default('0640') }}"
+  with_items: "{{ openssl_keys }}"
+
+- name: Copying certs
+  copy:
+    content: "{{ item.cert }}"
+    dest: "{{ openssl_certs_path }}/{{ item.name }}"
+    owner: "{{ item.owner | default(openssl_default_cert_owner) }}"
+    group: "{{ item.group | default(openssl_default_cert_group) }}"
+    mode: "{{ item.mode | default('0644') }}"
+  with_items: "{{ openssl_certs }}"
+
+- name: Creating self-signed private keys
+  openssl_privatekey:
+    path: "{{ openssl_keys_path }}/{{ item.name }}.key"
+  with_items: "{{ openssl_self_signed }}"
+
+- name: Creating self-signed CSRs
+  openssl_csr:
+    path: "{{ openssl_csrs_path }}/{{ item.name }}.csr"
+    privatekey_path: "{{ openssl_keys_path }}/{{ item.name }}.key"
+    subject: "{{ item.subject | default(omit) }}"
+  with_items: "{{ openssl_self_signed }}"
+
+- name: Generate a Self Signed OpenSSL certificate.
+  openssl_certificate:
+    path: "{{ openssl_certs_path }}/{{ item.name }}.crt"
+    privatekey_path: "{{ openssl_keys_path }}/{{ item.name }}.key"
+    csr_path: "{{ openssl_csrs_path }}/{{ item.name }}.csr"
+    provider: selfsigned
+  with_items: "{{ openssl_self_signed }}"

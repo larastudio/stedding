@@ -1,14 +1,20 @@
 ---
-- name: Add PPA for Nginx.
+- name: Ensure dirmngr is installed (gnupg dependency).
+  apt:
+    name: dirmngr
+    state: present
+
+- name: Add PPA for Nginx (if configured).
   apt_repository:
     repo: 'ppa:nginx/{{ nginx_ppa_version }}'
     state: present
-    update_cache: yes
+    update_cache: true
   register: nginx_ppa_added
-  when: nginx_ppa_use
+  when: nginx_ppa_use | bool
 
 - name: Ensure nginx will reinstall if the PPA was just added.
   apt:
     name: nginx
     state: absent
-  when: nginx_ppa_added.changed
+  when: nginx_ppa_added is changed
+  tags: ['skip_ansible_lint']

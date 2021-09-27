@@ -1,6 +1,8 @@
 # Ansible Role: Nginx
 
-[![Build Status](https://travis-ci.org/geerlingguy/ansible-role-nginx.svg?branch=master)](https://travis-ci.org/geerlingguy/ansible-role-nginx)
+[![CI](https://github.com/geerlingguy/ansible-role-nginx/workflows/CI/badge.svg?event=push)](https://github.com/geerlingguy/ansible-role-nginx/actions?query=workflow%3ACI)
+
+**Note:** Please consider using the official [NGINX Ansible role](https://github.com/nginxinc/ansible-role-nginx) from NGINX, Inc.
 
 Installs Nginx on RedHat/CentOS, Debian/Ubuntu, Archlinux, FreeBSD or OpenBSD servers.
 
@@ -13,6 +15,11 @@ None.
 ## Role Variables
 
 Available variables are listed below, along with default values (see `defaults/main.yml`):
+
+
+    nginx_listen_ipv6: true
+
+Whether or not to listen on IPv6 (applied to all vhosts managed by this role).
 
     nginx_vhosts: []
 
@@ -128,7 +135,7 @@ Extra lines to be inserted in the top of `nginx.conf`. The value should be defin
 
 See the template in `templates/nginx.conf.j2` for more details on the placement.
 
-    nginx_log_format: |
+    nginx_log_format: |-
       '$remote_addr - $remote_user [$time_local] "$request" '
       '$status $body_bytes_sent "$http_referer" '
       '"$http_user_agent" "$http_x_forwarded_for"'
@@ -147,6 +154,11 @@ Configures Nginx's [`log_format`](http://nginx.org/en/docs/http/ngx_http_log_mod
     nginx_yum_repo_enabled: true
 
 (For RedHat/CentOS only) Set this to `false` to disable the installation of the `nginx` yum repository. This could be necessary if you want the default OS stable packages, or if you use Satellite.
+
+    nginx_service_state: started
+    nginx_service_enabled: yes
+
+By default, this role will ensure Nginx is running and enabled at boot after Nginx is configured. You can use these variables to override this behavior if installing in a container or further control over the service state is required.
 
 ## Overriding configuration templates
 

@@ -1,0 +1,38 @@
+---
+
+- import_tasks: vars.yml
+  tags:
+    - system
+    - openssl
+    - install
+    - openssl-vars
+
+- import_tasks: install.yml
+  tags:
+    - system
+    - openssl
+    - install
+    - openssl-install
+
+- import_tasks: config.yml
+  tags:
+    - system
+    - openssl
+    - config
+    - openssl-config
+
+- import_tasks: manage.yml
+  tags:
+    - system
+    - openssl
+    - manage
+    - openssl-manage
+
+- import_tasks: cacert.yml
+  tags:
+    - system
+    - openssl
+    - cacert
+    - openssl-cacert
+  when: openssl_cacert_import | bool
+

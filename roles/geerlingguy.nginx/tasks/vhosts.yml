@@ -3,26 +3,29 @@
   file:
     path: "{{ nginx_default_vhost_path }}"
     state: absent
-  when: nginx_remove_default_vhost
+  when: nginx_remove_default_vhost | bool
   notify: restart nginx
 
 - name: Ensure nginx_vhost_path exists.
   file:
     path: "{{ nginx_vhost_path }}"
     state: directory
+    mode: 0755
   notify: reload nginx
 
 - name: Add managed vhost config files.
   template:
     src: "{{ item.template|default(nginx_vhost_template) }}"
     dest: "{{ nginx_vhost_path }}/{{ item.filename|default(item.server_name.split(' ')[0] ~ '.conf') }}"
-    force: yes
+    force: true
     owner: root
-    group: root
+    group: "{{ root_group }}"
     mode: 0644
   when: item.state|default('present') != 'absent'
   with_items: "{{ nginx_vhosts }}"
   notify: reload nginx
+  tags:
+    - skip_ansible_lint
 
 - name: Remove managed vhost config files.
   file:
@@ -31,6 +34,8 @@
   when: item.state|default('present') == 'absent'
   with_items: "{{ nginx_vhosts }}"
   notify: reload nginx
+  tags:
+    - skip_ansible_lint
 
 - name: Remove legacy vhosts.conf file.
   file:

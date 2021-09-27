@@ -12,10 +12,14 @@ nginx_ppa_version: stable
 # The name of the nginx package to install.
 nginx_package_name: "nginx"
 
+nginx_service_state: started
+nginx_service_enabled: true
+
 nginx_conf_template: "nginx.conf.j2"
 nginx_vhost_template: "vhost.j2"
 
-nginx_worker_processes: "{{ ansible_processor_vcpus | default(ansible_processor_count) }}"
+nginx_worker_processes: >-
+  "{{ ansible_processor_vcpus | default(ansible_processor_count) }}"
 nginx_worker_connections: "1024"
 nginx_multi_accept: "off"
 
@@ -53,13 +57,17 @@ nginx_extra_http_options: ""
 #      proxy_set_header   Host $http_host;
 
 nginx_remove_default_vhost: false
+
+# Listen on IPv6 (default: true)
+nginx_listen_ipv6: true
+
 nginx_vhosts: []
 # Example vhost below, showing all available options:
 # - listen: "80" # default: "80"
 #   server_name: "example.com" # default: N/A
 #   root: "/var/www/example.com" # default: N/A
 #   index: "index.html index.htm" # default: "index.html index.htm"
-#   filename: "example.com.conf" # Can be used to set the filename of the vhost file.
+#   filename: "example.com.conf" # Can be used to set the vhost filename.
 #
 #   # Properties that are only added if defined:
 #   server_name_redirect: "www.example.com" # default: N/A
@@ -74,13 +82,12 @@ nginx_upstreams: []
 # - name: myapp1
 #   strategy: "ip_hash" # "least_conn", etc.
 #   keepalive: 16 # optional
-#   servers: {
-#     "srv1.example.com",
-#     "srv2.example.com weight=3",
-#     "srv3.example.com"
-#   }
+#   servers:
+#     - "srv1.example.com"
+#     - "srv2.example.com weight=3"
+#     - "srv3.example.com"
 
-nginx_log_format: |
+nginx_log_format: |-
   '$remote_addr - $remote_user [$time_local] "$request" '
   '$status $body_bytes_sent "$http_referer" '
   '"$http_user_agent" "$http_x_forwarded_for"'

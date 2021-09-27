@@ -1,5 +1,17 @@
 ---
 # Variable setup.
+- name: Include distribution and version-specific vars.
+  include_vars: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
+      skip: true
+
+- name: Set the default PHP version for Debian-based OSes.
+  set_fact:
+    php_default_version_debian: "{{ __php_default_version_debian }}"
+  when: php_default_version_debian is not defined and ansible_os_family == 'Debian'
+
 - name: Include OS-specific variables.
   include_vars: "{{ ansible_os_family }}.yml"
 
@@ -7,11 +19,6 @@
   set_fact:
     php_packages: "{{ __php_packages | list }}"
   when: php_packages is not defined
-
-- name: Define extra php_packages.
-  set_fact:
-    php_packages: "{{ php_packages | list + php_packages_extra | list }}"
-  when: php_packages_extra is defined
 
 - name: Define php_webserver_daemon.
   set_fact:
@@ -49,25 +56,22 @@
   when: php_fpm_conf_path is not defined
 
 # Setup/install tasks.
-- include: setup-RedHat.yml
-  when: (php_install_from_source == false) and (ansible_os_family == 'RedHat')
-  static: no
+- include_tasks: setup-RedHat.yml
+  when:
+    - not php_install_from_source
+    - ansible_os_family == 'RedHat'
 
-- include: setup-Debian.yml
-  when: (php_install_from_source == false) and (ansible_os_family == 'Debian')
-  static: no
+- include_tasks: setup-Debian.yml
+  when:
+    - not php_install_from_source
+    - ansible_os_family == 'Debian'
 
 # Install PHP from source when php_install_from_source is true.
-- include: install-from-source.yml
-  when: php_install_from_source == true
-  static: no
+- include_tasks: install-from-source.yml
+  when: php_install_from_source
 
 # Configure PHP.
-- include: configure.yml
-  static: no
-- include: configure-apcu.yml
-  static: no
-- include: configure-opcache.yml
-  static: no
-- include: configure-fpm.yml
-  static: no
+- include_tasks: configure.yml
+- include_tasks: configure-apcu.yml
+- include_tasks: configure-opcache.yml
+- include_tasks: configure-fpm.yml
