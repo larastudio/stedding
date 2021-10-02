@@ -39,6 +39,7 @@ Geerllingguy Roles:
 added where possible with `ansible-galaxy install --roles-path . geerlingguy.rolename` inside roles folder.
 
 ## Stedding Variables
+
 Do not forget to adjust the vars in:
 
 * `group_vars/all` 
@@ -47,7 +48,26 @@ Do not forget to adjust the vars in:
 
 where need be. 
 
-example for the `all` file (not added in repo):
+
+### Hosts
+
+Here you normally add at least the ip address for the server. We added two hosts in this example:
+````
+[web]
+xxx.xxx.xx.xxx
+[database]
+xxx.xxx.xx.xxx
+````
+### Main Variables
+
+The variables in `vars/main.yml` are for setting up PHP, MySQL and Nginx details based on Geerlingguy roles. 
+
+
+### All Variables
+
+The variables in `group_vars/all` are for the repo, keys, branch, user, password and domain.
+
+example:
 ````
 repo_url : git@github.com:Larastudio/larastudio.git
 github_keys: https://github.com/jasperf.keys
@@ -60,12 +80,6 @@ database_name: database_name
 database_user: database_user
 database_user_password: database_user_password
 ````
-Not all will have to be adjusted perhaps but some will have to. This is besides the addition of the hosts file. Here you normally add at least the ip address for the server:
-````
-[web]
-xxx.xxx.xx.xxx
-````
-The variables in `vars/main.yml` are for setting up PHP, MySQL and Nginx details based on Geerlingguy roles. The variables in `group_vars/all` are for the repo, keys, branch, user, password and domain.
 
 
 ### Nginx
@@ -88,7 +102,7 @@ to start the installation. You will then be asked to choose a domain. Next, they
 *NB* May not be necessary if you run your own certs only. See further down on SSL
 ### PHP
 
-To work with PHP 7.1. Ondrej's PHP PPA is added in requirements playbook using:
+To work with PHP 7.4 Ondrej's PHP PPA is added in requirements playbook using:
 ````
 - name: Add repository for PHP 7.
       apt_repository: repo='ppa:ondrej/php'
@@ -117,12 +131,9 @@ Nodejs role is installed and we automatically add the following global packages:
 ````
 nodejs_npm_global_packages:
   - name: yarn
-  - name: bower
-  - name: grunt
-  - name: gulp
+  - npm
 ````
 
-Bower and Grunt will probably be removed in the future.
 
 ## Laravel Homebase Setup
 
@@ -132,9 +143,6 @@ To run your Laravel application from a specific project directory, the one added
     file: dest=/var/www/{{domain}} mode=2755 state=directory owner=web group=www-data
 ````
 The domain can be set in `group_vars/all`. [GUID]
-
-## Deployment
-Deployment script using [Deployer.org](https://deployer.org/) has been added as a role to this Ansible package. It is using the latest role version that is available on Github.  The repository with the deploy.php script that has been tested with the Laravel app Larastudio can be found [here](https://github.com/jasperf/larastudio). 
 
 ## Let's Encryp or Commercial SSL Certificates
 
