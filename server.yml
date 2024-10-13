@@ -1,18 +1,22 @@
 - name: Install prerequisites
   hosts: web
   remote_user: "{{ sudo_user }}"
-  gather_facts: true
+  gather_facts: false
   tasks:
-    - name: Install Python 3.x
-      ansible.builtin.package:
-        name: python3-simplejson
-        state: present
-      register: python_check
-      changed_when: not python_check.stdout | search('/usr/bin/python3')
+    - name: Ensure Python 3.8 is installed
+      raw: sudo apt-get update && sudo apt-get install -y python3.8
+      changed_when: false
+
+    - name: Ensure Python 3 points to Python 3.8
+      raw: sudo ln -sf /usr/bin/python3.8 /usr/bin/python3
+      changed_when: false
+
+    - name: Gather Facts
+      setup:
+
     - name: Add repository for PHP 8.2
-      ansible.builtin.apt_repository:
-        repo: 'ppa:ondrej/php'
-        state: present
+      raw: sudo add-apt-repository ppa:ondrej/php -y && sudo apt-get update
+      changed_when: false
 
 - name: Sudo user Creation
   hosts: web
@@ -32,6 +36,7 @@
       ansible.builtin.authorized_key:
         user: "{{ sudo_user }}"
         key: "{{ github_keys }}"
+      when: not ansible_check_mode
 
 - name: Web user creation
   hosts: web
@@ -50,11 +55,22 @@
       ansible.builtin.authorized_key:
         user: "{{ web_user }}"
         key: "{{ github_keys }}"
+      when: not ansible_check_mode
+    - name: Ensure .bashrc exists for the web user
+      ansible.builtin.file:
+        path: "/home/{{ web_user }}/.bashrc"
+        state: touch
+        owner: "{{ web_user }}"
+        group: "www-data"
+        mode: '0644'
     - name: Add Composer to path
       ansible.builtin.lineinfile:
-        dest: /home/{{ web_user }}/.bashrc
+        dest: "/home/{{ web_user }}/.bashrc"
         state: present
         line: 'export PATH="$PATH:$HOME/.composer/vendor/bin"'
+        owner: "{{ web_user }}"
+        group: "www-data"
+        mode: '0644'
 
 - name: LEMP Provisioning
   hosts: web
