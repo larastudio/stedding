@@ -19,12 +19,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the codebase.
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: 'geerlingguy.certbot'
 
       - name: Set up Python 3.
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.x'
 
@@ -41,39 +41,33 @@ jobs:
     strategy:
       matrix:
         include:
-          - distro: centos8
+          - distro: rockylinux9
             playbook: converge.yml
             experimental: false
-          - distro: centos7
-            playbook: converge.yml
-            experimental: false
-          - distro: ubuntu1804
+          - distro: ubuntu2004
             playbook: converge.yml
             experimental: false
           - distro: debian10
             playbook: converge.yml
             experimental: false
-          - distro: centos7
-            playbook: playbook-source-install.yml
-            experimental: false
 
-          - distro: centos7
+          - distro: rockylinux9
             playbook: playbook-snap-install.yml
             experimental: true
 
     steps:
       - name: Check out the codebase.
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: 'geerlingguy.certbot'
 
       - name: Set up Python 3.
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.x'
 
       - name: Install test dependencies.
-        run: pip3 install ansible molecule[docker] docker
+        run: pip3 install ansible molecule molecule-plugins[docker] docker
 
       - name: Run Molecule tests.
         run: molecule test

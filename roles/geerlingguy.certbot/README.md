@@ -20,20 +20,31 @@ Controls how Certbot is installed. Available options are 'package', 'snap', and 
     certbot_auto_renew_user: "{{ ansible_user | default(lookup('env', 'USER')) }}"
     certbot_auto_renew_hour: "3"
     certbot_auto_renew_minute: "30"
-    certbot_auto_renew_options: "--quiet --no-self-upgrade"
+    certbot_auto_renew_options: "--quiet"
 
 By default, this role configures a cron job to run under the provided user account at the given hour and minute, every day. The defaults run `certbot renew` (or `certbot-auto renew`) via cron every day at 03:30:00 by the user you use in your Ansible playbook. It's preferred that you set a custom user/hour/minute so the renewal is during a low-traffic period and done by a non-root user account.
 
 ### Automatic Certificate Generation
 
-Currently there is one built-in method for generating new certificates using this role: `standalone`. Other methods (e.g. using nginx or apache and a webroot) may be added in the future.
+Currently the `standalone` and `webroot` method are supported for generating new certificates using this role.
 
 **For a complete example**: see the fully functional test playbook in [molecule/default/playbook-standalone-nginx-aws.yml](molecule/default/playbook-standalone-nginx-aws.yml).
 
     certbot_create_if_missing: false
+
+Set `certbot_create_if_missing` to `yes` or `True` to let this role generate certs. 
+
     certbot_create_method: standalone
 
-Set `certbot_create_if_missing` to `yes` or `True` to let this role generate certs. Set the method used for generating certs with the `certbot_create_method` variable—current allowed values include: `standalone`.
+Set the method used for generating certs with the `certbot_create_method` variable — current allowed values are: `standalone` or `webroot`.
+
+    certbot_testmode: false
+
+Enable test mode to only run a test request without actually creating certificates.
+
+    certbot_hsts: false
+
+Enable (HTTP Strict Transport Security) for the certificate generation.
 
     certbot_admin_email: email@example.com
 
@@ -41,17 +52,18 @@ The email address used to agree to Let's Encrypt's TOS and subscribe to cert-rel
 
     certbot_certs: []
       # - email: janedoe@example.com
+      #   webroot: "/var/www/html"
       #   domains:
       #     - example1.com
       #     - example2.com
       # - domains:
       #     - example3.com
 
-A list of domains (and other data) for which certs should be generated. You can add an `email` key to any list item to override the `certbot_admin_email`.
+A list of domains (and other data) for which certs should be generated. You can add an `email` key to any list item to override the `certbot_admin_email`. When using the `webroot` creation method, a `webroot` item has to be provided, specifying which directory to use for the authentication. Make sure your webserver correctly delivers contents from this directory.
 
     certbot_create_command: "{{ certbot_script }} certonly --standalone --noninteractive --agree-tos --email {{ cert_item.email | default(certbot_admin_email) }} -d {{ cert_item.domains | join(',') }}"
 
-The `certbot_create_command` defines the command used to generate the cert.
+The `certbot_create_command` defines the command used to generate the cert. See the full default command inside `defaults/main.yml` for a full example—and you can easily add in extra arguments that are not in the default command with the `certbot_create_extra_args` variable.
 
 #### Standalone Certificate Generation
 
@@ -69,6 +81,10 @@ Beginning in December 2020, the Certbot maintainers decided to recommend install
 Setting `certbot_install_method: snap` configures this role to install Certbot via Snap.
 
 This install method is currently experimental and may or may not work across all Linux distributions.
+
+#### Webroot Certificate Generation
+
+When using the `webroot` creation method, a `webroot` item has to be provided for every `certbot_certs` item, specifying which directory to use for the authentication. Also, make sure your webserver correctly delivers contents from this directory.
 
 ### Source Installation from Git
 

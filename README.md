@@ -36,7 +36,13 @@ Geerllingguy Roles:
 * [composer](https://github.com/geerlingguy/ansible-role-composer)
 * [node](https://github.com/geerlingguy/ansible-role-nodejs)
 
-added where possible with `ansible-galaxy install --roles-path . geerlingguy.rolename` inside roles folder.
+added where possible with `ansible-galaxy install --roles-path . geerlingguy.rolename` inside roles folder. 
+
+Roles can be overwritten later using commands like:
+```
+ansible-galaxy install geerlingguy.certbot --force -p ~/code/stedding/roles/
+```
+as well. Adjust path and package based on your local setup.
 
 ## Stedding Variables
 

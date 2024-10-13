@@ -41,10 +41,12 @@ jobs:
     strategy:
       matrix:
         distro:
-          - centos8
-          - centos7
-          - ubuntu1804
-          - debian10
+          - rockylinux8
+          - rockylinux9
+          - ubuntu2204
+          - ubuntu2004
+          - debian12
+          - debian11
 
     steps:
       - name: Check out the codebase.
@@ -58,7 +60,7 @@ jobs:
           python-version: '3.x'
 
       - name: Install test dependencies.
-        run: pip3 install ansible molecule[docker] docker
+        run: pip3 install ansible molecule molecule-plugins[docker] docker
 
       # See: https://github.com/geerlingguy/ansible-role-mysql/issues/422
       - name: Disable AppArmor on Debian.

@@ -1,94 +1,59 @@
-php_version: "7.4"
+php_version: "8.2"
 php_packages_state: latest
 php_use_managed_ini: true
 php_memory_limit: "512M"
 php_max_execution_time: "90"
 php_upload_max_filesize: "256M"
 php_packages:
-  - php7.4-apcu
-  - php7.4-common
-  - php7.4-intl
-  - php7.4-cli
-  - php7.4-dev
-  - php7.4-fpm
+  - php8.2-apcu
+  - php8.2-common
+  - php8.2-intl
+  - php8.2-cli
+  - php8.2-dev
+  - php8.2-fpm
   - libpcre3-dev
-  - php7.4-gd
-  - php7.4-curl
-  - php7.4-imap
-  - php7.4-json
-  - php-mbstring
-  - php7.4-mcrypt
-  - php7.4-opcache
-  - php7.4-pdo
-  - php7.4-xml
-  - php7.4-mbstring
-  - php7.4-zip
-  - php7.4-mysql
+  - php8.2-gd
+  - php8.2-curl
+  - php8.2-imap
+  - php8.2-json
+  - php8.2-mbstring
+  - php8.2-opcache
+  - php8.2-pdo
+  - php8.2-xml
+  - php8.2-zip
+  - php8.2-mysql
 php_date_timezone: "UTC"
 php_webserver_daemon: "nginx"
-php_fpm_daemon: php7.4-fpm
+php_fpm_daemon: php8.2-fpm
 php_conf_paths:
-  - /etc/php/7.4/fpm
-  - /etc/php/7.4/cli
-
+  - /etc/php/8.2/fpm
+  - /etc/php/8.2/cli
 php_extension_conf_paths:
-  - /etc/php/7.4/fpm/conf.d
-  - /etc/php/7.4/cli/conf.d
+  - /etc/php/8.2/fpm/conf.d
+  - /etc/php/8.2/cli/conf.d
 
 mysql_packages:
   - mariadb-client
   - mariadb-server
-  - python-mysqldb
+  - python3-mysqldb
 
-mysql_root_password: "{{mysql_root_password}}"
+mysql_root_password: "{{ mysql_root_password }}"
 mysql_databases:
-  - name: "{{database_name}}"
+  - name: "{{ database_name }}"
     encoding: utf8mb4
     collation: utf8mb4_unicode_ci
 mysql_users:
-  - name: "{{database_user}}"
+  - name: "{{ database_user }}"
     host: "%"
-    password: "{{database_user_password}}"
-    priv: "example_db.*:ALL"
+    password: "{{ database_user_password }}"
+    priv: "{{ database_name }}.*:ALL"
 
 nginx_server_names_hash_bucket_size: "128"
 nginx_remove_default_vhost: true
-#one vhost, one block, filename is server_name unless added
 nginx_vhosts:
-  # Host files for self signed setup
-  # - listen: "443 ssl http2"
-  #   server_name: "{{domain}}"
-  #   root: "/var/www/{{domain}}/current/public"
-  #   index: "index.php index.html index.htm"
-  #   state: "present"
-  #   template: "{{ nginx_vhost_template }}"
-  #   #The filename defaults to the first domain in server_name
-  #   filename: "{{domain}}.conf" 
-  #   extra_parameters: |
-  #     location / {
-  #         try_files $uri $uri/ /index.php$is_args$args;
-  #     }
-  #     location ~ \.php$ {
-  #         fastcgi_split_path_info ^(.+\.php)(/.+)$;
-  #         fastcgi_pass unix:/var/run/php/php7.4-fpm.sock;
-  #         fastcgi_index index.php;
-  #         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-  #         include fastcgi_params;
-  #     }
-  #     # certificates for when Let's Encrypt Certbot is not used
-  #     # ssl_certificate /etc/ssl/certs/domain_com-bundle.crt;
-  #     # ssl_certificate_key /etc/ssl/certs/domain_com.key;
-  #     # ssl_protocols       TLSv1.1 TLSv1.2;
-  #     # ssl_ciphers         HIGH:!aNULL:!MD5;
-  # - listen: "80"
-  #   server_name: "{{domain}}"
-  #   return: "301 https://{{domain}}$request_uri"
-  #   state: "present"
-  #   filename: "{{domain}}.80.conf"
-
   - listen: "80 default_server"
-    server_name: "{{domain}}"
-    root: "/var/www/{{domain}}/current/public"
+    server_name: "{{ domain }}"
+    root: "/var/www/{{ domain }}/current/public"
     index: "index.php index.html index.htm"
     state: "present"
     template: "{{ nginx_vhost_template }}"
@@ -98,21 +63,20 @@ nginx_vhosts:
       }
       location ~ \.php$ {
           fastcgi_split_path_info ^(.+\.php)(/.+)$;
-          fastcgi_pass unix:/var/run/php/php7.4-fpm.sock;
+          fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
           fastcgi_index index.php;
           fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
           include fastcgi_params;
       }
 
-# Certbot Details if used instead of own SSL Certificates
 certbot_auto_renew_user: root
 certbot_auto_renew_minute: 20
 certbot_auto_renew_hour: 5
 
 composer_global_packages:
   - { name: laravel/installer }
-composer_home_path: '/home/web/.composer'
-composer_home_owner: web
+composer_home_path: '/home/{{ web_user }}/.composer'
+composer_home_owner: "{{ web_user }}"
 composer_home_group: www-data
 composer_add_to_path: true
 

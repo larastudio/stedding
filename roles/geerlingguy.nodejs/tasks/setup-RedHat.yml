@@ -1,42 +1,30 @@
 ---
-- name: Set up the Nodesource RPM directory.
-  set_fact:
-    nodejs_rhel_rpm_dir: "pub_{{ nodejs_version }}"
-
-- name: Import Nodesource RPM key (CentOS < 7).
+- name: Import Nodesource RPM key.
   rpm_key:
-    key: http://rpm.nodesource.com/pub/el/NODESOURCE-GPG-SIGNING-KEY-EL
+    key: https://rpm.nodesource.com/gpgkey/nodesource.gpg.key
     state: present
-  when: ansible_distribution_major_version|int < 7
 
-- name: Import Nodesource RPM key (CentOS 7+).
-  rpm_key:
-    key: https://rpm.nodesource.com/pub/el/NODESOURCE-GPG-SIGNING-KEY-EL
-    state: present
-  when: ansible_distribution_major_version|int >= 7
-
-- name: Add Nodesource repositories for Node.js (CentOS < 7).
+- name: Add Nodesource repositories for Node.js.
   yum:
-    name: "http://rpm.nodesource.com/{{ nodejs_rhel_rpm_dir }}/el/{{ ansible_distribution_major_version }}/{{ ansible_architecture }}/nodesource-release-el{{ ansible_distribution_major_version }}-1.noarch.rpm"
+    name: "https://rpm.nodesource.com/pub_{{ nodejs_version }}/nodistro/repo/nodesource-release-nodistro-1.noarch.rpm"
     state: present
-  when: ansible_distribution_major_version|int < 7
+  when: ansible_distribution_major_version | int >= 7
+  register: node_repo
 
-- name: Add Nodesource repositories for Node.js (CentOS 7+).
+- name: Update package cache if repo was added.
   yum:
-    name: "https://rpm.nodesource.com/{{ nodejs_rhel_rpm_dir }}/el/{{ ansible_distribution_major_version }}/{{ ansible_architecture }}/nodesource-release-el{{ ansible_distribution_major_version }}-1.noarch.rpm"
-    state: present
-  when: ansible_distribution_major_version|int >= 7
+    update_cache: true
+  when: node_repo is changed
+  tags: ['skip_ansible_lint']
 
 - name: Ensure Node.js AppStream module is disabled (CentOS 8+).
   command: yum module disable -y nodejs
-  args:
-    warn: false
   register: module_disable
   changed_when: "'Nothing to do.' not in module_disable.stdout"
-  when: ansible_distribution_major_version|int >= 8
+  when: ansible_distribution_major_version | int >= 8
 
 - name: Ensure Node.js and npm are installed.
   yum:
-    name: "nodejs-{{ nodejs_version|regex_replace('x', '') }}*"
+    name: "nodejs-{{ nodejs_version | regex_replace('x', '') }}*"
     state: present
     enablerepo: nodesource

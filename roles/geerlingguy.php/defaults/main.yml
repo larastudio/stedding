@@ -31,6 +31,7 @@ php_fpm_pm_start_servers: 5
 php_fpm_pm_min_spare_servers: 5
 php_fpm_pm_max_spare_servers: 5
 php_fpm_pm_max_requests: 0
+php_fpm_pm_status_path: ""
 
 # PHP-FPM pool configuration.
 php_fpm_pools:
@@ -43,7 +44,8 @@ php_fpm_pools:
     pool_pm_start_servers: "{{ php_fpm_pm_start_servers }}"
     pool_pm_min_spare_servers: "{{ php_fpm_pm_min_spare_servers }}"
     pool_pm_max_spare_servers: "{{ php_fpm_pm_max_spare_servers }}"
-    pool_php_fpm_pm_max_requests: "{{ php_fpm_pm_max_requests }}"
+    pool_pm_max_requests: "{{ php_fpm_pm_max_requests }}"
+    pool_pm_status_path: "{{ php_fpm_pm_status_path }}"
 
 # The executable to run when calling PHP from the command line.
 php_executable: "php"
@@ -106,7 +108,7 @@ php_display_startup_errors: "Off"
 
 # Install PHP from source (instead of using a package manager) with these vars.
 php_install_from_source: false
-php_source_repo: "https://git.php.net/repository/php-src.git"
+php_source_repo: "https://github.com/php/php-src.git"
 php_source_version: "master"
 php_source_clone_dir: "~/php-src"
 php_source_clone_depth: 1
