@@ -1,7 +1,0 @@
-*.retry
-*/__pycache__
-*.pyc
-.cache
-
-venv/
-.vscode/
