@@ -11,3 +11,5 @@
     - { role: nginx, tags: ['nginx', 'web', 'http', 'lemp'] }
 
     - { role: composer, tags: ['composer'] }
+    
+    - { role: redis, tags: ['redis', 'cache'] }
