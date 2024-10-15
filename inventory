@@ -1,8 +1,12 @@
-    [dev]
-    203.0.113.0.101
+[local]
+# ansible-test-host will fail though that is the container host name
+docker-host ansible_host=localhost ansible_port=2222 ansible_user=testuser ansible_become=yes
 
-    [prod]
-    203.0.113.0.102
+[staging]
+# IP address for your staging server
 
-    [all:vars]
-    ansible_python_interpreter=/usr/bin/python3
+[prod]
+# IP address for your production server
+
+[all:vars]
+ansible_python_interpreter=/usr/bin/python3

@@ -1,7 +1,23 @@
 ---
 - name: Install MariaDB & mysql-python prereq
-  apt: name={{ item }} update_cache=yes state=latest
-  loop: [ 'mariadb-server', 'python3-pymysql' ]
+  apt:
+    name: "{{ item }}"
+    update_cache: yes
+    state: latest
+  loop:
+    - mariadb-server
+    - python3-pymysql
+
+# Check if MariaDB is running
+- name: Check if MariaDB is running
+  shell: "mysqladmin ping -uroot --socket=/var/run/mysqld/mysqld.sock"
+  register: mariadb_status
+  failed_when: false
+  changed_when: false
+
+- name: Ensure MariaDB is started if not running
+  shell: "mysqld_safe --datadir=/var/lib/mysql &"
+  when: mariadb_status.rc != 0
 
 # MariaDB Configuration
 - name: Sets the root password
@@ -9,7 +25,7 @@
     name: root
     password: "{{ mysql_root_password }}"
     login_unix_socket: /var/run/mysqld/mysqld.sock
-  no_log: true
+  no_log: false
 
 - name: Removes all anonymous user accounts
   mysql_user:
@@ -17,7 +33,7 @@
     host_all: yes
     state: absent
     login_unix_socket: /var/run/mysqld/mysqld.sock
-  no_log: true
+  no_log: false
 
 - name: Removes the MySQL test database
   mysql_db:

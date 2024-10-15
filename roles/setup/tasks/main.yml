@@ -1,36 +1,41 @@
 ---
+
+- name: Debug Variables
+  debug:
+    msg: "DB Host: {{ db_host }}, DB User: {{ db_user }}, DB Pass: {{ db_pass }}"
+
 - name: Install Prerequisites
   apt: name=aptitude update_cache=yes state=latest force_apt_get=yes
 
 # Sudo Group Setup
-- name: Make sure we have a 'wheel' group
-  group:
-    name: wheel
-    state: present
+# - name: Make sure we have a 'wheel' group
+#   group:
+#     name: wheel
+#     state: present
 
-- name: Allow 'wheel' group to have passwordless sudo
-  lineinfile:
-    path: /etc/sudoers
-    state: present
-    regexp: '^%wheel'
-    line: '%wheel ALL=(ALL) NOPASSWD: ALL'
-    validate: '/usr/sbin/visudo -cf %s'
+# - name: Allow 'wheel' group to have passwordless sudo
+#   lineinfile:
+#     path: /etc/sudoers
+#     state: present
+#     regexp: '^%wheel'
+#     line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+#     validate: '/usr/sbin/visudo -cf %s'
 
 # User + Key Setup
-- name: Create a new regular user with sudo privileges
-  user:
-    name: "{{ remote_user }}"
-    state: present
-    groups: wheel
-    append: true
-    create_home: true
-    shell: /bin/bash
+# - name: Create a new regular user with sudo privileges
+#   user:
+#     name: "{{ remote_user }}"
+#     state: present
+#     groups: wheel
+#     append: true
+#     create_home: true
+#     shell: /bin/bash
 
-- name: Set authorized key for remote user
-  authorized_key:
-    user: "{{ remote_user }}"
-    state: present
-    key: "{{ copy_local_key }}"
+# - name: Set authorized key for remote user
+#   authorized_key:
+#     user: "{{ remote_user }}"
+#     state: present
+#     key: "{{ copy_local_key }}" # local ssh 
 
 - name: Disable password authentication for root
   lineinfile:
