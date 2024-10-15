@@ -86,11 +86,6 @@ You can now SSH into the container using the testuser account to verify that eve
     UBUNTU_CODENAME=noble
     LOGO=ubuntu-logo
     ```
-5. **Run Your Ansible Playbook**: Execute your Ansible playbook inside the running container:
-
-   ```bash
-   docker exec -it ansible-test-host ansible-playbook -i inventory server-setup.yml --limit local
-   ```
 
 ## Notes
 
