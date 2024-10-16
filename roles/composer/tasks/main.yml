@@ -1,38 +1,32 @@
 ---
 - name: Checks if Composer is already installed
-  command: "{{ composer_path }}"
-  ignore_errors: true
+  stat:
+    path: /usr/local/bin/composer
   register: composer_installed
 
-- name: Install Composer if its not already installed
+- name: Install Composer if it is not already installed
   block:
 
     - name: Download Composer Installation Script (if not already installed)
       get_url:
         url: https://getcomposer.org/installer
         dest: /tmp/composer-setup.php
+      when: composer_installed.stat.exists == false
+
+    - name: Verify Composer installer signature
+      shell: |
+        php -r "if (hash_file('SHA384', '/tmp/composer-setup.php') === '48e868dec6b34e1f015032c405f17b1162e6e4a1b8053bbefcb4ff57347a5678') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('/tmp/composer-setup.php'); }"
+      when: composer_installed.stat.exists == false
+      changed_when: false
 
     - name: Run Composer Installer (if not already installed)
-      command:
-        cmd: /usr/bin/php /tmp/composer-setup.php
-        creates: composer.phar
-
-    - name: Copy Composer Executable to /usr/local/bin
-      become: true
-      copy:
-        src: composer.phar
-        dest: /usr/local/bin/composer
-        remote_src: yes
-        mode: '0755'
-
-    - name: Remove phar
-      file:
-        path: composer.phar
-        state: absent
+      shell: /usr/bin/php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer
+      when: composer_installed.stat.exists == false
 
     - name: Remove Install Script
       file:
         path: /tmp/composer-setup.php
         state: absent
+      when: composer_installed.stat.exists == false
 
-  when: composer_installed is failed
+  when: composer_installed.stat.exists == false
