@@ -1,5 +1,5 @@
-# Use the latest Ubuntu image
-FROM ubuntu:latest
+# Use Ubuntu 24.04 image instead of latest
+FROM ubuntu:24.04
 
 # Update and install required packages
 RUN apt-get update && apt-get install -y sudo openssh-server curl && apt-get clean
