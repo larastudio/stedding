@@ -48,7 +48,8 @@ pip install passlib
 
 ## Local Testing with Docker
 
-You can use Docker to create an isolated environment for running your Ansible playbooks locally.
+You can use Docker to create an isolated environment for running your Ansible playbooks locally. You will need to
+run the playbook twice most of the time due to network issues with ipv.
 
 ### Steps to Set Up:
 
@@ -90,7 +91,49 @@ You can now SSH into the container using the testuser account to verify that eve
    ```bash
    ansible-playbook  -i inventory server-setup.yml --limit local
    ```
+## Lima
 
+You can also test the playbook with Lima VM. General setup instructions:
+```bash
+brew install lima
+limactl create --arch=x86_64 template://ubuntu
+limactl edit ubuntu
+```
+and add
+```bash
+ssh:
+  localPort: 2022
+portForwards:
+  - guestPort: 80
+    hostPort: 8080
+  - guestPort: 443
+    hostPort: 8443
+```
+at the end of the file and save that. Lima will ask you to start the system and say yes. Will take a bit of time.
+
+then do a 
+```bash
+sudo nano ~/.config/ssh_config
+```
+and add
+```bash
+host lima-ubuntu
+  HostName localhost
+  Port 2022
+```
+useful for VS Code access. Then to test shell access to virtual iamge do:
+```bash
+ssh jasperfrumau@127.0.0.1 -p 2022
+```
+Also adjust `inventory line:
+```bash
+[lima]
+ansible_host=127.0.0.1 ansible_port=2022 ansible_user=yourlocaluser ansible_become=yes
+```
+and add your own local user you use. To now run playbook you can now use 
+```bash
+ansible-playbook  -i inventory server-setup.yml --limit lima
+```
 ## Notes
 
 This is the new version of Stedding, based on [Heidi's Ansible Laravel Demo](https://github.com/do-community/ansible-laravel-demo).
