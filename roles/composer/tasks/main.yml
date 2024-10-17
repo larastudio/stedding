@@ -7,26 +7,58 @@
 - name: Install Composer if it is not already installed
   block:
 
+    - name: Create directory for Composer setup
+      file:
+        path: /usr/local/src
+        state: directory
+        mode: '0755'
+      when: composer_installed.stat.exists == false
+
     - name: Download Composer Installation Script (if not already installed)
       get_url:
         url: https://getcomposer.org/installer
-        dest: /tmp/composer-setup.php
+        dest: /usr/local/src/composer-setup.php
       when: composer_installed.stat.exists == false
 
-    - name: Verify Composer installer signature
-      shell: |
-        php -r "if (hash_file('SHA384', '/tmp/composer-setup.php') === '48e868dec6b34e1f015032c405f17b1162e6e4a1b8053bbefcb4ff57347a5678') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('/tmp/composer-setup.php'); }"
-      when: composer_installed.stat.exists == false
-      changed_when: false
-
-    - name: Run Composer Installer (if not already installed)
-      shell: /usr/bin/php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer
+    - name: Check if Composer setup script was downloaded
+      stat:
+        path: /usr/local/src/composer-setup.php
+      register: composer_setup_downloaded
       when: composer_installed.stat.exists == false
 
-    - name: Remove Install Script
+    - name: Set execute permissions on Composer setup script
       file:
-        path: /tmp/composer-setup.php
+        path: /usr/local/src/composer-setup.php
+        mode: '0755'
+      when: composer_installed.stat.exists == false and composer_setup_downloaded.stat.exists
+
+    - name: Run Composer Installer with debug (as root)
+      shell: /usr/bin/php /usr/local/src/composer-setup.php --install-dir=/usr/local/bin --filename=composer
+      register: composer_install_output
+      become: true  # Ensure it runs as root for system-level installation
+      when: composer_installed.stat.exists == false and composer_setup_downloaded.stat.exists
+
+    # - name: Debug Composer Install Output
+    #   debug:
+    #     var: composer_install_output
+    #   when: composer_installed.stat.exists == false and composer_setup_downloaded.stat.exists
+
+    # Transfer ownership to www-data (or the web user) after installation
+    - name: Change ownership of Composer binary to www-data
+      file:
+        path: /usr/local/bin/composer
+        owner: www-data
+        group: www-data
+        mode: '0755'
+      become: true  # Root needs to change ownership
+      when: composer_installed.stat.exists == false
+
+    # Clean up the installer script after Composer is installed
+    - name: Remove Composer setup script
+      file:
+        path: /usr/local/src/composer-setup.php
         state: absent
+      become: true  # Ensure root can remove the setup script
       when: composer_installed.stat.exists == false
 
   when: composer_installed.stat.exists == false
