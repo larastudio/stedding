@@ -135,7 +135,7 @@ and add your own local user you use. To now run playbook you can now use
 ansible-playbook  -i inventory server-setup.yml --limit lima
 ```
 
-**NB** see `lima.yml in root project where we have the full Ubuntu lima config file with changes.
+**NB** see `lima.yml` in root project where we have the full Ubuntu lima config file with changes.
 
 ## Notes
 
