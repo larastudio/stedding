@@ -1,11 +1,9 @@
 ---
-
-- name: Debug Variables
-  debug:
-    msg: "DB Host: {{ db_host }}, DB User: {{ db_user }}, DB Pass: {{ db_pass }}"
-
 - name: Install Prerequisites
   apt: name=aptitude update_cache=yes state=latest force_apt_get=yes
+
+# Removed Addition sudo group and sudo user. Can be 
+# done on VPS using GUI or via cloudinit
 
 # Sudo Group Setup
 # - name: Make sure we have a 'wheel' group
