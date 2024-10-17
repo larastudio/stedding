@@ -1,21 +1,21 @@
 ---
 # Initial Server Setup
-# Already set up
+remote_user: warden
 
 # MySQL Setup
 mysql_root_password: root
-mysql_app_db: saas
-mysql_app_user: saas_user
+mysql_app_db: stedding
+mysql_app_user: stonemason
 mysql_app_pass: mysql
 
 # Web Server Setup
 http_host: "{{ ansible_facts.eth0.ipv4.address }}"
 remote_www_root: /var/www
-app_root_dir: saas-demo
+app_root_dir: stedding
 document_root: "{{ remote_www_root }}/{{ app_root_dir }}/public"
 
 # Laravel Env Variables
-app_name: saas
+app_name: stedding
 app_env: dev
 app_debug: true
 app_url: "http://{{ http_host }}"
