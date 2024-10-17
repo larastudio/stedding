@@ -134,6 +134,9 @@ and add your own local user you use. To now run playbook you can now use
 ```bash
 ansible-playbook  -i inventory server-setup.yml --limit lima
 ```
+
+**NB** see `lima.yml in root project where we have the full Ubuntu lima config file with changes.
+
 ## Notes
 
 This is the new version of Stedding, based on [Heidi's Ansible Laravel Demo](https://github.com/do-community/ansible-laravel-demo).
