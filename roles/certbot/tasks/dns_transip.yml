@@ -1,0 +1,31 @@
+---
+- name: "Ensure /etc/letsencrypt directory exists"
+  file:
+    path: /etc/letsencrypt
+    state: directory
+    mode: '0755'
+
+- name: "Copy TransIP API credentials file"
+  copy:
+    src: files/transip.ini
+    dest: /etc/letsencrypt/transip.ini
+    owner: root
+    group: root
+    mode: '0600'
+
+- name: "Obtain wildcard SSL certificate using Certbot with DNS (TransIP)"
+  command: >
+    certbot certonly
+    --dns-transip
+    --dns-transip-credentials /etc/letsencrypt/transip.ini
+    -d "{{ http_host }}"
+    -d "*.{{ http_host }}"
+    --non-interactive
+    --agree-tos
+    --email "{{ certbot_email }}"
+  register: certbot_result
+
+- name: "Check if Certbot succeeded"
+  debug:
+    msg: "{{ certbot_result.stdout }}"
+  failed_when: certbot_result.rc != 0

@@ -1,3 +1,4 @@
+
 # Stedding
 
 Stedding is a minimalistic LEMP Stack setup for Laravel PHP. It facilitates the setting up of Laravel apps on a well prepared Ubuntu based VPS using Ansible Playbooks.
@@ -36,20 +37,69 @@ pip install passlib
    ansible-playbook server-setup.yml
    ```
 
+    You can add `--limit host` where host is `lima`, `docker`, `staging` or `production` depending on the host you are going for. 
+
 6. **Deploy Laravel**: Run the `laravel-deploy.yml` playbook to deploy the demo Laravel application:
 
    ```bash
    ansible-playbook laravel-deploy.yml
    ```
+   
+   You do need to have the application added to the application directory. You can add the application by copying over data or adding it as a submodule.
 
 7. **Access the Application**: Use your server's IP address or hostname to verify the setup.
 
----
+
+## Certbot for SSL Certificates
+
+Stedding supports SSL certificate issuance via Let's Encrypt using Certbot. You can choose between DNS-based validation (for wildcard certificates) and HTTP-based validation.
+
+### DNS or HTTP Validation
+
+To use DNS validation for obtaining wildcard SSL certificates, set the `certbot_dns` variable to `true` in your `group_vars/all.yml` or a specific environment file. You'll also need to specify the DNS provider in the `dns_provider` variable (e.g., `transip`, `hetzner`).
+
+Example for DNS validation in `group_vars/all.yml`:
+```yaml
+certbot_dns: true
+dns_provider: "transip"  # Use "hetzner" for Hetzner DNS
+certbot_email: "your-email@example.com"
+```
+
+To use HTTP validation, set `certbot_dns` to `false`:
+```yaml
+certbot_dns: false
+```
+
+### Environment-Specific Configuration
+
+For production and staging environments, make sure to add a fully qualified domain name (FQDN) in `group_vars/production.yml` or `group_vars/staging.yml`. Certbot requires the FQDN for both DNS and HTTP validation.
+
+Example for `group_vars/production.yml`:
+```yaml
+http_host: "example.com"
+```
+
+For testing environments (e.g., Lima or Docker), you can set the `http_host` to a local domain or IP address.
+
+### Running the Playbook for Specific Environments
+
+When running the playbook, you can limit the execution to specific environments like production or staging by using the `--limit` flag. This ensures that environment-specific configurations, including Certbot, are applied only to the relevant hosts.
+
+Example for running the playbook in production:
+```bash
+ansible-playbook server-setup.yml --limit production
+```
+
+For staging:
+```bash
+ansible-playbook server-setup.yml --limit staging
+```
+
+Make sure you have a `group_vars/production.yml` or `group_vars/staging.yml` file set up with the necessary configuration values, such as the FQDN (`http_host`).
 
 ## Local Testing with Docker
 
-You can use Docker to create an isolated environment for running your Ansible playbooks locally. You will need to
-run the playbook twice most of the time due to network issues with ipv.
+You can use Docker to create an isolated environment for running your Ansible playbooks locally. You will need to run the playbook twice most of the time due to network issues with ipv.
 
 ### Steps to Set Up:
 
@@ -91,6 +141,7 @@ You can now SSH into the container using the testuser account to verify that eve
    ```bash
    ansible-playbook  -i inventory server-setup.yml --limit local
    ```
+
 ## Lima
 
 You can also test the playbook with Lima VM. General setup instructions:
@@ -121,7 +172,7 @@ host lima-ubuntu
   HostName localhost
   Port 2022
 ```
-useful for VS Code access. Then to test shell access to virtual iamge do:
+useful for VS Code access. Then to test shell access to virtual image do:
 ```bash
 ssh jasperfrumau@127.0.0.1 -p 2022
 ```

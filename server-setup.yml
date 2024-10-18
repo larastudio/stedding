@@ -13,3 +13,9 @@
     - { role: composer, tags: ['composer'] }
     
     - { role: redis, tags: ['redis', 'cache'] }
+    
+# Run Certbot only on production and staging hosts
+- hosts: production:staging
+  become: true
+  roles:
+    - { role: certbot, tags: ['certbot'] }

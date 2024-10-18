@@ -1,0 +1,48 @@
+server {
+    listen 80;
+    server_name {{ http_host }};
+
+    # Allow access to the Let's Encrypt challenge
+    location /.well-known/acme-challenge/ {
+        root {{ document_root }};
+        allow all;
+    }
+
+    # Redirect all other HTTP requests to HTTPS
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+
+server {
+    listen 443 ssl;
+    server_name {{ http_host }};
+
+    ssl_certificate /etc/letsencrypt/live/{{ http_host }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ http_host }}/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+
+    add_header X-Frame-Options "SAMEORIGIN";
+    add_header X-XSS-Protection "1; mode=block";
+    add_header X-Content-Type-Options "nosniff";
+
+    root {{ document_root }};
+    index index.html index.htm index.php;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+        fastcgi_pass unix:/var/run/php/php-fpm.sock;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+}

@@ -1,0 +1,4 @@
+certbot_dns: false  # Default to HTTP validation; override in group_vars if needed
+certbot_email: ""  # Set in group_vars/all.yml
+http_host: ""  # Set in group_vars/all.yml
+dns_provider: "transip"  # Default DNS provider; can be changed in group_vars

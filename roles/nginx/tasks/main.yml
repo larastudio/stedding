@@ -1,12 +1,23 @@
 ---
 - name: Install Nginx
-  apt: name=nginx update_cache=yes state=latest
+  apt:
+    name: nginx
+    update_cache: yes
+    state: latest
 
-# Nginx Configuration
-- name: Sets Nginx conf file
+# Nginx Configuration for Local VM (lima, docker)
+- name: Sets Nginx conf file for local VM
   template:
-    src: "nginx.conf.j2"
+    src: "nginx.conf-local.j2"
     dest: "/etc/nginx/sites-available/{{ http_conf }}"
+  when: "'lima' in group_names or 'docker' in group_names"
+
+# Nginx Configuration for Production-like environments (staging, dev, production)
+- name: Sets Nginx conf file for production
+  template:
+    src: "nginx.conf-production.j2"
+    dest: "/etc/nginx/sites-available/{{ http_conf }}"
+  when: "'staging' in group_names or 'production' in group_names"
 
 - name: Enables new site
   file:
@@ -27,3 +38,12 @@
     rule: allow
     port: "{{ http_port }}"
     proto: tcp
+  when: "'lima' in group_names or 'docker' in group_names or 'staging' in group_names or 'production' in group_names"
+
+# UFW Configuration for HTTPS (Production environments)
+- name: "UFW - Allow HTTPS on port 443"
+  ufw:
+    rule: allow
+    port: "443"
+    proto: tcp
+  when: "'staging' in group_names or 'production' in group_names"
