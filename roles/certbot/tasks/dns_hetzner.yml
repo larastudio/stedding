@@ -7,7 +7,7 @@
 
 - name: "Copy Hetzner API credentials file"
   copy:
-    src: files/hetzner.ini
+    src: "{{ playbook_dir }}/files/hetzner.ini"
     dest: /etc/letsencrypt/hetzner.ini
     owner: root
     group: root

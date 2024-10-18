@@ -7,7 +7,7 @@
 
 - name: "Copy TransIP API credentials file"
   copy:
-    src: files/transip.ini
+    src: "{{ playbook_dir }}/files/transip.ini"
     dest: /etc/letsencrypt/transip.ini
     owner: root
     group: root
