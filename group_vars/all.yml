@@ -25,12 +25,9 @@ db_database: "{{ mysql_app_db }}"
 db_user: "{{ mysql_app_user }}"
 db_pass: "{{ mysql_app_pass }}"
 
-# TransIP API credentials for DNS-based Certbot validation
-transip_username: "your-transip-username"
-transip_key: |
-  -----BEGIN PRIVATE KEY-----
-  MIIEvgIBADANBgkqhkiG9w0BAQEFAASC...
-  -----END PRIVATE KEY-----
+# DNS
+# DNS Keys are addded to files/provider.ini.example. Rename them to 
+# remove the example part and add keys. For TransIP a username is needed as well.
 
 # Certbot configuration
 certbot_dns: false  # Use HTTP validation by default
