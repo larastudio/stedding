@@ -1,0 +1,29 @@
+---
+- hosts: localhost
+  become: true
+  gather_facts: false
+  vars:
+    # Load the API token from the hetzner.ini file
+    hcloud_token: "{{ lookup('ini', 'dns_hetzner_api_token file={{ playbook_dir }}/files/hetzner.ini') }}"
+
+  tasks:
+    - name: Stop the Hetzner Cloud VPS
+      hcloud_server:
+        name: "{{ vps_name }}"
+        state: stopped
+        api_token: "{{ hcloud_token }}"
+      tags: ['resize']
+
+    - name: Resize Hetzner Cloud VPS to CX31
+      hcloud_server:
+        name: "{{ vps_name }}"
+        server_type: "cx31"
+        api_token: "{{ hcloud_token }}"
+      tags: ['resize']
+
+    - name: Start the Hetzner Cloud VPS
+      hcloud_server:
+        name: "{{ vps_name }}"
+        state: started
+        api_token: "{{ hcloud_token }}"
+      tags: ['resize']

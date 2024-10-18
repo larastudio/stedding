@@ -1,0 +1,28 @@
+---
+- name: "Install Certbot and DNS plugin for TransIP or other providers"
+  apt:
+    name:
+      - certbot
+      - python3-certbot-dns-{{ dns_provider }}
+    state: latest
+    update_cache: yes
+  when: certbot_dns
+
+- name: "Install Certbot and Nginx plugin"
+  apt:
+    name:
+      - certbot
+      - python3-certbot-nginx
+    state: latest
+    update_cache: yes
+  when: not certbot_dns
+
+# Include DNS-specific tasks based on the provider
+- include_tasks: dns_transip.yml
+  when: certbot_dns and dns_provider == "transip"
+
+- include_tasks: dns_hetzner.yml
+  when: certbot_dns and dns_provider == "hetzner"
+
+- include_tasks: http.yml
+  when: not certbot_dns

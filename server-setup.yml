@@ -1,0 +1,21 @@
+---
+- hosts: all
+  become: true
+  roles:
+    - { role: setup, tags: ['setup'] }
+
+    - { role: mariadb, tags: ['mysql', 'mariadb', 'db', 'lemp'] }
+
+    - { role: php, tags: ['php', 'web', 'php-fpm', 'lemp'] }
+
+    - { role: nginx, tags: ['nginx', 'web', 'http', 'lemp'] }
+
+    - { role: composer, tags: ['composer'] }
+    
+    - { role: redis, tags: ['redis', 'cache'] }
+    
+# Run Certbot only on production and staging hosts
+- hosts: production:staging
+  become: true
+  roles:
+    - { role: certbot, tags: ['certbot'] }

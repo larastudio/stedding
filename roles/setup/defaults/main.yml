@@ -1,0 +1,2 @@
+---
+sys_packages: ['curl', 'vim', 'git', 'ufw']

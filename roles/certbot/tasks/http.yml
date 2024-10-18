@@ -1,0 +1,10 @@
+---
+- name: "Obtain SSL certificate using Certbot with HTTP validation"
+  command: >
+    certbot --nginx -d {{ http_host }} --non-interactive --agree-tos --email {{ certbot_email }} --redirect
+  register: certbot_http_result
+
+- name: "Check if Certbot succeeded"
+  debug:
+    msg: "{{ certbot_http_result.stdout }}"
+  failed_when: certbot_http_result.rc != 0

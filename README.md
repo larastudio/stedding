@@ -1,151 +1,193 @@
+
 # Stedding
-Stedding is a minimalistic LEMP Stack setup for [Laravel PHP](https://laravel.com/). It facilitates the setting up of Laravel apps on a well prepared [Ubuntu based](https://www.ubuntu.com/) VPS using Ansible Playbooks. 
 
+Stedding is a minimalistic LEMP Stack setup for Laravel PHP. It facilitates the setting up of Laravel apps on a well prepared Ubuntu based VPS using Ansible Playbooks.
 
-## Local Box Requirements
-You need to have Ansible installed on your local computer. This really differs from box to box See [Ansible Documents](http://docs.ansible.com/ansible/intro_installation.html) for instructions.
+## Quick Setup
 
-For hashing the password for the admin user you have to install passlib:
-````
+To get started, you will need:
+
+- **Ansible Control Node**: A machine with Ansible installed and configured to connect to your Ansible hosts using SSH keys.
+- **Ansible Hosts**: One or more remote Ubuntu 22.04 servers. Ensure that each host has the control node’s public key added to its `authorized_keys` file for SSH access.
+
+**NB** For hashing the password for the admin user you have to install passlib:
+
+```bash
 pip install passlib
-````
-
-## Remote Server Requirements
-To run Ansible Playbooks properly on *Ubuntu 20.10+* we need to setup a sudo user and make sure Python and some other packages such as `ppa:ondrej/php` are available so Ansible can run. The setting up of a sudo user and adding of the SSH keys has been taken care of. So is the adding of Python and Ondrej's PHP PPA. All you need is root access to the Ubuntu 16.0.4 box. Preferably using an SSH key.
-
-**NB** [Gist with useful setup tips](https://gist.github.com/jasperf/0be4439bbda9a324dd24e7300f357eb4)
-
-## Playbooks
-
-* Install prerequisites
-* Sudo user Creation
-* Web user Creation
-* LEMP Provisioning
-* Laravel Homebase Setup
-
-## Roles
-
-Geerllingguy Roles:
-* [nginx](https://github.com/geerlingguy/ansible-role-nginx)
-* [certbot](https://github.com/geerlingguy/ansible-role-certbot)
-* [php](https://github.com/geerlingguy/ansible-role-php)
-* [mysql](https://github.com/geerlingguy/ansible-role-mysql)
-* [php-mysql](https://github.com/geerlingguy/ansible-role-php-mysql)
-* [memcached](https://github.com/geerlingguy/ansible-role-memcached)
-* [git](https://github.com/geerlingguy/ansible-role-git)
-* [composer](https://github.com/geerlingguy/ansible-role-composer)
-* [node](https://github.com/geerlingguy/ansible-role-nodejs)
-
-added where possible with `ansible-galaxy install --roles-path . geerlingguy.rolename` inside roles folder.
-
-## Stedding Variables
-
-Do not forget to adjust the vars in:
-
-* `group_vars/all` 
-* `vars/mainyml` 
-* `hosts`
-
-where need be. 
-
-
-### Hosts
-
-Here you normally add at least the ip address for the server. We added two hosts in this example:
-````
-[web]
-xxx.xxx.xx.xxx
-[database]
-xxx.xxx.xx.xxx
-````
-### Main Variables
-
-The variables in `vars/main.yml` are for setting up PHP, MySQL and Nginx details based on Geerlingguy roles. 
-
-
-### All Variables
-
-The variables in `group_vars/all` are for the repo, keys, branch, user, password and domain.
-
-example:
-````
-repo_url : git@github.com:Larastudio/larastudio.git
-github_keys: https://github.com/jasperf.keys
-git_branch: master
-sudo_user: admin
-web_user: web
-upassword: passsword
-domain: larastud.io
-database_name: database_name
-database_user: database_user
-database_user_password: database_user_password
-````
-
-
-### Nginx
-Nginx details are stored in `vars/main.yml` and `server.yml` . One host for the site being used for testing purposes has been added there. Do change it to work with the domain of your choice.
-
-### Certbot
-Using Geerling's [Certbot role](https://github.com/geerlingguy/ansible-role-certbot) Let's Encrypt's [Certbot](https://certbot.eff.org/) has been added to the server. This allows the site to use Let's Encrypt SSL certificate. This does however not adjust the Nginx's domain configuration to server on 443 and redirect port 80 traffic to port 443. Tweaks for this are being made.
-
-Nginx Certbot plugin has to be added using
-````
-sudo apt-get install python-certbot-nginx
-````
-A task is in the works, but not done.
-Then you can run:
-````
-certbot --nginx
-````
-to start the installation. You will then be asked to choose a domain. Next, they will ask you to agree with the TOS and install all. Working on an incorporation on the server still.
-
-*NB* May not be necessary if you run your own certs only. See further down on SSL
-### PHP
-
-To work with PHP 7.4 Ondrej's PHP PPA is added in requirements playbook using:
-````
-- name: Add repository for PHP 7.
-      apt_repository: repo='ppa:ondrej/php'
-````
-
-#### PHP OpCache
-
-For pre compiling PHP scripts Stedding uses PHP OpCache. For quick emptying OpCache use `/etc/init.d/php7.1-fpm restart` . Read more on it at [Ma.ttias.be](https://ma.ttias.be/how-to-clear-php-opcache/)
-
-### Memcached
-"Free & open source, high-performance, distributed memory object caching system, generic in nature, but intended for use in speeding up dynamic web applications by alleviating database load."
-
-### MariaDB
-
-The MariaDB details are added to `vars/main.yml` are just dummy data. Do adjust them.
-
-### Composer
-
-Composer is added and binary is put in the directory of the web user. Laravel is also added as a globally required package so it can be used.
-
-### Mail
-To set up your Laravel application to work with [Mailgun](https://www.mailgun.com/) for sending out emails which is used in this repo check out this [Laravel document](https://laravel.com/docs/mail) 
-### Nodejs
-Nodejs role is installed and we automatically add the following global packages:
-
-````
-nodejs_npm_global_packages:
-  - name: yarn
-  - npm
-````
-
-
-## Laravel Homebase Setup
-
-To run your Laravel application from a specific project directory, the one added to your Nginx configuration, we have added a separate playbook. One we will expand upon soon with other tasks. For now the project directory is created only using this task:
 ```
-  - name: Project Folder Creation
-    file: dest=/var/www/{{domain}} mode=2755 state=directory owner=web group=www-data
-````
-The domain can be set in `group_vars/all`. [GUID]
 
-## Let's Encryp or Commercial SSL Certificates
+### Steps:
 
-OpenSSL role has been added so self signed certificates can be added when you would like to. Current Stedding setup is aimed at working with Let's Encrypt so this role has not been acitvated. The path to own SSL certificates have been commented out.
+1. **Install Ansible**: Ensure Ansible is installed on your control node. You can follow this [Ansible installation guide](https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-ansible-on-ubuntu-18-04).
 
-As you will see there are two server blocks. One is for port 80, the second one should be for port 443 and both in different files. Let's Encrypt task for auto renewal has also been added.
+2. **Clone this repository**:
+
+   ```bash
+   git clone https://github.com/your-repository/stedding.git
+   cd stedding
+   ```
+
+3. **Set up your inventory file**: Use `inventory-example` as a base for creating your own `inventory` file.
+
+4. **Adjust configuration**: Modify the values in your `group_vars/all.yml` file according to your environment.
+
+5. **Run the server setup playbook**: Execute the `server-setup.yml` playbook to set up the LEMP server:
+
+   ```bash
+   ansible-playbook server-setup.yml
+   ```
+
+    You can add `--limit host` where host is `lima`, `docker`, `staging` or `production` depending on the host you are going for. 
+
+6. **Deploy Laravel**: Run the `laravel-deploy.yml` playbook to deploy the demo Laravel application:
+
+   ```bash
+   ansible-playbook laravel-deploy.yml
+   ```
+   
+   You do need to have the application added to the application directory. You can add the application by copying over data or adding it as a submodule.
+
+7. **Access the Application**: Use your server's IP address or hostname to verify the setup.
+
+
+## Certbot for SSL Certificates
+
+Stedding supports SSL certificate issuance via Let's Encrypt using Certbot. You can choose between DNS-based validation (for wildcard certificates) and HTTP-based validation.
+
+### DNS or HTTP Validation
+
+To use DNS validation for obtaining wildcard SSL certificates, set the `certbot_dns` variable to `true` in your `group_vars/all.yml` or a specific environment file. You'll also need to specify the DNS provider in the `dns_provider` variable (e.g., `transip`, `hetzner`).
+
+Example for DNS validation in `group_vars/all.yml`:
+```yaml
+certbot_dns: true
+dns_provider: "transip"  # Use "hetzner" for Hetzner DNS
+certbot_email: "your-email@example.com"
+```
+
+To use HTTP validation, set `certbot_dns` to `false`:
+```yaml
+certbot_dns: false
+```
+
+### Environment-Specific Configuration
+
+For production and staging environments, make sure to add a fully qualified domain name (FQDN) in `group_vars/production.yml` or `group_vars/staging.yml`. Certbot requires the FQDN for both DNS and HTTP validation.
+
+Example for `group_vars/production.yml`:
+```yaml
+http_host: "example.com"
+```
+
+For testing environments (e.g., Lima or Docker), you can set the `http_host` to a local domain or IP address.
+
+### Running the Playbook for Specific Environments
+
+When running the playbook, you can limit the execution to specific environments like production or staging by using the `--limit` flag. This ensures that environment-specific configurations, including Certbot, are applied only to the relevant hosts.
+
+Example for running the playbook in production:
+```bash
+ansible-playbook server-setup.yml --limit production
+```
+
+For staging:
+```bash
+ansible-playbook server-setup.yml --limit staging
+```
+
+Make sure you have a `group_vars/production.yml` or `group_vars/staging.yml` file set up with the necessary configuration values, such as the FQDN (`http_host`).
+
+## Local Testing with Docker
+
+You can use Docker to create an isolated environment for running your Ansible playbooks locally. You will need to run the playbook twice most of the time due to network issues with ipv.
+
+### Steps to Set Up:
+
+1. **Install Docker**: Follow the [Docker installation guide](https://docs.docker.com/engine/install/).
+
+2. **Build and Run the Docker Container**:
+
+    Update `SSH_KEY_URL` with your Github url for ssh public keys. Then run the command to build the image
+   ```bash
+   docker build -t ansible-test-host .
+   ```
+3. Run the Docker Container: After building the image, start the container:
+
+    ```bash
+    docker run --privileged  -d --name ansible-test-host -p 2222:22 ansible-test-host
+    ```
+   This will run the container in detached mode and bind the container's SSH service to port 2222 on your local machine.
+   
+   **NB** The `--privileged` flag grants the container extended privileges, allowing it to modify networking settings like UFW and iptables.
+
+4.  SSH into the Container (Optional): 
+You can now SSH into the container using the testuser account to verify that everything is working:
+
+    ```bash
+    ssh testuser@localhost -p 2222
+    ```
+    You can then check Ubuntu version
+    ```bash
+    sudo su
+    root@70e2eb742cab:/home/testuser# cd /etc/os-release
+    bash: cd: /etc/os-release: Not a directory
+    root@70e2eb742cab:/home/testuser# cat /etc/os-release
+    PRETTY_NAME="Ubuntu 24.04 LTS"
+    ...
+    UBUNTU_CODENAME=noble
+    LOGO=ubuntu-logo
+    ```
+5. Run local playbook 
+   ```bash
+   ansible-playbook  -i inventory server-setup.yml --limit local
+   ```
+
+## Lima
+
+You can also test the playbook with Lima VM. General setup instructions:
+```bash
+brew install lima
+limactl create --arch=x86_64 template://ubuntu
+limactl edit ubuntu
+```
+and add
+```bash
+ssh:
+  localPort: 2022
+portForwards:
+  - guestPort: 80
+    hostPort: 8080
+  - guestPort: 443
+    hostPort: 8443
+```
+at the end of the file and save that. Lima will ask you to start the system and say yes. Will take a bit of time.
+
+then do a 
+```bash
+sudo nano ~/.config/ssh_config
+```
+and add
+```bash
+host lima-ubuntu
+  HostName localhost
+  Port 2022
+```
+useful for VS Code access. Then to test shell access to virtual image do:
+```bash
+ssh jasperfrumau@127.0.0.1 -p 2022
+```
+Also adjust `inventory line:
+```bash
+[lima]
+ansible_host=127.0.0.1 ansible_port=2022 ansible_user=yourlocaluser ansible_become=yes
+```
+and add your own local user you use. To now run playbook you can now use 
+```bash
+ansible-playbook  -i inventory server-setup.yml --limit lima
+```
+
+**NB** see `lima.yml` in root project where we have the full Ubuntu lima config file with changes.
+
+## Notes
+
+This is the new version of Stedding, based on [Heidi's Ansible Laravel Demo](https://github.com/do-community/ansible-laravel-demo).

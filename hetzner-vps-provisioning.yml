@@ -1,0 +1,25 @@
+---
+- hosts: localhost
+  become: true
+  gather_facts: false
+  vars:
+    # Lookup the API token from the hetzner.ini file
+    hcloud_token: "{{ lookup('ini', 'dns_hetzner_api_token file={{ playbook_dir }}/files/hetzner.ini') }}"
+
+  tasks:
+    - name: Install Hetzner Cloud Python package
+      pip:
+        name: hcloud
+        state: present
+      tags: ['vps']
+
+    - name: Create Hetzner Cloud VPS
+      hcloud_server:
+        name: "{{ vps_name }}"
+        image: "ubuntu-24.04"
+        server_type: "cx21"
+        location: "fsn1"
+        ssh_keys: "{{ ssh_key_name }}"
+        api_token: "{{ hcloud_token }}"
+      register: vps
+      tags: ['vps']

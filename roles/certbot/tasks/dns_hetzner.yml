@@ -1,0 +1,31 @@
+---
+- name: "Ensure /etc/letsencrypt directory exists"
+  file:
+    path: /etc/letsencrypt
+    state: directory
+    mode: '0755'
+
+- name: "Copy Hetzner API credentials file"
+  copy:
+    src: "{{ playbook_dir }}/files/hetzner.ini"
+    dest: /etc/letsencrypt/hetzner.ini
+    owner: root
+    group: root
+    mode: '0600'
+
+- name: "Obtain wildcard SSL certificate using Certbot with DNS (Hetzner)"
+  command: >
+    certbot certonly
+    --dns-hetzner
+    --dns-hetzner-credentials /etc/letsencrypt/hetzner.ini
+    -d "{{ http_host }}"
+    -d "*.{{ http_host }}"
+    --non-interactive
+    --agree-tos
+    --email "{{ certbot_email }}"
+  register: certbot_result
+
+- name: "Check if Certbot succeeded"
+  debug:
+    msg: "{{ certbot_result.stdout }}"
+  failed_when: certbot_result.rc != 0

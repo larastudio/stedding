@@ -1,0 +1,80 @@
+---
+- name: Install MariaDB & mysql-python prereq
+  apt:
+    name: "{{ item }}"
+    update_cache: yes
+    state: latest
+  loop:
+    - mariadb-server
+    - python3-pymysql
+
+# Check if MariaDB is running
+- name: Check if MariaDB is running
+  shell: "mysqladmin ping -uroot --socket=/var/run/mysqld/mysqld.sock"
+  register: mariadb_status
+  failed_when: false
+  changed_when: false
+
+- name: Ensure MariaDB is started if not running
+  shell: "mysqld_safe --datadir=/var/lib/mysql &"
+  when: mariadb_status.rc != 0
+
+# MariaDB Configuration
+
+# Check if the root password is already set
+- name: Check if root password is already set
+  shell: "mysqladmin -uroot -p'{{ mysql_root_password }}' ping"
+  register: root_password_check
+  failed_when: false
+  changed_when: false
+  ignore_errors: true
+
+# Set the root password only if it is not already set
+- name: Sets the root password if not already set
+  mysql_user:
+    name: root
+    password: "{{ mysql_root_password }}"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+  when: root_password_check.rc != 0
+  no_log: false
+
+# Remove all anonymous user accounts
+- name: Removes all anonymous user accounts
+  mysql_user:
+    name: ''
+    host_all: yes
+    state: absent
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+  no_log: false
+
+# Remove the MySQL test database
+- name: Removes the MySQL test database
+  mysql_db:
+    name: test
+    state: absent
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+
+# Create the App Database
+- name: Creates App Database
+  mysql_db:
+    name: "{{ mysql_app_db }}"
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+
+# Create App MySQL user and grants access to App DB
+- name: Create App MySQL user and grants access to App DB
+  mysql_user:
+    name: "{{ mysql_app_user }}"
+    password: "{{ mysql_app_pass }}"
+    priv: "{{ mysql_app_db }}.*:ALL"
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+  no_log: true

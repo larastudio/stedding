@@ -1,0 +1,66 @@
+---
+- name: Install Prerequisites
+  apt: name=aptitude update_cache=yes state=latest force_apt_get=yes
+
+# Sudo Group Setup
+# Use 'sudo' group instead of 'wheel'
+- name: Allow 'sudo' group to have passwordless sudo
+  lineinfile:
+    path: /etc/sudoers
+    state: present
+    regexp: '^%sudo'
+    line: '%sudo ALL=(ALL) NOPASSWD: ALL'
+    validate: '/usr/sbin/visudo -cf %s'
+
+# User + Key Setup
+- name: Create a new regular user with sudo privileges
+  user:
+    name: "{{ remote_user }}"
+    state: present
+    groups: sudo
+    append: true
+    create_home: true
+    shell: /bin/bash
+
+# SSH Key Setup
+- name: Check for id_rsa.pub
+  set_fact:
+    copy_local_key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
+  when: lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub', errors='ignore') is not none
+
+- name: Check for id_ed25519.pub if id_rsa.pub not found
+  set_fact:
+    copy_local_key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_ed25519.pub') }}"
+  when: copy_local_key is not defined or copy_local_key == ''
+
+- name: Set authorized key for remote user
+  authorized_key:
+    user: "{{ remote_user }}"
+    state: present
+    key: "{{ copy_local_key }}" # local ssh
+
+- name: Disable password authentication for root
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    state: present
+    regexp: '^#?PermitRootLogin'
+    line: 'PermitRootLogin prohibit-password'
+
+# Install Packages
+- name: Update apt
+  apt: update_cache=yes
+
+- name: Install required system packages
+  apt: name={{ sys_packages }} state=latest
+
+# UFW Setup
+- name: UFW - Allow SSH connections
+  ufw:
+    rule: allow
+    name: OpenSSH
+
+- name: UFW - Deny all other incoming traffic by default
+  ufw:
+    state: enabled
+    policy: deny
+    direction: incoming
