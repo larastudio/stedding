@@ -5,6 +5,7 @@
   vars:
     # Lookup the API token from the hetzner.ini file
     hcloud_token: "{{ lookup('ini', 'dns_hetzner_api_token file={{ playbook_dir }}/files/hetzner.ini') }}"
+    github_username: "jasperf"  # GitHub username to load keys from
 
   tasks:
     - name: Install Hetzner Cloud Python package
@@ -13,13 +14,21 @@
         state: present
       tags: ['vps']
 
+    - name: Fetch SSH public keys from GitHub
+      uri:
+        url: "https://github.com/{{ github_username }}.keys"
+        return_content: yes
+      register: github_keys
+      tags: ['vps']
+
     - name: Create Hetzner Cloud VPS
       hcloud_server:
         name: "{{ vps_name }}"
         image: "ubuntu-24.04"
         server_type: "cx21"
         location: "fsn1"
-        ssh_keys: "{{ ssh_key_name }}"
+        ssh_keys: "{{ github_keys.content | split('\n') | select('length') | list }}"  # Convert keys to a list
         api_token: "{{ hcloud_token }}"
       register: vps
       tags: ['vps']
+
