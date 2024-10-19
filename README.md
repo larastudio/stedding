@@ -1,4 +1,3 @@
-
 # Stedding
 
 Stedding is a minimalistic LEMP Stack setup for Laravel PHP. It facilitates the setting up of Laravel apps on a well prepared Ubuntu based VPS using Ansible Playbooks.
@@ -24,7 +23,6 @@ Stedding is a minimalistic LEMP Stack setup for Laravel PHP. It facilitates the 
   - [Steps to Set Up](#steps-to-set-up)
 - [Lima](#lima)
 - [Notes](#notes)
-
 
 ## Provisioning and Resizing a VPS at Hetzner with Ansible
 
@@ -96,7 +94,6 @@ To get started, you will need:
 
 - **Ansible Control Node**: A machine with Ansible installed and configured to connect to your Ansible hosts using SSH keys.
 - **Ansible Hosts**: One or more remote Ubuntu 24.04 servers. Ensure that each host has the control node’s public key added to its `authorized_keys` file for SSH access.
-
 
 ### Steps:
 
@@ -193,11 +190,13 @@ You can use Docker to create an isolated environment for running your Ansible pl
    ```bash
    docker build -t ansible-test-host .
    ```
+
 3. Run the Docker Container: After building the image, start the container:
 
     ```bash
     docker run --privileged  -d --name ansible-test-host -p 2222:22 ansible-test-host
     ```
+
    This will run the container in detached mode and bind the container's SSH service to port 2222 on your local machine.
    
    **NB** The `--privileged` flag grants the container extended privileges, allowing it to modify networking settings like UFW and iptables.
@@ -208,18 +207,21 @@ You can now SSH into the container using the testuser account to verify that eve
     ```bash
     ssh testuser@localhost -p 2222
     ```
-    You can then check Ubuntu version
+
+    You can then check Ubuntu version:
+
     ```bash
     sudo su
-    root@70e2eb742cab:/home/testuser# cd /etc/os-release
-    bash: cd: /etc/os-release: Not a directory
     root@70e2eb742cab:/home/testuser# cat /etc/os-release
     PRETTY_NAME="Ubuntu 24.04 LTS"
-    ...
-    UBUNTU_CODENAME=noble
+    UBUNTU
+
+_CODENAME=noble
     LOGO=ubuntu-logo
     ```
-5. Run local playbook 
+
+5. Run local playbook:
+
    ```bash
    ansible-playbook  -i inventory server-setup.yml --limit local
    ```
@@ -227,13 +229,16 @@ You can now SSH into the container using the testuser account to verify that eve
 ## Lima
 
 You can also test the playbook with Lima VM. General setup instructions:
+
 ```bash
 brew install lima
 limactl create --arch=x86_64 template://ubuntu
 limactl edit ubuntu
 ```
-and add
-```bash
+
+Add the following to the configuration file:
+
+```yaml
 ssh:
   localPort: 2022
 portForwards:
@@ -242,33 +247,43 @@ portForwards:
   - guestPort: 443
     hostPort: 8443
 ```
-at the end of the file and save that. Lima will ask you to start the system and say yes. Will take a bit of time.
 
-then do a 
+Then, save and start the system when prompted.
+
+Next, edit your SSH config:
+
 ```bash
 sudo nano ~/.config/ssh_config
 ```
-and add
+
+Add the following:
+
 ```bash
 host lima-ubuntu
   HostName localhost
   Port 2022
 ```
-useful for VS Code access. Then to test shell access to virtual image do:
+
+To access the virtual image via shell, run:
+
 ```bash
-ssh jasperfrumau@127.0.0.1 -p 2022
+ssh yourusername@127.0.0.1 -p 2022
 ```
-Also adjust `inventory line:
-```bash
+
+Update your `inventory` file:
+
+```ini
 [lima]
 ansible_host=127.0.0.1 ansible_port=2022 ansible_user=yourlocaluser ansible_become=yes
 ```
-and add your own local user you use. To now run playbook you can now use 
+
+Run the playbook:
+
 ```bash
-ansible-playbook  -i inventory server-setup.yml --limit lima
+ansible-playbook -i inventory server-setup.yml --limit lima
 ```
 
-**NB** see `lima.yml` in root project where we have the full Ubuntu lima config file with changes.
+**NB**: See `lima.yml` in the root project folder for the full configuration.
 
 ## Notes
 
