@@ -3,6 +3,28 @@
 
 Stedding is a minimalistic LEMP Stack setup for Laravel PHP. It facilitates the setting up of Laravel apps on a well prepared Ubuntu based VPS using Ansible Playbooks.
 
+## Table of Contents
+
+- [Provisioning and Resizing a VPS at Hetzner with Ansible](#provisioning-and-resizing-a-vps-at-hetzner-with-ansible)
+  - [Prerequisites](#prerequisites)
+  - [Configuration](#configuration)
+    - [Hetzner API Token](#hetzner-api-token)
+    - [VPS Variables](#vps-variables)
+    - [SSH Key](#ssh-key)
+  - [Provisioning the VPS](#provisioning-the-vps)
+  - [Resizing the VPS](#resizing-the-vps)
+  - [Additional Notes](#additional-notes)
+- [Server Setup](#server-setup)
+  - [Steps](#steps)
+- [Certbot for SSL Certificates](#certbot-for-ssl-certificates)
+  - [DNS or HTTP Validation](#dns-or-http-validation)
+  - [Environment-Specific Configuration](#environment-specific-configuration)
+  - [Running the Playbook for Specific Environments](#running-the-playbook-for-specific-environments)
+- [Local Testing with Docker](#local-testing-with-docker)
+  - [Steps to Set Up](#steps-to-set-up)
+- [Lima](#lima)
+- [Notes](#notes)
+
 
 ## Provisioning and Resizing a VPS at Hetzner with Ansible
 
