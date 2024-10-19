@@ -14,15 +14,21 @@ Stedding is a minimalistic LEMP Stack setup for Laravel PHP. It facilitates the 
   - [Resizing the VPS](#resizing-the-vps)
   - [Additional Notes](#additional-notes)
 - [Server Setup](#server-setup)
-  - [Steps](#steps)
+  - [Ansible](#ansible)
+  - [Repository Copy](#repository-copy)
+  - [Set up your inventory file](#set-up-your-inventory-file)
+  - [Variables](#variables)
+  - [Run Server setup playbook](#run-server-setup-playbook)
 - [Certbot for SSL Certificates](#certbot-for-ssl-certificates)
   - [DNS or HTTP Validation](#dns-or-http-validation)
   - [Environment-Specific Configuration](#environment-specific-configuration)
   - [Running the Playbook for Specific Environments](#running-the-playbook-for-specific-environments)
+- [Deploy Laravel](#deploy-laravel)
 - [Local Testing with Docker](#local-testing-with-docker)
   - [Steps to Set Up](#steps-to-set-up)
 - [Lima](#lima)
 - [Notes](#notes)
+
 
 ## Provisioning and Resizing a VPS at Hetzner with Ansible
 
@@ -95,38 +101,36 @@ To get started, you will need:
 - **Ansible Control Node**: A machine with Ansible installed and configured to connect to your Ansible hosts using SSH keys.
 - **Ansible Hosts**: One or more remote Ubuntu 24.04 servers. Ensure that each host has the control node’s public key added to its `authorized_keys` file for SSH access.
 
-### Steps:
+### Ansible
 
-1. **Install Ansible**: Ensure Ansible is installed on your control node. You can follow this [Ansible installation guide](https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-ansible-on-ubuntu-18-04).
+Ensure Ansible is installed on your control node. You can follow this [Ansible installation guide](https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-ansible-on-ubuntu-18-04).
 
-2. **Clone this repository**:
+### Repository Copy
+
+Clone this repository:
 
    ```bash
    git clone https://github.com/your-repository/stedding.git
    cd stedding
    ```
 
-3. **Set up your inventory file**: Use `inventory-example` as a base for creating your own `inventory` file.
+### Set up your inventory file:
 
-4. **Adjust configuration**: Modify the values in your `group_vars/all.yml` file according to your environment.
+Use `inventory-example` as a base for creating your own `inventory` file.
 
-5. **Run the server setup playbook**: Execute the `server-setup.yml` playbook to set up the LEMP server:
+### Variables 
+
+Modify the values in your `group_vars/all.yml` , `groups_vars/lima.yml` , `groups_vars/docker.yml` or `groups_vars/production.yml` according to your environment.
+
+### Run Server setup playbook
+
+Execute the `server-setup.yml` playbook to set up the LEMP server:
 
    ```bash
    ansible-playbook server-setup.yml
    ```
 
     You can add `--limit host` where host is `lima`, `docker`, `staging` or `production` depending on the host you are going for. 
-
-6. **Deploy Laravel**: Run the `laravel-deploy.yml` playbook to deploy the demo Laravel application:
-
-   ```bash
-   ansible-playbook laravel-deploy.yml
-   ```
-   
-   You do need to have the application added to the application directory. You can add the application by copying over data or adding it as a submodule.
-
-7. **Access the Application**: Use your server's IP address or hostname to verify the setup.
 
 
 ## Certbot for SSL Certificates
@@ -175,6 +179,18 @@ ansible-playbook server-setup.yml --limit staging
 ```
 
 Make sure you have a `group_vars/production.yml` or `group_vars/staging.yml` file set up with the necessary configuration values, such as the FQDN (`http_host`).
+
+## Deploy Laravel
+
+Run the `laravel-deploy.yml` playbook to deploy the demo Laravel application:
+
+   ```bash
+   ansible-playbook laravel-deploy.yml
+   ```
+   
+   You do need to have the application added to the application directory. You can add the application by copying over data or adding it as a submodule.
+
+### Access the Application**: Use your server's IP address or hostname to verify the setup.
 
 ## Local Testing with Docker
 
