@@ -3,18 +3,78 @@
 
 Stedding is a minimalistic LEMP Stack setup for Laravel PHP. It facilitates the setting up of Laravel apps on a well prepared Ubuntu based VPS using Ansible Playbooks.
 
-## Quick Setup
+
+## Provisioning and Resizing a VPS at Hetzner with Ansible
+
+This section explains how to provision and resize a VPS on Hetzner Cloud using Ansible and the Hetzner Cloud API. If you already 
+have a VPS set up or you are using another provider you can skip this part.
+
+### Prerequisites
+
+Ensure you have:
+- A Hetzner Cloud API token (stored in `files/hetzner.ini`)
+- Ansible installed
+- The `hcloud` Python package for managing Hetzner Cloud resources
+
+### Configuration
+
+1. **Hetzner API Token**:  
+   Store your API token in `files/hetzner.ini`:
+
+    ```ini
+    dns_hetzner_api_token = your-hetzner-api-token
+    ```
+
+2. **VPS Variables**:  
+   Define your VPS name and related settings in `group_vars/all.yml`:
+
+    ```yaml
+    vps_name: "my-vps-server"
+    ```
+
+3. **SSH Key**:  
+   Ensure the SSH key is configured in Hetzner and referenced by name in the playbook.
+
+   You would have previously uploaded your public SSH key to Hetzner, which is stored under a specific name in your Hetzner Cloud account (e.g., `my-ssh-key`).
+
+### Provisioning the VPS
+
+To provision a new VPS on Hetzner Cloud, run the following playbook:
+
+```bash
+ansible-playbook hetzner-vps-provisioning.yml
+```
+
+This will create a new VPS with the specified configuration, such as server type, location, and SSH keys.
+
+### Resizing the VPS
+
+To resize an existing VPS (e.g., from `CX21` to `CX31`), use the resizing playbook:
+
+```bash
+ansible-playbook hetzner-vps-resizing.yml
+```
+
+This playbook will:
+- Stop the VPS
+- Resize it to the desired server type
+- Start the VPS again
+
+### Additional Notes
+
+- **Disk Resizing**: After resizing, you may need to manually resize the filesystem to utilize the additional disk space.
+- **Limitations**: Hetzner does not support downgrading instance types.
+
+For provisioning, refer to `hetzner-vps-setup.yml`, and for resizing, use `hetzner-vps-resizing.yml`.
+
+
+## Server Setup
 
 To get started, you will need:
 
 - **Ansible Control Node**: A machine with Ansible installed and configured to connect to your Ansible hosts using SSH keys.
-- **Ansible Hosts**: One or more remote Ubuntu 22.04 servers. Ensure that each host has the control node’s public key added to its `authorized_keys` file for SSH access.
+- **Ansible Hosts**: One or more remote Ubuntu 24.04 servers. Ensure that each host has the control node’s public key added to its `authorized_keys` file for SSH access.
 
-**NB** For hashing the password for the admin user you have to install passlib:
-
-```bash
-pip install passlib
-```
 
 ### Steps:
 
