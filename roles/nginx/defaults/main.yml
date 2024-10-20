@@ -1,5 +1,5 @@
 ---
-http_conf: stedding
+http_conf: arbor
 http_port: "80"
-http_host: "{{ ansible_facts.eth0.ipv4.address }}"
+http_host: "{{ http_host}}"
 document_root: /var/www/html
