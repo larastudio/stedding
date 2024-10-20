@@ -1,15 +1,16 @@
 [docker]
-# ansible-test-host will fail though that is the container host name
 docker-host ansible_host=localhost ansible_port=2222 ansible_user=testuser ansible_become=yes
 
 [lima]
 lima-vm ansible_host=127.0.0.1 ansible_port=2022 ansible_user=jasperfrumau ansible_become=yes
 
 [staging]
-# IP address for your staging server
+# Add the IP address or hostname for your staging server here
+staging-server ansible_host=<staging-ip> ansible_user=<user> ansible_become=yes
 
-[prod]
-# IP address for your production server
+[production]
+# Add the IP address or hostname for your production server here
+prod-server ansible_host=<prod-ip> ansible_user=<user> ansible_become=yes
 
 [all:vars]
 ansible_python_interpreter=/usr/bin/python3
