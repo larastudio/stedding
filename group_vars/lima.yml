@@ -9,7 +9,7 @@ mysql_app_user: stonemason
 mysql_app_pass: mysql
 
 # Web Server Setup
-http_host: "{{ ansible_facts.eth0.ipv4.address }}"
+http_host: "arbor-demo.test"
 remote_www_root: /var/www
 app_root_dir: arbor
 document_root: "{{ remote_www_root }}/{{ app_root_dir }}/public"
