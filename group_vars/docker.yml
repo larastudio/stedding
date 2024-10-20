@@ -4,18 +4,18 @@ remote_user: warden
 
 # MySQL Setup
 mysql_root_password: root
-mysql_app_db: stedding
+mysql_app_db: arbor
 mysql_app_user: stonemason
 mysql_app_pass: mysql
 
 # Web Server Setup
 http_host: "{{ ansible_facts.eth0.ipv4.address }}"
 remote_www_root: /var/www
-app_root_dir: stedding
+app_root_dir: arbor
 document_root: "{{ remote_www_root }}/{{ app_root_dir }}/public"
 
 # Laravel Env Variables
-app_name: stedding
+app_name: Arbor
 app_env: dev
 app_debug: true
 app_url: "http://{{ http_host }}"
