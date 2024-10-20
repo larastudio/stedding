@@ -40,7 +40,7 @@ have a VPS set up or you are using another provider you can skip this part.
 Ensure you have:
 - A Hetzner Cloud API token (stored in `files/hetzner.ini`)
 - Ansible installed
-- The `hcloud` Python package for managing Hetzner Cloud resources
+- The `hcloud` Python package for managing Hetzner Cloud resources which you install running this playbook for the first time.
 
 ### Configuration
 
@@ -61,7 +61,7 @@ Ensure you have:
 3. **SSH Key**:  
    Ensure the SSH key is configured in Hetzner and referenced by name in the playbook.
 
-   You would have previously uploaded your public SSH key to Hetzner, which is stored under a specific name in your Hetzner Cloud account (e.g., `my-ssh-key`).
+   You would have previously uploaded your public SSH key to Hetzner, which is stored under a specific name in your Hetzner Cloud account (e.g., `my-ssh-key`) at `https://console.hetzner.cloud/projects/xxxxx/security/sshkeys`.
 
 ### Provisioning the VPS
 
@@ -116,7 +116,7 @@ Clone this repository:
 
 ### Set up your inventory file:
 
-Use `inventory-example` as a base for creating your own `inventory` file.
+Use `inventory-example` as a base for creating your own `inventory` file. Add hosts as needed.
 
 ### Variables 
 
@@ -127,10 +127,10 @@ Modify the values in your `group_vars/all.yml` , `groups_vars/lima.yml` , `group
 Execute the `server-setup.yml` playbook to set up the LEMP server:
 
    ```bash
-   ansible-playbook server-setup.yml
+   ansible-playbook -i inventory server-setup.yml
    ```
 
-    You can add `--limit host` where host is `lima`, `docker`, `staging` or `production` depending on the host you are going for. 
+You can add `--limit host` where host is `lima`, `docker`, `staging` or `production` depending on the host you are going for. 
 
 
 ## Certbot for SSL Certificates
