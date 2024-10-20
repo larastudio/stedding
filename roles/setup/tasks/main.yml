@@ -1,6 +1,10 @@
 ---
 - name: Install Prerequisites
-  apt: name=aptitude update_cache=yes state=latest force_apt_get=yes
+  apt: 
+    name: aptitude 
+    update_cache: yes 
+    state: latest 
+    force_apt_get: yes
 
 # Sudo Group Setup
 # Use 'sudo' group instead of 'wheel'
@@ -48,10 +52,19 @@
 
 # Install Packages
 - name: Update apt
-  apt: update_cache=yes
+  apt: 
+    update_cache: yes
 
 - name: Install required system packages
-  apt: name={{ sys_packages }} state=latest
+  apt:
+    name: "{{ sys_packages }}"
+    state: latest
+
+# Install acl if missing
+- name: Install acl for setfacl command
+  apt:
+    name: acl
+    state: present
 
 # UFW Setup
 - name: UFW - Allow SSH connections
