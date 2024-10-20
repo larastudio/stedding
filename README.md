@@ -14,6 +14,7 @@ Stedding is a minimalistic LEMP Stack setup for Laravel PHP. It facilitates the 
   - [Resizing the VPS](#resizing-the-vps)
   - [Additional Notes](#additional-notes)
 - [Server Setup](#server-setup)
+  - [Laravel Application](#laravel-application)
   - [Ansible](#ansible)
   - [Repository Copy](#repository-copy)
   - [Set up your inventory file](#set-up-your-inventory-file)
@@ -24,9 +25,11 @@ Stedding is a minimalistic LEMP Stack setup for Laravel PHP. It facilitates the 
   - [Environment-Specific Configuration](#environment-specific-configuration)
   - [Running the Playbook for Specific Environments](#running-the-playbook-for-specific-environments)
 - [Deploy Laravel](#deploy-laravel)
-- [Local Testing with Docker](#local-testing-with-docker)
+- [Docker](#docker)
   - [Steps to Set Up](#steps-to-set-up)
-- [Lima](#lima)
+- [Lima Virtual Machine](#lima-vm)
+  - [Lima SSH and HTTP Ports](lima-ssh-and-http-ports)
+  - [Starting Lima and SSH Config](starting-lima-and-ssh-onfig)
 - [Notes](#notes)
 
 
@@ -101,6 +104,15 @@ To get started, you will need:
 - **Ansible Control Node**: A machine with Ansible installed and configured to connect to your Ansible hosts using SSH keys.
 - **Ansible Hosts**: One or more remote Ubuntu 24.04 servers. Ensure that each host has the control node’s public key added to its `authorized_keys` file for SSH access.
 
+
+### Laravel Application
+
+To work with the Laravel Application use the git submodule command to add the app to the directory application. Here is the 
+command to add the Laratudio Arbor Application, but you can replace it by yours:
+```bash
+cd application
+git submodule add git@github.com:larastudio/arbor.git
+```
 ### Ansible
 
 Ensure Ansible is installed on your control node. You can follow this [Ansible installation guide](https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-ansible-on-ubuntu-18-04).
@@ -192,7 +204,7 @@ Run the `laravel-deploy.yml` playbook to deploy the demo Laravel application:
 
 ### Access the Application**: Use your server's IP address or hostname to verify the setup.
 
-## Local Testing with Docker
+## Docker 
 
 You can use Docker to create an isolated environment for running your Ansible playbooks locally. You will need to run the playbook twice most of the time due to network issues with ipv.
 
@@ -242,17 +254,18 @@ _CODENAME=noble
    ansible-playbook  -i inventory server-setup.yml --limit local
    ```
 
-## Lima
+## Lima VM
 
 You can also test the playbook with Lima VM. General setup instructions:
 
 ```bash
 brew install lima
 limactl create --arch=x86_64 template://ubuntu
-limactl edit ubuntu
 ```
 
-Add the following to the configuration file:
+### Lima SSH and HTTP Ports
+
+Choose edit to make adjusts and add the following to the configuration file:
 
 ```yaml
 ssh:
@@ -264,7 +277,9 @@ portForwards:
     hostPort: 8443
 ```
 
-Then, save and start the system when prompted.
+### Starting Lima and SSH Config
+
+Then, save and start the system when prompted using `limactl start ubuntu`
 
 Next, edit your SSH config:
 
@@ -284,7 +299,16 @@ To access the virtual image via shell, run:
 
 ```bash
 ssh yourusername@127.0.0.1 -p 2022
+uname -a
+ss -tuln
 ```
+
+or
+```bash
+limactl shell ubuntu
+```
+
+to get into the vm and then run the commands.
 
 Update your `inventory` file:
 
