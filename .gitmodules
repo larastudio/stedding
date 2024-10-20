@@ -1,0 +1,3 @@
+[submodule "application/arbor"]
+	path = application/arbor
+	url = git@github.com:larastudio/arbor.git
