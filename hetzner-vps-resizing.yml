@@ -14,10 +14,10 @@
         api_token: "{{ hcloud_token }}"
       tags: ['resize']
 
-    - name: Resize Hetzner Cloud VPS to CX31
+    - name: Resize Hetzner Cloud VPS to 4 vCPU - 8GB - 80GB ARM CAX21
       hcloud_server:
         name: "{{ vps_name }}"
-        server_type: "cx31"
+        server_type: "cax21"
         api_token: "{{ hcloud_token }}"
       tags: ['resize']
 

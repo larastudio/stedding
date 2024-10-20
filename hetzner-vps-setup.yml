@@ -21,11 +21,11 @@
       register: github_keys
       tags: ['vps']
 
-    - name: Create Hetzner Cloud VPS
+    - name: Create Hetzner 2 vCPU - 4GB - 40GB ARM Cloud VPS
       hcloud_server:
         name: "{{ vps_name }}"
         image: "ubuntu-24.04"
-        server_type: "cx21"
+        server_type: "cax11"
         location: "fsn1"
         ssh_keys: "{{ github_keys.content | split('\n') | select('length') | list }}"  # Convert keys to a list
         api_token: "{{ hcloud_token }}"
