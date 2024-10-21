@@ -1,7 +1,7 @@
 # Stedding
 
 <p align="center">
-  <img src="./stedding-logo.webp" alt="Stedding Logo" style="max-width: 60px;">
+  <img src="./stedding-logo.webp" alt="Stedding Logo" style="width: 60px;">
 </p>
 
 Stedding is a minimalistic LEMP Stack setup for Laravel PHP. It facilitates the setting up of Laravel apps on a well prepared Ubuntu based VPS using Ansible Playbooks.
