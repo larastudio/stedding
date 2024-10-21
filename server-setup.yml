@@ -13,6 +13,9 @@
     - { role: composer, tags: ['composer'] }
     
     - { role: redis, tags: ['redis', 'cache'] }
+
+    - { role: nodejs, tags: ['nodejs', 'javascript', 'npm'] }  # Add the Node.js role here
+
     
 # Run Certbot only on production and staging hosts
 - hosts: production:staging
