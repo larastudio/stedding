@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://imagewize.com">
-    <img alt="Cafe JP Coen" src="./stedding-logo-v2.pngpng"" height="150" >
+    <img alt="Cafe JP Coen" src="./stedding-logo-v2.png" height="150" >
   </a>
 </p>
 
