@@ -9,14 +9,14 @@ mysql_app_user: stonemason
 mysql_app_pass: mysql
 
 # Web Server Setup
-http_host: "{{ ansible_facts.eth0.ipv4.address }}"
+http_host: arbor.local
 remote_www_root: /var/www
 app_root_dir: arbor
 document_root: "{{ remote_www_root }}/{{ app_root_dir }}/public"
 
 # Laravel Env Variables
 app_name: Arbor
-app_env: dev
+app_env: lima  # Set environment to lima for the Lima VM
 app_debug: true
 app_url: "http://{{ http_host }}"
 db_host: localhost

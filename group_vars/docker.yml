@@ -16,7 +16,7 @@ document_root: "{{ remote_www_root }}/{{ app_root_dir }}/public"
 
 # Laravel Env Variables
 app_name: Arbor
-app_env: dev
+app_env: docker
 app_debug: true
 app_url: "http://{{ http_host }}"
 db_host: localhost
