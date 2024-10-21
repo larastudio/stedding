@@ -1,10 +1,14 @@
 # Stedding
 
 <p align="center">
-  <img src="./stedding-logo.webp" alt="Stedding Logo" style="width: 180px;">
+  <a href="https://imagewize.com">
+    <img alt="Cafe JP Coen" src="./stedding-logo.webp"" height="150" >
+  </a>
 </p>
 
-Stedding is a minimalistic LEMP Stack setup for Laravel PHP. It facilitates the setting up of Laravel apps on a well prepared Ubuntu based VPS using Ansible Playbooks.
+<p align="center">Stedding is a minimalistic LEMP Stack setup for Laravel PHP. It facilitates the setting up of Laravel apps on a well prepared Ubuntu based VPS using Ansible Playbooks.
+</p>
+
 
 ## Table of Contents
 
