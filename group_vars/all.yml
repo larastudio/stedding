@@ -1,6 +1,6 @@
 ---
 # Initial Server Setup
-remote_user: warden
+web_user: warden
 
 # MySQL Setup
 mysql_root_password: MYSQL_ROOT_PASSWORD

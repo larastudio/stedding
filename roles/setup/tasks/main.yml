@@ -19,7 +19,7 @@
 # User + Key Setup
 - name: Create a new regular user with sudo privileges
   user:
-    name: "{{ remote_user }}"
+    name: "{{ web_user }}"
     state: present
     groups: sudo
     append: true
@@ -37,9 +37,9 @@
     copy_local_key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_ed25519.pub') }}"
   when: copy_local_key is not defined or copy_local_key == ''
 
-- name: Set authorized key for remote user
+- name: Set authorized key for web user
   authorized_key:
-    user: "{{ remote_user }}"
+    user: "{{ web_user }}"
     state: present
     key: "{{ copy_local_key }}" # local ssh
 
