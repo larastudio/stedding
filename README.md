@@ -275,6 +275,8 @@ portForwards:
     hostPort: 8080
   - guestPort: 443
     hostPort: 8443
+  - guestPort: 6379  # Redis port in the guest VM
+    hostPort: 6380   # Forward to port 6380 on your local machine
 ```
 
 ### Starting Lima and SSH Config
@@ -303,12 +305,18 @@ uname -a
 ss -tuln
 ```
 
-or
+or one of these two
 ```bash
+ssh warden@127.0.0.1 -p 2022
 limactl shell ubuntu
 ```
 
 to get into the vm and then run the commands.
+
+To test Redis port forwarding from localhost:
+```bash
+redis-cli -h 127.0.0.1 -p 6380
+```
 
 Update your `inventory` file:
 
