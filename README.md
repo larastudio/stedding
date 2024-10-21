@@ -339,6 +339,14 @@ Run the playbook:
 ansible-playbook -i inventory server-setup.yml --limit lima
 ```
 
+once done you can run the deployment of the application:
+
+```bash
+ansible-playbook -i inventory laravel-deploy.yml --limit lima
+```
+
+Do not forget to update host's `/etc/hosts` and add `127.0.0.1 arbor.local` or add name as added for `http_host` . Will be able to reach site using `http://arbor.local:8080`
+
 **NB**: See `lima.yml` in the root project folder for the full configuration.
 
 ## Notes
