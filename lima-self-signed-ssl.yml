@@ -1,0 +1,79 @@
+---
+- name: Generate SSL Certificates, Install CA, and Update Nginx Configuration
+  hosts: localhost
+  become: true
+  vars:
+    ca_key_path: "/etc/ssl/private/my_ca.key"
+    ca_cert_path: "/etc/ssl/certs/my_ca.pem"
+    server_key_path: "/etc/ssl/private/server.key"
+    server_cert_path: "/etc/ssl/certs/server.pem"
+    server_csr_path: "/etc/ssl/private/server.csr"
+    nginx_http_config: "/etc/nginx/conf.d/nginx.conf-http"
+    nginx_https_config: "/etc/nginx/conf.d/nginx.conf-https"
+    nginx_config_path: "/etc/nginx/conf.d/nginx.conf"
+    domain: "yourdomain.local"
+    web_root: "html"  # Set this to your web root
+
+  tasks:
+    # Generate CA and server certificates
+    - name: Generate CA private key
+      command: openssl genrsa -out "{{ ca_key_path }}" 2048
+      args:
+        creates: "{{ ca_key_path }}"
+
+    - name: Generate CA certificate
+      command: >
+        openssl req -x509 -new -nodes -key "{{ ca_key_path }}" -sha256 -days 3650
+        -out "{{ ca_cert_path }}"
+        -subj "/C=US/ST=State/L=City/O=MyOrg/CN=MyCA"
+      args:
+        creates: "{{ ca_cert_path }}"
+
+    - name: Generate server private key
+      command: openssl genrsa -out "{{ server_key_path }}" 2048
+      args:
+        creates: "{{ server_key_path }}"
+
+    - name: Generate server CSR
+      command: >
+        openssl req -new -key "{{ server_key_path }}" -out "{{ server_csr_path }}"
+        -subj "/C=US/ST=State/L=City/O=MyOrg/CN={{ domain }}"
+      args:
+        creates: "{{ server_csr_path }}"
+
+    - name: Generate server certificate signed by CA
+      command: >
+        openssl x509 -req -in "{{ server_csr_path }}" -CA "{{ ca_cert_path }}"
+        -CAkey "{{ ca_key_path }}" -CAcreateserial -out "{{ server_cert_path }}"
+        -days 3650 -sha256
+      args:
+        creates: "{{ server_cert_path }}"
+
+    # Install CA on macOS (runs on host machine)
+    - name: Install CA on macOS
+      when: ansible_facts['os_family'] == 'Darwin'
+      delegate_to: localhost
+      become: true
+      command: security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain "{{ ca_cert_path }}"
+
+    # Install CA on Windows (runs on host machine)
+    - name: Install CA on Windows
+      when: ansible_facts['os_family'] == 'Windows'
+      delegate_to: localhost
+      win_certificate_store:
+        state: present
+        store_name: Root
+        certificate_path: "{{ ca_cert_path }}"
+
+    # Replace Nginx config with HTTPS and redirect
+    - name: Replace Nginx config with HTTPS and redirect
+      template:
+        src: "roles/nginx/templates/nginx.conf-https.j2"
+        dest: "/etc/nginx/sites-available/{{ http_conf }}"
+      notify: restart nginx
+
+  handlers:
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
