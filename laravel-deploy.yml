@@ -55,7 +55,16 @@
         owner: "{{ web_user }}"
         group: "{{ web_user }}"
 
-    # Install npm dependencies
+    # Install Composer dependencies (should run before npm tasks)
+    - name: Install Dependencies with Composer
+      become: true  # Use sudo to ensure proper permissions
+      become_user: "{{ web_user }}"  # Run as web_user
+      composer:
+        command: install
+        working_dir: "{{ remote_www_root }}/{{ app_root_dir }}"
+      tags: [ 'composer:install' ]
+
+    # Install npm dependencies (runs after Composer dependencies are installed)
     - name: Install npm dependencies
       become: true
       become_user: "{{ web_user }}"
@@ -72,15 +81,6 @@
       args:
         chdir: "{{ remote_www_root }}/{{ app_root_dir }}"
       tags: [ 'npm:build' ]
-
-    # Install Composer dependencies
-    - name: Install Dependencies with Composer
-      become: true  # Use sudo to ensure proper permissions
-      become_user: "{{ web_user }}"  # Run as web_user
-      composer:
-        command: install
-        working_dir: "{{ remote_www_root }}/{{ app_root_dir }}"
-      tags: [ 'composer:install' ]
 
     # Generate Laravel application key
     - name: Generate app key
