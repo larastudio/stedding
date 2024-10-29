@@ -1,5 +1,5 @@
 ---
-http_conf: arbor
+http_conf: "{{ http_host}}"
 http_port: "80"
 http_host: "{{ http_host}}"
 document_root: /var/www/html
