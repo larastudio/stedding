@@ -283,8 +283,8 @@ portForwards:
     hostPort: 8080
   - guestPort: 443
     hostPort: 8443
-  - guestPort: 6379  # Redis port in the guest VM
-    hostPort: 6380   # Forward to port 6380 on your local machine
+  - guestPort: 6379
+    hostPort: 6380
 ```
 
 ### Starting Lima and SSH Config
