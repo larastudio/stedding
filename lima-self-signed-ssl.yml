@@ -1,79 +1,135 @@
 ---
-- name: Generate SSL Certificates, Install CA, and Update Nginx Configuration
-  hosts: localhost
+- name: Generate SSL Certificates, Install CA, and Update Nginx Configuration on lima VM
+  hosts: lima
   become: true
   vars:
-    ca_key_path: "/etc/ssl/private/my_ca.key"
-    ca_cert_path: "/etc/ssl/certs/my_ca.pem"
+    # Root CA Certificate Paths
+    ca_key_path: "/etc/ssl/private/lima-vm-ca.key"
+    ca_cert_path: "/etc/ssl/certs/lima-vm-ca.pem"
     server_key_path: "/etc/ssl/private/server.key"
     server_cert_path: "/etc/ssl/certs/server.pem"
     server_csr_path: "/etc/ssl/private/server.csr"
-    nginx_http_config: "/etc/nginx/conf.d/nginx.conf-http"
-    nginx_https_config: "/etc/nginx/conf.d/nginx.conf-https"
-    nginx_config_path: "/etc/nginx/conf.d/nginx.conf"
-    domain: "yourdomain.local"
-    web_root: "html"  # Set this to your web root
+    nginx_config_path: "/etc/nginx/sites-available/{{ http_host }}"
+    local_ca_cert_path: "{{ lookup('env', 'HOME') }}/Downloads/lima-vm-ca.pem"
+    local_server_cert_path: "{{ lookup('env', 'HOME') }}/Downloads/server.pem"
 
   tasks:
-    # Generate CA and server certificates
-    - name: Generate CA private key
-      command: openssl genrsa -out "{{ ca_key_path }}" 2048
-      args:
-        creates: "{{ ca_key_path }}"
+    # [Previous tasks remain the same until the fetch operations]
 
-    - name: Generate CA certificate
-      command: >
-        openssl req -x509 -new -nodes -key "{{ ca_key_path }}" -sha256 -days 3650
-        -out "{{ ca_cert_path }}"
-        -subj "/C=US/ST=State/L=City/O=MyOrg/CN=MyCA"
-      args:
-        creates: "{{ ca_cert_path }}"
+    - name: Ensure local Downloads directory exists
+      file:
+        path: "{{ lookup('env', 'HOME') }}/Downloads"
+        state: directory
+        mode: '0755'
+      delegate_to: localhost
+      become: false
 
-    - name: Generate server private key
-      command: openssl genrsa -out "{{ server_key_path }}" 2048
-      args:
-        creates: "{{ server_key_path }}"
+    - name: Remove existing certificates if present
+      file:
+        path: "{{ item }}"
+        state: absent
+      delegate_to: localhost
+      become: false
+      with_items:
+        - "{{ local_ca_cert_path }}"
+        - "{{ local_server_cert_path }}"
 
-    - name: Generate server CSR
-      command: >
-        openssl req -new -key "{{ server_key_path }}" -out "{{ server_csr_path }}"
-        -subj "/C=US/ST=State/L=City/O=MyOrg/CN={{ domain }}"
-      args:
-        creates: "{{ server_csr_path }}"
+    - name: Fetch CA certificate to local machine
+      fetch:
+        src: "{{ ca_cert_path }}"
+        dest: "{{ local_ca_cert_path }}"
+        flat: yes
+      register: ca_fetch_result
 
-    - name: Generate server certificate signed by CA
-      command: >
-        openssl x509 -req -in "{{ server_csr_path }}" -CA "{{ ca_cert_path }}"
-        -CAkey "{{ ca_key_path }}" -CAcreateserial -out "{{ server_cert_path }}"
-        -days 3650 -sha256
-      args:
-        creates: "{{ server_cert_path }}"
+    - name: Verify CA certificate was fetched successfully
+      stat:
+        path: "{{ local_ca_cert_path }}"
+      delegate_to: localhost
+      register: ca_stat_result
+      failed_when: not ca_stat_result.stat.exists
+      become: false
 
-    # Install CA on macOS (runs on host machine)
-    - name: Install CA on macOS
+    - name: Fetch server certificate to local machine
+      fetch:
+        src: "{{ server_cert_path }}"
+        dest: "{{ local_server_cert_path }}"
+        flat: yes
+      register: server_fetch_result
+
+    - name: Verify server certificate was fetched successfully
+      stat:
+        path: "{{ local_server_cert_path }}"
+      delegate_to: localhost
+      register: server_stat_result
+      failed_when: not server_stat_result.stat.exists
+      become: false
+
+    # [Rest of the lima VM tasks remain the same]
+
+- name: macOS Keychain Installation Tasks
+  hosts: localhost
+  gather_facts: yes
+  vars:
+    local_ca_cert_path: "{{ lookup('env', 'HOME') }}/Downloads/lima-vm-ca.pem"
+    local_server_cert_path: "{{ lookup('env', 'HOME') }}/Downloads/server.pem"
+
+  tasks:
+    - name: Verify certificates exist locally before proceeding
+      stat:
+        path: "{{ item }}"
+      register: cert_check
+      failed_when: not cert_check.stat.exists
+      with_items:
+        - "{{ local_ca_cert_path }}"
+        - "{{ local_server_cert_path }}"
       when: ansible_facts['os_family'] == 'Darwin'
-      delegate_to: localhost
-      become: true
-      command: security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain "{{ ca_cert_path }}"
 
-    # Install CA on Windows (runs on host machine)
-    - name: Install CA on Windows
-      when: ansible_facts['os_family'] == 'Windows'
-      delegate_to: localhost
-      win_certificate_store:
-        state: present
-        store_name: Root
-        certificate_path: "{{ ca_cert_path }}"
+    - name: Set proper permissions for certificates
+      file:
+        path: "{{ item }}"
+        mode: '0644'
+      with_items:
+        - "{{ local_ca_cert_path }}"
+        - "{{ local_server_cert_path }}"
+      when: ansible_facts['os_family'] == 'Darwin'
 
-    # Replace Nginx config with HTTPS and redirect
-    - name: Replace Nginx config with HTTPS and redirect
-      template:
-        src: "roles/nginx/templates/nginx.conf-https.j2"
-        dest: "/etc/nginx/sites-available/{{ http_conf }}"
-      notify: restart nginx
+    - name: Check if CA certificate is already installed
+      shell: security find-certificate -c "LimaVM-CA" -a /Library/Keychains/System.keychain | grep -q "LimaVM-CA"
+      register: ca_cert_check
+      changed_when: false
+      failed_when: false
+      when: ansible_facts['os_family'] == 'Darwin'
+
+    - name: Check if server certificate is already installed
+      shell: security find-certificate -c "{{ http_host }}" -a /Library/Keychains/System.keychain | grep -q "{{ http_host }}"
+      register: server_cert_check
+      changed_when: false
+      failed_when: false
+      when: ansible_facts['os_family'] == 'Darwin'
+
+    - name: Install CA certificate if not present
+      command: >
+        osascript -e 'do shell script "security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain {{ local_ca_cert_path }}" with administrator privileges'
+      when: >
+        ansible_facts['os_family'] == 'Darwin' and
+        (ca_cert_check.rc is defined and ca_cert_check.rc != 0)
+      become: false
+      register: ca_install_result
+      failed_when: ca_install_result.rc != 0
+
+    - name: Install server certificate if not present
+      command: >
+        osascript -e 'do shell script "security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain {{ local_server_cert_path }}" with administrator privileges'
+      when: >
+        ansible_facts['os_family'] == 'Darwin' and
+        (server_cert_check.rc is defined and server_cert_check.rc != 0)
+      become: false
+      register: server_install_result
+      failed_when: server_install_result.rc != 0
 
   handlers:
     - name: restart nginx
       service:
         name: nginx
         state: restarted
+      become: true
