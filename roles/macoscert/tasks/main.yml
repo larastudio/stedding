@@ -1,0 +1,258 @@
+---
+# roles/macoscert/tasks/main.yml
+
+# Generate CA and server certificates on the Lima VM
+
+# Generate CA private key on Lima VM
+- name: Generate CA private key on Lima VM
+  community.crypto.openssl_privatekey:
+    path: "{{ ca_key_path }}"
+    size: 2048
+    type: RSA
+    mode: '0600'
+  register: ca_privatekey_result
+
+# Generate self-signed CA certificate if it doesn't exist
+- name: Check if CA certificate exists
+  stat:
+    path: "{{ ca_cert_path }}"
+  register: ca_cert_stat
+
+- name: Generate self-signed CA certificate on Lima VM
+  community.crypto.x509_certificate:
+    path: "{{ ca_cert_path }}"
+    privatekey_path: "{{ ca_key_path }}"
+    provider: selfsigned
+    selfsigned_not_before: "+0s"
+    selfsigned_not_after: "+3650d"
+    selfsigned_digest: "sha256"
+    mode: '0644'
+  when: not ca_cert_stat.stat.exists
+  register: ca_cert_result
+
+# Generate server private key on Lima VM
+- name: Generate server private key on Lima VM
+  community.crypto.openssl_privatekey:
+    path: "{{ server_key_path }}"
+    size: 2048
+    type: RSA
+    mode: '0600'
+  register: server_privatekey_result
+
+# Generate a CSR for the server certificate
+- name: Generate server CSR on Lima VM
+  community.crypto.openssl_csr:
+    path: "{{ server_csr_path }}"
+    privatekey_path: "{{ server_key_path }}"
+    subject:
+      C: "US"
+      ST: "Wyoming"
+      L: "City"
+      O: "Imagewize"
+      CN: "{{ http_host }}"
+    mode: '0644'
+  register: server_csr_result
+
+# Generate server certificate signed by CA on Lima VM
+- name: Generate server certificate signed by CA on Lima VM
+  community.crypto.x509_certificate:
+    path: "{{ server_cert_path }}"
+    csr_path: "{{ server_csr_path }}"
+    privatekey_path: "{{ ca_key_path }}"
+    ownca_path: "{{ ca_cert_path }}"
+    ownca_privatekey_path: "{{ ca_key_path }}"
+    provider: ownca
+    selfsigned_not_before: "+0s"
+    selfsigned_not_after: "+3650d"
+    selfsigned_digest: "sha256"
+    mode: '0644'
+  register: server_cert_result
+
+# Ensure /tmp directory exists with the correct permissions
+- name: Ensure /tmp directory exists on Lima VM
+  file:
+    path: "/tmp"
+    state: directory
+    mode: '1777'
+  become: true
+
+# Define temporary paths for certificate transfer
+- name: Define temporary paths for certificate transfer
+  set_fact:
+    temp_ca_cert_path: "/tmp/lima-ca.pem"
+    temp_server_cert_path: "/tmp/lima-server.pem"
+    temp_server_key_path: "/tmp/lima-server.key"
+
+# Use ansible.builtin.copy to ensure CA certificate is placed in the temporary location
+- name: Copy CA certificate to temporary location with ansible.builtin.copy
+  ansible.builtin.copy:
+    src: "{{ ca_cert_path }}"
+    dest: "{{ temp_ca_cert_path }}"
+    remote_src: yes
+  become: true
+  when: ca_cert_stat.stat.exists
+
+# Verify that the CA certificate was copied to the temporary location
+- name: Verify CA certificate exists in temporary location
+  stat:
+    path: "{{ temp_ca_cert_path }}"
+  register: temp_ca_cert_stat
+
+# Debug output to confirm CA certificate copy status and permissions
+- name: Debug CA certificate copy status and permissions
+  debug:
+    msg: "CA certificate exists at {{ temp_ca_cert_path }} with permissions {{ temp_ca_cert_stat.stat.mode }}: {{ temp_ca_cert_stat.stat.exists }}"
+
+# Fetch CA certificate to macOS host if it exists in temporary location
+- name: Fetch CA certificate to macOS host
+  fetch:
+    src: "{{ temp_ca_cert_path }}"
+    dest: "{{ local_ca_cert_path }}"
+    flat: yes
+  # delegate_to: localhost
+  when: temp_ca_cert_stat.stat.exists
+
+- name: Debug fetch result
+  debug:
+    var: fetch_result
+  when: fetch_result is defined
+
+# Copy server certificate to temporary location with ansible.builtin.copy
+- name: Copy server certificate to temporary location
+  ansible.builtin.copy:
+    src: "{{ server_cert_path }}"
+    dest: "{{ temp_server_cert_path }}"
+    remote_src: yes
+  become: true
+
+# Copy server private key to temporary location with ansible.builtin.copy
+- name: Copy server private key to temporary location
+  ansible.builtin.copy:
+    src: "{{ server_key_path }}"
+    dest: "{{ temp_server_key_path }}"
+    remote_src: yes
+  become: true
+
+# Verify that the server certificate was copied to the temporary location
+- name: Verify server certificate exists in temporary location
+  stat:
+    path: "{{ temp_server_cert_path }}"
+  register: temp_server_cert_stat
+
+# Verify that the server private key was copied to the temporary location
+- name: Verify server private key exists in temporary location
+  stat:
+    path: "{{ temp_server_key_path }}"
+  register: temp_server_key_stat
+
+# Fetch server certificate to macOS host
+- name: Fetch server certificate to macOS host
+  fetch:
+    src: "{{ temp_server_cert_path }}"
+    dest: "{{ local_server_cert_path }}"
+    flat: yes
+  # delegate_to: localhost
+  when: temp_server_cert_stat.stat.exists
+
+# Fetch server private key to macOS host
+- name: Fetch server private key to macOS host
+  fetch:
+    src: "{{ temp_server_key_path }}"
+    dest: "{{ local_server_key_path }}"
+    flat: yes
+  # delegate_to: localhost
+  when: temp_server_key_stat.stat.exists
+
+# Clean up temporary files on Lima VM
+- name: Remove temporary certificate files on Lima VM
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ temp_ca_cert_path }}"
+    - "{{ temp_server_cert_path }}"
+    - "{{ temp_server_key_path }}"
+  become: true
+  when: temp_ca_cert_stat.stat.exists
+
+# First remove any existing certificates to avoid duplicates
+- name: Remove existing certificates for arbor.local
+  command: security delete-certificate -c "arbor.local" /Library/Keychains/System.keychain
+  delegate_to: localhost
+  become: true
+  ignore_errors: true  # Certificate might not exist
+  register: delete_result
+
+- name: Debug certificate deletion
+  debug:
+    var: delete_result
+  when: delete_result is defined
+
+# Add CA certificate to the macOS Keychain with user prompt for permission
+- name: Add CA certificate to macOS Keychain
+  command: >
+    security add-trusted-cert 
+    -d 
+    -r trustRoot 
+    -k /Library/Keychains/System.keychain
+    "{{ local_ca_cert_path }}"
+  delegate_to: localhost
+  become: true
+  when: temp_ca_cert_stat.stat.exists
+
+# Add server certificate to macOS Keychain with administrator privileges
+- name: Add server certificate to macOS Keychain
+  command: >
+    security add-trusted-cert 
+    -d 
+    -r trustRoot 
+    -k /Library/Keychains/System.keychain
+    "{{ local_server_cert_path }}"
+  delegate_to: localhost
+  become: true
+  when: temp_server_cert_stat.stat.exists
+
+# Deploy the Nginx HTTPS configuration for the Lima VM using the fetched certificates
+- name: Deploy Nginx HTTPS configuration for {{ http_host }}
+  template:
+    src: "nginx.conf-self-signed.j2"
+    dest: "/etc/nginx/sites-available/{{ http_host }}"
+    mode: '0644'
+  notify: restart nginx
+
+# Enable Nginx site by linking to sites-enabled
+- name: Enable Nginx site for {{ http_host }}
+  file:
+    src: "/etc/nginx/sites-available/{{ http_host }}"
+    dest: "/etc/nginx/sites-enabled/{{ http_host }}"
+    state: link
+
+# Validate Nginx configuration
+- name: Validate Nginx configuration
+  command: nginx -t
+  changed_when: false
+  notify: restart nginx
+
+#  Check for certificates. Feedback will be in Hex
+# security find-certificate -a /Library/Keychains/System.keychain | grep -A 2 -B 2 "Lima"
+#     "skid"<blob>=0x3EFE58D7B710EF6A74FC24DE8DDD31F0087E3A87  ">\376X\327\267\020\357jt\374$\336\215\3351\360\010~:\207"
+#     "snbr"<blob>=0x52620F15EB2D8914BB14D6E8ED1065416846E8BE  "Rb\017\025\353-\211\024\273\024\326\350\355\020eAhF\350\276"
+#     "subj"<blob>=0x30283110300E060355040A0C074C696D6120564D3114301206035504030C0B6172626F722E6C6F63616C  "0(1\0200\016\006\003U\004\012\014\007Lima VM1\0240\022\006\003U\004\003\014\013arbor.local"
+# keychain: "/Library/Keychains/System.keychain"
+# version: 256
+# security verify-cert -c "/Library/Keychains/System.keychain" -p ssl
+
+# check stored certificates
+# security dump-trust-settings -d
+# ....
+# Cert 14: arbor.test
+#    Number of trust settings : 1
+#    Trust Setting 0:
+#       Result Type           : kSecTrustSettingsResultTrustAsRoot
+# Cert 15: <NULL>
+#    Number of trust settings : 0
+# Cert 16: <NULL>
+#    Number of trust settings : 0
+# Cert 17: arbor.local
+#    Number of trust settings : 0
+# or use security dump-trust-settings -d | grep -A 3 "arbor.local"

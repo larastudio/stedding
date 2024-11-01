@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>PayloadContent</key>
+  <array>
+    <dict>
+      <key>PayloadCertificateFileName</key>
+      <string>LimaVM-RootCA.pem</string>
+      <key>PayloadContent</key>
+      <data>
+        # Insert base64 encoded certificate content here
+      </data>
+      <key>PayloadDescription</key>
+      <string>Installs the root CA certificate for Lima VM</string>
+      <key>PayloadDisplayName</key>
+      <string>Lima VM Root CA Certificate</string>
+      <key>PayloadIdentifier</key>
+      <string>com.lima.rootca</string>
+      <key>PayloadType</key>
+      <string>com.apple.security.root</string>
+      <key>PayloadUUID</key>
+      <string>UUID-GOES-HERE</string>
+      <key>PayloadVersion</key>
+      <integer>1</integer>
+    </dict>
+  </array>
+  <key>PayloadDisplayName</key>
+  <string>Lima VM Root CA Certificate Installation</string>
+  <key>PayloadIdentifier</key>
+  <string>com.lima.rootca.profile</string>
+  <key>PayloadType</key>
+  <string>Configuration</string>
+  <key>PayloadUUID</key>
+  <string>UUID-GOES-HERE</string>
+  <key>PayloadVersion</key>
+  <integer>1</integer>
+</dict>
+</plist>

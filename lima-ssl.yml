@@ -1,0 +1,5 @@
+---
+- hosts: lima
+  become: true
+  roles:
+    - { role: macoscert, tags: ['macos', 'cert-profile'] }
