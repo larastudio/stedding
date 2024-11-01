@@ -205,7 +205,7 @@
   command: >
     security add-trusted-cert 
     -d 
-    -r trustRoot 
+    -r trustAsRoot 
     -k /Library/Keychains/System.keychain
     "{{ local_server_cert_path }}"
   delegate_to: localhost
