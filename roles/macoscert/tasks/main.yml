@@ -22,7 +22,13 @@
   community.crypto.openssl_csr_pipe:
     privatekey_path: "{{ ca_key_path }}"
     privatekey_passphrase: "{{ ca_passphrase }}"
-    common_name: "{{ ca_common_name }}"
+    # common_name: "{{ ca_common_name }}"
+    subject:
+      C: "US"
+      ST: "Wyoming"
+      L: "City"
+      O: "Lima CA"
+      CN: "{{ ca_common_name }}"
     basic_constraints:
       - 'CA:TRUE'
     basic_constraints_critical: true
@@ -58,7 +64,13 @@
 - name: Generate CSR for server certificate on Lima VM
   community.crypto.openssl_csr_pipe:
     privatekey_path: "{{ server_key_path }}"
-    common_name: "{{ server_common_name }}"
+    # common_name: "{{ server_common_name }}"
+    subject:
+      C: "US"
+      ST: "Wyoming"
+      L: "City"
+      O: "Imagewize"
+      CN: "{{ server_common_name }}"
     subject_alt_name:
       - "DNS:{{ http_host }}"
   register: server_csr_result
