@@ -14,8 +14,8 @@ server {
     listen 443 ssl;
     server_name {{ http_host }};
 
-    ssl_certificate     /etc/ssl/certs/server.pem;
-    ssl_certificate_key /etc/ssl/private/server.key;
+    ssl_certificate     {{ server_cert_path }};
+    ssl_certificate_key {{ server_key_path }};
     ssl_protocols       TLSv1.2 TLSv1.3;
     ssl_ciphers         HIGH:!aNULL:!MD5;
 

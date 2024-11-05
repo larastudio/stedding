@@ -26,16 +26,19 @@ db_user: "{{ mysql_app_user }}"
 db_pass: "{{ mysql_app_pass }}"
 
 # Define local paths for macOS host where certificates will be fetched
-local_ca_cert_path: "{{ lookup('env', 'HOME') }}/Downloads/lima-ca.pem"
-local_server_cert_path: "{{ lookup('env', 'HOME') }}/Downloads/lima-server.pem"
-local_server_key_path: "{{ lookup('env', 'HOME') }}/Downloads/lima-server.key"
+local_ca_cert_path: "{{ lookup('env', 'HOME') }}/.config/lima-certificates/lima-ca.pem"
+local_server_cert_path: "{{ lookup('env', 'HOME') }}/.config/lima-certificates/lima-server.pem"
+local_server_key_path: "{{ lookup('env', 'HOME') }}/.config/lima-certificates/lima-server.key"
 
 # Define remote paths on Lima VM
 ca_cert_path: "/etc/ssl/certs/lima-ca.pem"
 ca_key_path: "/etc/ssl/private/lima-ca.key"
+ca_common_name: "Lima CA Self Signed CN"
+ca_passphrase: "password"
 server_cert_path: "/etc/ssl/certs/lima-server.pem"
 server_key_path: "/etc/ssl/private/lima-server.key"
 server_csr_path: "/etc/ssl/certs/lima-server.csr"
+server_common_name: "{{http_host}}"
 
 # Define temporary paths for transfer
 temp_ca_cert_path: "/tmp/lima-ca.pem"
