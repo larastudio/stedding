@@ -15,10 +15,10 @@ app_root_dir: arbor
 document_root: "{{ remote_www_root }}/{{ app_root_dir }}/public"
 
 # Laravel Env Variables
-app_name: Arbor
+app_name: arbor
 app_env: lima  # Set environment to lima for the Lima VM
 app_debug: true
-app_url: "http://{{ http_host }}"
+app_url: "https://{{ http_host }}"
 db_host: localhost
 db_port: 3306
 db_database: "{{ mysql_app_db }}"
@@ -26,22 +26,28 @@ db_user: "{{ mysql_app_user }}"
 db_pass: "{{ mysql_app_pass }}"
 
 # Define local paths for macOS host where certificates will be fetched
-local_ca_cert_path: "{{ lookup('env', 'HOME') }}/.config/lima-certificates/lima-ca.pem"
-local_server_cert_path: "{{ lookup('env', 'HOME') }}/.config/lima-certificates/lima-server.pem"
-local_server_key_path: "{{ lookup('env', 'HOME') }}/.config/lima-certificates/lima-server.key"
+local_ca_cert_path: "{{ lookup('env', 'HOME') }}/.config/lima-certificates/ca/lima-ca.pem"
+local_ca_key_path: "{{ lookup('env', 'HOME') }}/.config/lima-certificates/ca/lima-ca.key"
+local_server_cert_path: "{{ lookup('env', 'HOME') }}/.config/lima-certificates/{{ http_host }}.pem"
+local_server_key_path: "{{ lookup('env', 'HOME') }}/.config/lima-certificates/{{ http_host }}.key"
 
 # Define remote paths on Lima VM
 ca_cert_path: "/etc/ssl/certs/lima-ca.pem"
 ca_key_path: "/etc/ssl/private/lima-ca.key"
 ca_common_name: "Lima CA Self Signed CN"
 ca_passphrase: "password"
-server_cert_path: "/etc/ssl/certs/lima-server.pem"
-server_key_path: "/etc/ssl/private/lima-server.key"
-server_csr_path: "/etc/ssl/certs/lima-server.csr"
+server_cert_path: "/etc/ssl/certs/{{ http_host }}.pem"
+server_key_path: "/etc/ssl/private/{{ http_host }}.key"
+server_csr_path: "/etc/ssl/certs/{{ http_host }}.csr"
 server_common_name: "{{http_host}}"
 
 # Define temporary paths for transfer
 temp_ca_cert_path: "/tmp/lima-ca.pem"
-temp_server_cert_path: "/tmp/lima-server.pem"
-temp_server_key_path: "/tmp/lima-server.key"
+temp_server_cert_path: "/tmp/{{ http_host }}.pem"
+temp_server_key_path: "/tmp/{{ http_host }}.key"
 
+# Define path for concatenated server and CA certificate for macOS
+combined_cert_path: "{{ lookup('env', 'HOME') }}/.config/lima-certificates/{{ http_host }}-combined.pem"
+
+# openssl s_client -connect arbor.local:8443 -showcerts
+# curl -v  https://arbor.local:8443

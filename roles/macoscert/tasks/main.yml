@@ -22,7 +22,6 @@
   community.crypto.openssl_csr_pipe:
     privatekey_path: "{{ ca_key_path }}"
     privatekey_passphrase: "{{ ca_passphrase }}"
-    # common_name: "{{ ca_common_name }}"
     subject:
       C: "US"
       ST: "Wyoming"
@@ -64,7 +63,6 @@
 - name: Generate CSR for server certificate on Lima VM
   community.crypto.openssl_csr_pipe:
     privatekey_path: "{{ server_key_path }}"
-    # common_name: "{{ server_common_name }}"
     subject:
       C: "US"
       ST: "Wyoming"
@@ -106,8 +104,8 @@
 - name: Define temporary paths for certificate transfer
   set_fact:
     temp_ca_cert_path: "/tmp/lima-ca.pem"
-    temp_server_cert_path: "/tmp/lima-server.pem"
-    temp_server_key_path: "/tmp/lima-server.key"
+    temp_server_cert_path: "/tmp/{{http_host}}.pem"
+    temp_server_key_path: "/tmp/{{http_host}}.key"
 
 # Copy CA certificate to temporary location
 - name: Copy CA certificate to temporary location
@@ -154,6 +152,13 @@
     dest: "{{ local_server_key_path }}"
     flat: yes
 
+# Concatenate server and CA certificates into one file for Nginx
+- name: Concatenate server and CA certificates into one file on macOS
+  shell: cat {{ local_server_cert_path }} {{ local_ca_cert_path }} > {{ combined_cert_path }}
+  args:
+    creates: "{{ combined_cert_path }}"
+  delegate_to: localhost
+
 # Clean up temporary files on Lima VM
 - name: Remove temporary certificate files on Lima VM
   file:
@@ -176,18 +181,18 @@
   delegate_to: localhost
   become: true
 
-# Add server certificate to macOS Keychain
-- name: Add server certificate to macOS Keychain
+# Add combined server certificate to macOS Keychain
+- name: Add combined server certificate to macOS Keychain
   command: >
     security add-trusted-cert 
     -d 
     -r trustAsRoot 
     -k /Library/Keychains/System.keychain
-    "{{ local_server_cert_path }}"
+    "{{ combined_cert_path }}"
   delegate_to: localhost
   become: true
 
-# Deploy the Nginx HTTPS configuration for the Lima VM using the fetched certificates
+# Deploy the Nginx HTTPS configuration for the Lima VM using the concatenated certificate
 - name: Deploy Nginx HTTPS configuration for {{ http_host }}
   template:
     src: "nginx.conf-self-signed.j2"
