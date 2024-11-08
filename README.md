@@ -157,7 +157,14 @@ Host lima-ubuntu
 To access the virtual machine via shell, run:
 
 ```bash
-ssh lima-ubuntu
+ssh -p 2022 mac-user-name@127.0.0.1
+```
+or
+```bash
+ssh jasperfrumau@lima-ubuntu -p 2022
+```
+
+with thhe `~/.ssh/config` updated.  Once entered you can double check you are in the right environment with the right ports opened using:
 uname -a
 ss -tuln
 ```
