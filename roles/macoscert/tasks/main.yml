@@ -1,6 +1,8 @@
 ---
 # roles/macoscert/tasks/main.yml
 
+# Tasks
+
 # Check if CA certificate already exists
 - name: Check if CA certificate exists
   stat:
@@ -15,6 +17,7 @@
     size: 2048
     type: RSA
     mode: '0600'
+  when: not ca_cert_stat.stat.exists
   register: ca_privatekey_result
 
 # Generate CSR for CA certificate on Lima VM
@@ -34,6 +37,7 @@
     key_usage:
       - keyCertSign
     key_usage_critical: true
+  when: not ca_cert_stat.stat.exists
   register: ca_csr
 
 # Generate self-signed CA certificate from CSR
@@ -59,7 +63,7 @@
     mode: '0600'
   register: server_privatekey_result
 
-# Generate CSR for the server certificate
+# Generate CSR for server certificate
 - name: Generate CSR for server certificate on Lima VM
   community.crypto.openssl_csr_pipe:
     privatekey_path: "{{ server_key_path }}"
@@ -90,6 +94,7 @@
   copy:
     dest: "{{ server_cert_path }}"
     content: "{{ server_certificate_result.certificate }}"
+    mode: '0644'
   register: write_server_cert
 
 # Ensure /tmp directory exists with the correct permissions
@@ -100,19 +105,13 @@
     mode: '1777'
   become: true
 
-# Define temporary paths for certificate transfer
-- name: Define temporary paths for certificate transfer
-  set_fact:
-    temp_ca_cert_path: "/tmp/lima-ca.pem"
-    temp_server_cert_path: "/tmp/{{http_host}}.pem"
-    temp_server_key_path: "/tmp/{{http_host}}.key"
-
 # Copy CA certificate to temporary location
 - name: Copy CA certificate to temporary location
   ansible.builtin.copy:
     src: "{{ ca_cert_path }}"
     dest: "{{ temp_ca_cert_path }}"
     remote_src: yes
+    mode: '0644'
   become: true
 
 # Copy server certificate to temporary location
@@ -121,6 +120,7 @@
     src: "{{ server_cert_path }}"
     dest: "{{ temp_server_cert_path }}"
     remote_src: yes
+    mode: '0644'
   become: true
 
 # Copy server private key to temporary location
@@ -129,6 +129,7 @@
     src: "{{ server_key_path }}"
     dest: "{{ temp_server_key_path }}"
     remote_src: yes
+    mode: '0600'
   become: true
 
 # Fetch CA certificate to macOS host
@@ -152,11 +153,18 @@
     dest: "{{ local_server_key_path }}"
     flat: yes
 
-# Concatenate server and CA certificates into one file for Nginx
-- name: Concatenate server and CA certificates into one file on macOS
-  shell: cat {{ local_server_cert_path }} {{ local_ca_cert_path }} > {{ combined_cert_path }}
+# Concatenate server and CA certificates into one file on Lima VM
+- name: Concatenate server and CA certificates into one file on Lima VM
+  shell: cat {{ server_cert_path }} {{ ca_cert_path }} > {{ combined_cert_path_vm }}
   args:
-    creates: "{{ combined_cert_path }}"
+    creates: "{{ combined_cert_path_vm }}"
+  become: true
+
+# Concatenate server and CA certificates into one file on macOS
+- name: Concatenate server and CA certificates into one file on macOS
+  shell: cat {{ local_server_cert_path }} {{ local_ca_cert_path }} > {{ local_combined_cert_path }}
+  args:
+    creates: "{{ local_combined_cert_path }}"
   delegate_to: localhost
 
 # Clean up temporary files on Lima VM
@@ -164,7 +172,7 @@
   file:
     path: "{{ item }}"
     state: absent
-  with_items:
+  loop:
     - "{{ temp_ca_cert_path }}"
     - "{{ temp_server_cert_path }}"
     - "{{ temp_server_key_path }}"
@@ -188,7 +196,7 @@
     -d 
     -r trustAsRoot 
     -k /Library/Keychains/System.keychain
-    "{{ combined_cert_path }}"
+    "{{ local_combined_cert_path }}"
   delegate_to: localhost
   become: true
 
