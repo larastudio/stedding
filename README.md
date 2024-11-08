@@ -2,7 +2,12 @@
 
 <p align="center">
   <a href="https://imagewize.com">
-    <img alt="Cafe JP Coen" src="./stedding-logo-v6.png" height="250" >
+    <picture>
+      <!-- Dark Mode Logo -->
+      <source srcset="./stedding-logo-light.png" media="(prefers-color-scheme: dark)">
+      <!-- Light Mode Logo -->
+      <img src="./stedding-logo-dark.png" alt="Cafe JP Coen" height="250">
+    </picture>
   </a>
 </p>
 
