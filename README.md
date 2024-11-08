@@ -163,8 +163,8 @@ or
 ```bash
 ssh jasperfrumau@lima-ubuntu -p 2022
 ```
-
 with thhe `~/.ssh/config` updated.  Once entered you can double check you are in the right environment with the right ports opened using:
+```bash
 uname -a
 ss -tuln
 ```
