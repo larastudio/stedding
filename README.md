@@ -107,11 +107,16 @@ You can use Docker to create an isolated environment for running your Ansible pl
 
 ### Lima VM
 
-You can also test the playbook with Lima VM. General setup instructions:
+You can use the playbook on your Lima VM. To start your Ubuntu image it first needs to be created:
 
 ```bash
 brew install lima
 limactl create --arch=x86_64 template://ubuntu
+```
+
+If you prefer to use the latest virutalization technology on your Mac use
+```bash
+limactl create --arch=aarch64 --vm-type=vz --mount-type=virtiofs template://ubuntu
 ```
 
 #### Lima SSH and HTTP Ports
