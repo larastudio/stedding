@@ -64,6 +64,15 @@
         working_dir: "{{ remote_www_root }}/{{ app_root_dir }}"
       tags: [ 'composer:install' ]
 
+    # Clear npm cache to avoid potential installation issues
+    - name: Clear npm cache
+      command: "npm cache clean --force"
+      become: true
+      become_user: "{{ web_user }}"
+      args:
+        chdir: "{{ remote_www_root }}/{{ app_root_dir }}"
+      tags: npm
+
     # Install npm dependencies (runs after Composer dependencies are installed)
     - name: Install npm dependencies
       become: true
