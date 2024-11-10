@@ -26,6 +26,7 @@ Stedding is a minimalistic LEMP Stack setup for Laravel PHP. It facilitates the 
   - [Lima VM](#lima-vm)
     - [Lima SSH and HTTP Ports](#lima-ssh-and-http-ports)
     - [Starting Lima and SSH Config](#starting-lima-and-ssh-config)
+    - [Self Signed SSL](#self-signed-ssl)
 - [Provisioning](#provisioning)
   - [Prerequisites](#prerequisites)
   - [Configuration](#configuration)
@@ -118,6 +119,8 @@ If you prefer to use the latest virutalization technology on your Mac use
 ```bash
 limactl create --arch=aarch64 --vm-type=vz --mount-type=virtiofs template://ubuntu
 ```
+
+We currently however seem to be having issues with port forwarding using this version.
 
 #### Lima SSH and HTTP Ports
 
@@ -212,6 +215,23 @@ Do not forget to update your host's `/etc/hosts` file and add:
 ```
 
 or the name as specified in `http_host`. You will be able to reach the site using `http://arbor.local:8080`
+
+### Self Signed SSL
+To have a secure local Lima VM you need to run
+```bash
+ansible-playbook -i inventory lima-ssl.yml --ask-become-pass
+```
+
+You can test certificates set using
+```bash
+openssl s_client -connect arbor.local:8443 -showcerts
+```
+or
+```bash
+curl -v https://arbor.local:8443
+```
+
+Do change domain if need be.
 
 ## Provisioning
 
