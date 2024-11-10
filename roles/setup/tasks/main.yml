@@ -7,7 +7,6 @@
     force_apt_get: yes
 
 # Sudo Group Setup
-# Use 'sudo' group instead of 'wheel'
 - name: Allow 'sudo' group to have passwordless sudo
   lineinfile:
     path: /etc/sudoers
@@ -26,6 +25,14 @@
     create_home: true
     shell: /bin/bash
 
+# Ensure ownership of user's home directory
+- name: Set ownership of web user home directory
+  file:
+    path: "/home/{{ web_user }}"
+    owner: "{{ web_user }}"
+    group: "{{ web_user }}"
+    recurse: yes
+
 # SSH Key Setup
 - name: Check for id_rsa.pub
   set_fact:
@@ -41,7 +48,7 @@
   authorized_key:
     user: "{{ web_user }}"
     state: present
-    key: "{{ copy_local_key }}" # local ssh
+    key: "{{ copy_local_key }}"
 
 - name: Disable password authentication for root
   lineinfile:
@@ -49,6 +56,39 @@
     state: present
     regexp: '^#?PermitRootLogin'
     line: 'PermitRootLogin prohibit-password'
+
+# Ensure .bashrc file exists
+- name: Ensure .bashrc file exists for web user
+  file:
+    path: "/home/{{ web_user }}/.bashrc"
+    state: touch
+    owner: "{{ web_user }}"
+    group: "{{ web_user }}"
+
+# Add alias ll to .bashrc
+- name: Add ll alias to .bashrc for web user
+  lineinfile:
+    path: "/home/{{ web_user }}/.bashrc"
+    state: present
+    regexp: '^alias ll='
+    line: "alias ll='ls -alF'"
+  become: false
+
+# Ensure .profile file exists
+- name: Ensure .profile file exists for web user
+  file:
+    path: "/home/{{ web_user }}/.profile"
+    state: touch
+    owner: "{{ web_user }}"
+    group: "{{ web_user }}"
+
+# Add alias ll to .profile
+- name: Add ll alias to .profile for web user
+  lineinfile:
+    path: "/home/{{ web_user }}/.profile"
+    state: present
+    regexp: '^alias ll='
+    line: "alias ll='ls -alF'"
 
 # Install Packages
 - name: Update apt
