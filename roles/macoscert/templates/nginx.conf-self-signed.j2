@@ -19,6 +19,13 @@ server {
     ssl_protocols       TLSv1.2 TLSv1.3;
     ssl_ciphers         HIGH:!aNULL:!MD5;
 
+    # Enable SSL session caching and timeout for faster SSL handshake on repeated connections
+    ssl_session_cache   shared:SSL:10m;
+    ssl_session_timeout 10m;
+
+    # Enable session tickets for better performance (optional, check with your compliance needs)
+    ssl_session_tickets on;
+    
     # Security headers
     add_header X-Frame-Options "SAMEORIGIN";
     add_header X-XSS-Protection "1; mode=block";
