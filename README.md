@@ -213,6 +213,7 @@ Do not forget to update your host's `/etc/hosts` file and add:
 ```
 127.0.0.1       arbor.local
 ::1             arbor.local
+fe80::1%lo0     arbor.local
 ```
 
 or the name as specified in `http_host`. You will be able to reach the site using `http://arbor.local:8080`
