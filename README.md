@@ -211,7 +211,8 @@ ansible-playbook -i inventory laravel-deploy.yml --limit lima
 Do not forget to update your host's `/etc/hosts` file and add:
 
 ```
-127.0.0.1 arbor.local
+127.0.0.1       arbor.local
+::1             arbor.local
 ```
 
 or the name as specified in `http_host`. You will be able to reach the site using `http://arbor.local:8080`
