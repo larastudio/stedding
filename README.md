@@ -111,12 +111,6 @@ You can use Docker to create an isolated environment for running your Ansible pl
 You can use the playbook on your Lima VM. To start your Ubuntu image it first needs to be created:
 
 ```bash
-brew install lima
-limactl create --arch=x86_64 template://ubuntu
-```
-
-If you prefer to use the latest virutalization technology on your Mac use
-```bash
 limactl create --arch=aarch64 --vm-type=vz --mount-type=virtiofs template://ubuntu
 ```
 
@@ -137,6 +131,8 @@ portForwards:
   - guestPort: 6379
     hostPort: 6380
 ```
+
+Port 2022 is used in `.inventory` file.
 
 #### Starting Lima and SSH Config
 
@@ -211,12 +207,10 @@ ansible-playbook -i inventory laravel-deploy.yml --limit lima
 Do not forget to update your host's `/etc/hosts` file and add:
 
 ```
-127.0.0.1       arbor.local
-::1             arbor.local
-fe80::1%lo0     arbor.local
+127.0.0.1       arbor.test
 ```
 
-or the name as specified in `http_host`. You will be able to reach the site using `http://arbor.local:8080`
+or the name as specified in `http_host`. You will be able to reach the site using `http://arbor.test`
 
 ### Self Signed SSL
 To have a secure local Lima VM you need to run
@@ -226,11 +220,11 @@ ansible-playbook -i inventory lima-ssl.yml --ask-become-pass
 
 You can test certificates set using
 ```bash
-openssl s_client -connect arbor.local:8443 -showcerts
+openssl s_client -connect arbor.test -showcerts
 ```
 or
 ```bash
-curl -v https://arbor.local:8443
+curl -v https://arbor.test
 ```
 
 Do change domain if need be.
