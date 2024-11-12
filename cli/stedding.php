@@ -1,32 +1,49 @@
 #!/usr/bin/env php
 <?php
 
-$options = getopt("", ["limit::", "ask-become-pass::"]);
+$options = getopt("", ["ask-become-pass::"]);
 $args = array_slice($argv, 1);
 
-$limit = isset($options['limit']) ? "--limit " . $options['limit'] : "";
-$askBecomePass = isset($options['ask-become-pass']) ? "--ask-become-pass" : "";
+$limit = "";
+$askBecomePass = "";
 
 $command = "";
-if (in_array("setup", $args)) {
-    $command = "setup";
-} elseif (in_array("deploy", $args)) {
-    $command = "deploy";
-} elseif (in_array("secure", $args)) {
-    $command = "secure";
-} elseif (in_array("test", $args)) {
-    $command = "test";
+$target = "";
+
+if (count($args) >= 2) {
+    $command = $args[0];
+    $target = $args[1];
+    $limit = "--limit " . $target;
+
+    // Automatically include --ask-become-pass if running "stedding secure lima"
+    if ($command === "secure" && $target === "lima") {
+        $askBecomePass = "--ask-become-pass";
+    }
 } else {
-    echo "Usage: stedding {setup|deploy|secure|test} [--limit=<target>] [--ask-become-pass]\n";
+    echo "Usage: stedding {setup|deploy|secure} {target} [--ask-become-pass]\n";
     exit(1);
 }
 
-if ($command === "test") {
-    echo "Stedding command works correctly.\n";
-    exit(0);
+if (!in_array($command, ["setup", "deploy", "secure"])) {
+    echo "Invalid command. Usage: stedding {setup|deploy|secure} {target} [--ask-become-pass]\n";
+    exit(1);
 }
 
-$steddingScript = __DIR__ . '/../stedding';
-$cmd = "$steddingScript $command $limit $askBecomePass";
+// Define the Ansible playbook file based on the command
+$playbookFile = "";
+switch ($command) {
+    case "setup":
+        $playbookFile = "server.yml";
+        break;
+    case "deploy":
+        $playbookFile = "deploy.yml";
+        break;
+    case "secure":
+        $playbookFile = "secure.yml";
+        break;
+}
+
+$ansiblePlaybook = "ansible-playbook";
+$cmd = "$ansiblePlaybook $playbookFile $limit $askBecomePass";
 echo "Running: $cmd\n";
 system($cmd);
