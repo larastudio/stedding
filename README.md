@@ -201,7 +201,7 @@ ansible-playbook -i inventory server-setup.yml --limit lima
 Once done, you can run the deployment of the application:
 
 ```bash
-ansible-playbook -i inventory laravel-deploy.yml --limit lima
+ansible-playbook -i inventory deploy.yml --limit lima
 ```
 
 Do not forget to update your host's `/etc/hosts` file and add:
@@ -215,7 +215,7 @@ or the name as specified in `http_host`. You will be able to reach the site usin
 ### Self Signed SSL
 To have a secure local Lima VM you need to run
 ```bash
-ansible-playbook -i inventory lima-ssl.yml --ask-become-pass
+ansible-playbook -i inventory secure.yml --ask-become-pass
 ```
 
 You can test certificates set using
@@ -345,10 +345,10 @@ You can add `--limit host`, where `host` is `lima`, `docker`, `staging`, or `pro
 
 ## Deploy Laravel
 
-Run the `laravel-deploy.yml` playbook to deploy the Laravel application:
+Run the `deploy.yml` playbook to deploy the Laravel application:
 
 ```bash
-ansible-playbook -i inventory laravel-deploy.yml
+ansible-playbook -i inventory deploy.yml
 ```
 
 You need to have the application added to the `application` directory. You can add the application by copying over data or adding it as a submodule.
