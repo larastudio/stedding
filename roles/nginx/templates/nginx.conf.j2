@@ -1,5 +1,6 @@
 server {
-    listen {{ http_port }};
+    listen 80;
+    listen [::]:80;
     server_name {{ http_host }};
     root {{ document_root }};
 

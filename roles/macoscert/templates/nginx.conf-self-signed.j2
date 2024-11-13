@@ -1,6 +1,7 @@
 # HTTP server to redirect all requests to HTTPS
 server {
     listen 80;
+    listen [::]:80;
     server_name {{ http_host }};
 
     # Redirect all HTTP requests to HTTPS
@@ -11,13 +12,15 @@ server {
 
 # HTTPS server with SSL configuration
 server {
-    listen 443 ssl;
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
     server_name {{ http_host }};
 
     ssl_certificate     {{ combined_cert_path_vm }};
     ssl_certificate_key {{ server_key_path }};
     ssl_protocols       TLSv1.2 TLSv1.3;
     ssl_ciphers         HIGH:!aNULL:!MD5;
+    ssl_prefer_server_ciphers on;
 
     # Enable SSL session caching and timeout for faster SSL handshake on repeated connections
     ssl_session_cache   shared:SSL:10m;
@@ -25,11 +28,18 @@ server {
 
     # Enable session tickets for better performance (optional, check with your compliance needs)
     ssl_session_tickets on;
-    
+
+    # OCSP stapling
+    ssl_stapling on;
+    ssl_stapling_verify on;
+    # resolver 8.8.8.8 8.8.4.4 valid=300s;
+    # resolver_timeout 5s;
+
     # Security headers
     add_header X-Frame-Options "SAMEORIGIN";
     add_header X-XSS-Protection "1; mode=block";
     add_header X-Content-Type-Options "nosniff";
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
 
     root {{ document_root }};
     index index.html index.htm index.php;
@@ -39,12 +49,25 @@ server {
         try_files $uri $uri/ /index.php?$query_string;
     }
 
+    access_log off;
+    error_log  /var/log/nginx/{{ http_host }}-error.log error;
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
+
+    error_page 404 /index.php;
+
     # PHP handling
     location ~ \.php$ {
+        try_files $uri /index.php =404;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
         fastcgi_pass unix:/var/run/php/php-fpm.sock;
+        fastcgi_buffers 16 16k;
         fastcgi_index index.php;
         fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        fastcgi_param DOCUMENT_ROOT $realpath_root;
         include fastcgi_params;
+        fastcgi_read_timeout 300;
     }
 
     # Restrict access to hidden files and directories
