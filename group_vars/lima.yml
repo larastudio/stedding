@@ -9,7 +9,7 @@ mysql_app_user: stonemason
 mysql_app_pass: mysql
 
 # Web Server Setup
-http_host: arbor.test
+http_host: arbor.localhost
 remote_www_root: /var/www
 app_root_dir: arbor
 document_root: "{{ remote_www_root }}/{{ app_root_dir }}/public"
@@ -49,5 +49,5 @@ temp_server_cert_path: "/tmp/{{ http_host }}.pem"
 temp_server_key_path: "/tmp/{{ http_host }}.key"
 
 
-# openssl s_client -connect arbor.local:8443 -showcerts
-# curl -v  https://arbor.test
+# openssl s_client -connect arbor.localhost:8443 -showcerts
+# curl -v  https://arbor.localhost
