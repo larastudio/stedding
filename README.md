@@ -132,7 +132,7 @@ portForwards:
     hostPort: 6380
 ```
 
-Port 2022 is used in `.inventory` file.
+Port 2022 is used in `.inventory` file. If your ports 80, 443 and 6369 are available you do not need the PortForwards. Laravel Valet does need 80 and 443 for example and even though it uses .test it still will fight Lima Nginx for them.
 
 #### Starting Lima and SSH Config
 
@@ -207,10 +207,10 @@ ansible-playbook -i inventory deploy.yml --limit lima
 Do not forget to update your host's `/etc/hosts` file and add:
 
 ```
-127.0.0.1       arbor.test
+127.0.0.1       arbor.localhost
 ```
 
-or the name as specified in `http_host`. You will be able to reach the site using `http://arbor.test`
+or the host as specified in `http_host`. You will be able to reach the site using `http://arbor.localhost` or with host you set. We use `.localhost` as we also use Laravel Valet with `.test`
 
 ### Self Signed SSL
 To have a secure local Lima VM you need to run
@@ -220,11 +220,11 @@ ansible-playbook -i inventory secure.yml --ask-become-pass
 
 You can test certificates set using
 ```bash
-openssl s_client -connect arbor.test -showcerts
+openssl s_client -connect arbor.localhost -showcerts
 ```
 or
 ```bash
-curl -v https://arbor.test
+curl -v https://arbor.localhost
 ```
 
 Do change domain if need be.
