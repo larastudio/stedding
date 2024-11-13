@@ -1,8 +1,0 @@
-*.log
-*.retry
-.DS_Store
-.vagrant
-.vscode/*
-!.vscode/settings.json
-!.vscode/extensions.json
-.idea

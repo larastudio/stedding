@@ -1,0 +1,7 @@
+---
+# handlers file for roles/macoscert
+
+- name: restart nginx
+  service:
+    name: nginx
+    state: restarted

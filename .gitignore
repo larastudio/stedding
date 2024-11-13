@@ -1,2 +1,6 @@
 hosts
 server.retry
+inventory.ini
+inventory
+group_vars/production.yml
+group_vars/staging.yml

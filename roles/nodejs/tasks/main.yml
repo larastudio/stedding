@@ -1,0 +1,48 @@
+---
+# Update apt cache to ensure the latest package lists are available
+- name: Update apt cache
+  apt:
+    update_cache: yes
+  tags: nodejs
+
+# Install the latest version of Node.js
+- name: Install Node.js
+  apt:
+    name: nodejs
+    state: present
+  tags: nodejs
+
+# Install npm
+- name: Install npm
+  apt:
+    name: npm
+    state: present
+  tags: npm
+
+# Install build-essential (for building native addons)
+- name: Install build-essential (for building native addons)
+  apt:
+    name: build-essential
+    state: present
+  tags: nodejs
+
+# Ensure npm global directory is writable
+- name: Ensure npm global directory is writable
+  file:
+    path: /usr/local/lib/node_modules
+    state: directory
+    mode: '0755'
+    owner: "{{ web_user }}"
+    group: "{{ web_user }}"
+  tags: npm
+
+# Fix ownership of the npm cache folder in the user's home directory
+- name: Set ownership of npm cache folder
+  file:
+    path: "/home/{{ web_user }}/.npm"
+    state: directory
+    owner: "{{ web_user }}"
+    group: "{{ web_user }}"
+    recurse: yes
+  tags: npm
+  

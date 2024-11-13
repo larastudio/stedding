@@ -1,0 +1,222 @@
+---
+# roles/macoscert/tasks/main.yml
+
+# Tasks
+
+# Check if CA certificate already exists
+- name: Check if CA certificate exists
+  stat:
+    path: "{{ ca_cert_path }}"
+  register: ca_cert_stat
+
+# Generate CA private key with password protection on Lima VM
+- name: Generate CA private key on Lima VM
+  community.crypto.openssl_privatekey:
+    path: "{{ ca_key_path }}"
+    passphrase: "{{ ca_passphrase }}"
+    size: 2048
+    type: RSA
+    mode: '0600'
+  when: not ca_cert_stat.stat.exists
+  register: ca_privatekey_result
+
+# Generate CSR for CA certificate on Lima VM
+- name: Generate CSR for CA certificate on Lima VM
+  community.crypto.openssl_csr_pipe:
+    privatekey_path: "{{ ca_key_path }}"
+    privatekey_passphrase: "{{ ca_passphrase }}"
+    subject:
+      C: "US"
+      ST: "Wyoming"
+      L: "City"
+      O: "Lima CA"
+      CN: "{{ ca_common_name }}"
+    basic_constraints:
+      - 'CA:TRUE'
+    basic_constraints_critical: true
+    key_usage:
+      - keyCertSign
+    key_usage_critical: true
+  when: not ca_cert_stat.stat.exists
+  register: ca_csr
+
+# Generate self-signed CA certificate from CSR
+- name: Generate self-signed CA certificate from CSR on Lima VM
+  community.crypto.x509_certificate:
+    path: "{{ ca_cert_path }}"
+    csr_content: "{{ ca_csr.csr }}"
+    privatekey_path: "{{ ca_key_path }}"
+    privatekey_passphrase: "{{ ca_passphrase }}"
+    provider: selfsigned
+    selfsigned_not_before: "+0s"
+    selfsigned_not_after: "+3650d"
+    mode: '0644'
+  when: not ca_cert_stat.stat.exists
+  register: ca_cert_result
+
+# Generate server private key on Lima VM
+- name: Generate server private key on Lima VM
+  community.crypto.openssl_privatekey:
+    path: "{{ server_key_path }}"
+    size: 2048
+    type: RSA
+    mode: '0600'
+  register: server_privatekey_result
+
+# Generate CSR for server certificate
+- name: Generate CSR for server certificate on Lima VM
+  community.crypto.openssl_csr_pipe:
+    privatekey_path: "{{ server_key_path }}"
+    subject:
+      C: "US"
+      ST: "Wyoming"
+      L: "City"
+      O: "Imagewize"
+      CN: "{{ server_common_name }}"
+    subject_alt_name:
+      - "DNS:{{ http_host }}"
+  register: server_csr_result
+
+# Sign the server certificate using our CA
+- name: Sign server certificate with our CA on Lima VM
+  community.crypto.x509_certificate_pipe:
+    csr_content: "{{ server_csr_result.csr }}"
+    provider: ownca
+    ownca_path: "{{ ca_cert_path }}"
+    ownca_privatekey_path: "{{ ca_key_path }}"
+    ownca_privatekey_passphrase: "{{ ca_passphrase }}"
+    ownca_not_after: "+365d"
+    ownca_not_before: "-1d"
+  register: server_certificate_result
+
+# Write the signed server certificate to the server cert path
+- name: Write server certificate file on Lima VM
+  copy:
+    dest: "{{ server_cert_path }}"
+    content: "{{ server_certificate_result.certificate }}"
+    mode: '0644'
+  register: write_server_cert
+
+# Ensure /tmp directory exists with the correct permissions
+- name: Ensure /tmp directory exists on Lima VM
+  file:
+    path: "/tmp"
+    state: directory
+    mode: '1777'
+  become: true
+
+# Copy CA certificate to temporary location
+- name: Copy CA certificate to temporary location
+  ansible.builtin.copy:
+    src: "{{ ca_cert_path }}"
+    dest: "{{ temp_ca_cert_path }}"
+    remote_src: yes
+    mode: '0644'
+  become: true
+
+# Copy server certificate to temporary location
+- name: Copy server certificate to temporary location
+  ansible.builtin.copy:
+    src: "{{ server_cert_path }}"
+    dest: "{{ temp_server_cert_path }}"
+    remote_src: yes
+    mode: '0644'
+  become: true
+
+# Copy server private key to temporary location
+- name: Copy server private key to temporary location
+  ansible.builtin.copy:
+    src: "{{ server_key_path }}"
+    dest: "{{ temp_server_key_path }}"
+    remote_src: yes
+    mode: '0600'
+  become: true
+
+# Fetch CA certificate to macOS host
+- name: Fetch CA certificate to macOS host
+  fetch:
+    src: "{{ temp_ca_cert_path }}"
+    dest: "{{ local_ca_cert_path }}"
+    flat: yes
+
+# Fetch server certificate to macOS host
+- name: Fetch server certificate to macOS host
+  fetch:
+    src: "{{ temp_server_cert_path }}"
+    dest: "{{ local_server_cert_path }}"
+    flat: yes
+
+# Fetch server private key to macOS host
+- name: Fetch server private key to macOS host
+  fetch:
+    src: "{{ temp_server_key_path }}"
+    dest: "{{ local_server_key_path }}"
+    flat: yes
+
+# Concatenate server and CA certificates into one file on Lima VM
+- name: Concatenate server and CA certificates into one file on Lima VM
+  shell: cat {{ server_cert_path }} {{ ca_cert_path }} > {{ combined_cert_path_vm }}
+  args:
+    creates: "{{ combined_cert_path_vm }}"
+  become: true
+
+# Concatenate server and CA certificates into one file on macOS
+- name: Concatenate server and CA certificates into one file on macOS
+  shell: cat {{ local_server_cert_path }} {{ local_ca_cert_path }} > {{ local_combined_cert_path }}
+  args:
+    creates: "{{ local_combined_cert_path }}"
+  delegate_to: localhost
+
+# Clean up temporary files on Lima VM
+- name: Remove temporary certificate files on Lima VM
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - "{{ temp_ca_cert_path }}"
+    - "{{ temp_server_cert_path }}"
+    - "{{ temp_server_key_path }}"
+  become: true
+
+# Add CA certificate to macOS Keychain
+- name: Add CA certificate to macOS Keychain
+  command: >
+    security add-trusted-cert 
+    -d 
+    -r trustRoot 
+    -k /Library/Keychains/System.keychain
+    "{{ local_ca_cert_path }}"
+  delegate_to: localhost
+  become: true
+
+# Add combined server certificate to macOS Keychain
+- name: Add combined server certificate to macOS Keychain
+  command: >
+    security add-trusted-cert 
+    -d 
+    -r trustAsRoot 
+    -k /Library/Keychains/System.keychain
+    "{{ local_combined_cert_path }}"
+  delegate_to: localhost
+  become: true
+
+# Deploy the Nginx HTTPS configuration for the Lima VM using the concatenated certificate
+- name: Deploy Nginx HTTPS configuration for {{ http_host }}
+  template:
+    src: "nginx.conf-self-signed.j2"
+    dest: "/etc/nginx/sites-available/{{ http_host }}"
+    mode: '0644'
+  notify: restart nginx
+
+# Enable Nginx site by linking to sites-enabled
+- name: Enable Nginx site for {{ http_host }}
+  file:
+    src: "/etc/nginx/sites-available/{{ http_host }}"
+    dest: "/etc/nginx/sites-enabled/{{ http_host }}"
+    state: link
+
+# Validate Nginx configuration
+- name: Validate Nginx configuration
+  command: nginx -t
+  changed_when: false
+  notify: restart nginx

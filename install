@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# Get absolute paths
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PHP_SCRIPT="${SCRIPT_DIR}/cli/stedding.php"
+SYMLINK="/usr/local/bin/stedding"
+
+echo "Debug: Script directory is ${SCRIPT_DIR}"
+echo "Debug: PHP script path is ${PHP_SCRIPT}"
+echo "Creating symlink from ${PHP_SCRIPT} to ${SYMLINK}"
+
+# Verify PHP script exists
+if [ ! -f "$PHP_SCRIPT" ]; then
+    echo "Error: PHP script not found at ${PHP_SCRIPT}"
+    exit 1
+fi
+
+# Ensure PHP script has correct shebang line
+# commented out as it has been added but will leave just in case 
+# we need it later down the line
+# echo "Adding shebang line to PHP script..."
+# TMP_FILE=$(mktemp)
+# echo '#!/usr/bin/env php' > "$TMP_FILE"
+# cat "$PHP_SCRIPT" >> "$TMP_FILE"
+# mv "$TMP_FILE" "$PHP_SCRIPT"
+
+# Make PHP script executable
+echo "Making PHP script executable..."
+chmod +x "$PHP_SCRIPT"
+
+# Check if the symlink exists
+if [ ! -L "$SYMLINK" ]; then
+    echo "Creating symlink for stedding..."
+    sudo ln -s "$PHP_SCRIPT" "$SYMLINK"
+    echo "Symlink created successfully."
+else
+    echo "Removing old symlink..."
+    sudo rm "$SYMLINK"
+    echo "Creating new symlink..."
+    sudo ln -s "$PHP_SCRIPT" "$SYMLINK"
+    echo "Symlink updated successfully."
+fi
+
+# Verify the symlink and permissions
+ls -l "$SYMLINK"
+ls -l "$PHP_SCRIPT"

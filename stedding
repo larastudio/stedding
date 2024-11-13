@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Define the path to the PHP script
+PHP_SCRIPT="$(dirname "$0")/cli/stedding.php"
+
+# Call the PHP script from the cli directory
+php "$PHP_SCRIPT" "$@"

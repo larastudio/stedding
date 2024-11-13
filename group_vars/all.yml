@@ -1,0 +1,38 @@
+---
+# Initial Server Setup
+web_user: warden
+
+# MySQL Setup
+mysql_root_password: MYSQL_ROOT_PASSWORD
+mysql_app_db: arbor
+mysql_app_user: stonemason
+mysql_app_pass: DB_PASSWORD
+
+# Web Server Setup
+http_host: "arbor.imagewize.com"
+remote_www_root: /var/www
+app_root_dir: arbor
+document_root: "{{ remote_www_root }}/{{ app_root_dir }}/public"
+
+# Laravel Env Variables
+app_name: Arbor
+app_env: dev
+app_debug: true
+app_url: "https://{{ http_host }}"
+db_host: localhost
+db_port: 3306
+db_database: "{{ mysql_app_db }}"
+db_user: "{{ mysql_app_user }}"
+db_pass: "{{ mysql_app_pass }}"
+
+# DNS Keys are addded to files/provider.ini.example. Rename them to 
+# remove the example part and add keys. For TransIP a username is needed as well.
+
+# Certbot configuration
+certbot_dns: false  # Use HTTP validation by default
+certbot_email: "your-email@example.com"
+dns_provider: "transip"  # Default DNS provider but `hetzner` also possible
+
+# VPS Provisioning 
+#  Hetzner only for now.
+vps_name: "my-vps-server"

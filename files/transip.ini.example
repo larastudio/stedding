@@ -1,0 +1,2 @@
+dns_transip_username = "your-transip-username"
+dns_transip_key = "your-transip-private-key"
